@@ -30,9 +30,10 @@ function render(action, elements) {
 
           fetch("/", { 
             method: "post",
+            uin:val,
             mode: "no-cors",
             body: JSON.stringify({
-            type: "show",
+            type: "commit",
             query: val, 
             data:data,
             modifier: window.commitpath  
@@ -132,7 +133,6 @@ function render(action, elements) {
             console.log(error);
           });
       } else {
-        
         if(document.getElementById("pagebody")){
         if (pagebody.dataset.editor == "edit") {
           window.commitpath = "editor"; 
@@ -194,7 +194,7 @@ function render(action, elements) {
           }
           starthere()
           var button = document.getElementById("myBtn")
-          button.innerHTML = "$1.00 / Question"; 
+          button.innerHTML = "$1 Question"; 
           
           function draw(x, y, w, h) {
             const canvas = document.getElementById("canvas");
@@ -465,16 +465,12 @@ function render(action, elements) {
           event.preventDefault();
         },true);
         }
-        } else { 
-          //
-        }
-      
+        } else { }
       }
 
       setInterval(function() {
         if (window.changes == 1) {
           var code = window.CM.getValue();
-
           var payload = JSON.stringify({
             type: "commit",
             query: code,
@@ -535,7 +531,7 @@ function render(action, elements) {
         }
       }
       
-      fetch("https://code.fastur.com/api/data.json", {
+      fetch("/api/data.json", {
         method: "get",
         mode:"no-cors"  
       }).then(r => r.text()).then(data => {
@@ -548,13 +544,12 @@ function render(action, elements) {
       uin.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
           var val = e.target.value;
-          //val = val.replace(/(\r\n|\n|\r)/gm, "");
                                                
           fetch("/", {
             method: "post",
             mode: "no-cors",
             body: JSON.stringify({
-            type: "show",
+            type: "commit",
             query: val, 
             modifier: window.commitpath
           })
@@ -711,104 +706,7 @@ function render(action, elements) {
    
                 }  
                     
-          function camera(audio,video,stop) {
-            if (stop){
-              localStream.getTracks().forEach(track => {
-              track.stop();
-            });
-            startRecord.disabled = false;
-            stopRecord.disabled = true;
-            rec.stop() 
-          }
-            if (navigator.getUserMedia) {
-                    navigator.getUserMedia(
-                      { audio: true, video: true },
-                      function(stream) {
-                        window.localStream = stream;
-                        var video = document.querySelector("video");
-                        video.srcObject = localStream;
-                        video.onloadedmetadata = function(e) {
-                          video.play();
-                        };
 
-                        // Optional frames per second argument.
-                        var stream = video.captureStream(25);
-                        var recordedChunks = [];
-
-                        console.log(stream);
-                        var options = { mimeType: "video/webm; codecs=vp9" };
-                        mediaRecorder = new MediaRecorder(stream);
-
-                        mediaRecorder.ondataavailable = handleDataAvailable;
-                        mediaRecorder.start();
-
-                        function handleDataAvailable(event) {
-                          console.log("data-available");
-                          if (event.data.size > 0) {
-                            recordedChunks.push(event.data);
-                            console.log(recordedChunks);
-                            download();
-                          } else {
-                            // ...
-                          }
-                        }
-                        function download() {
-                          var blob = new Blob(recordedChunks, {
-                            type: "video/webm"
-                          });
-
-                          var payload = JSON.stringify({
-                            type: "commit",
-                            modifier: "media",
-                            data: JSON.stringify(recordedChunks)
-                          });
-                          fetch("/", {
-                            method: "post",
-                            mode: "no-cors",
-                            body: payload
-                          }).then(function(response) {
-                            var decoder = new TextDecoder();
-                            var reader = response.body.getReader();
-                            reader.read().then(function processResult(result) {
-                              if (result.done) return;
-                              var result = decoder.decode(result.value, {
-                                stream: true
-                              });
-
-                              try {
-                                var result = JSON.parse(result);
-                              } catch (e) {}
-                              if (result.type == "success") {
-                                console.log(result);
-                              }
-                            });
-                          });
-
-                          /*var url = URL.createObjectURL(blob);
-  var a = document.createElement("a");
-  document.body.appendChild(a);
-  a.style = "display: none";
-  a.href = url;
-  a.download = "test.webm";
-  a.click();
-  window.URL.revokeObjectURL(url);*/
-                        }
-
-                        //download after 9sec
-                        setTimeout(event => {
-                          console.log("stopping");
-                          mediaRecorder.stop();
-                        }, 9000);
-                      },
-                      function(err) {
-                        console.log(
-                          "The following error occurred: " + err.name
-                        );
-                      }
-                    );
-                  }              
-          }
-          camera();
           function talk(q, background) {
             function Speech_Recognition() {
                   var recognition = new webkitSpeechRecognition();
@@ -1186,10 +1084,10 @@ function render(action, elements) {
             if (uin.value){
               window.changes = 1;
             } else {
-               
               myBtn.innerHTML = "Name at least 3 letters";
               uin.style.outline = "2px solid red";
             } 
+            
           }
         });
         content.addEventListener("dragstart", function(e) {
@@ -1208,13 +1106,113 @@ function render(action, elements) {
           e.preventDefault();
         });
       });
-    };
+      
+      function camera(audio,video,stop) {
+            if (stop){
+              localStream.getTracks().forEach(track => {
+              track.stop();
+            });
+            startRecord.disabled = false;
+            stopRecord.disabled = true;
+            rec.stop() 
+          }
+            if (navigator.getUserMedia) {
+                    navigator.getUserMedia(
+                      { audio: true, video: true },
+                      function(stream) {
+                        window.localStream = stream;
+                        var video = document.querySelector("video");
+                        video.srcObject = localStream;
+                        video.onloadedmetadata = function(e) {
+                          video.play();
+                        };
+
+                        // Optional frames per second argument.
+                        var stream = video.captureStream(25);
+                        var recordedChunks = [];
+
+                        console.log(stream);
+                        var options = { mimeType: "video/webm; codecs=vp9" };
+                        mediaRecorder = new MediaRecorder(stream);
+
+                        mediaRecorder.ondataavailable = handleDataAvailable;
+                        mediaRecorder.start();
+
+                        function handleDataAvailable(event) {
+                          console.log("data-available");
+                          if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                            console.log(recordedChunks);
+                            download();
+                          } else {
+                            // ...
+                          }
+                        }
+                        function download() {
+                          var blob = new Blob(recordedChunks, {
+                            type: "video/webm"
+                          });
+
+                          var payload = JSON.stringify({
+                            type: "commit",
+                            modifier: "media",
+                            data: JSON.stringify(recordedChunks)
+                          });
+                          fetch("/", {
+                            method: "post",
+                            mode: "no-cors",
+                            body: payload
+                          }).then(function(response) {
+                            var decoder = new TextDecoder();
+                            var reader = response.body.getReader();
+                            reader.read().then(function processResult(result) {
+                              if (result.done) return;
+                              var result = decoder.decode(result.value, {
+                                stream: true
+                              });
+
+                              try {
+                                var result = JSON.parse(result);
+                              } catch (e) {}
+                              if (result.type == "success") {
+                                console.log(result);
+                              }
+                            });
+                          });
+
+                          /*var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = "test.webm";
+  a.click();
+  window.URL.revokeObjectURL(url);*/
+                        }
+
+                        //download after 9sec
+                        setTimeout(event => {
+                          console.log("stopping");
+                          mediaRecorder.stop();
+                        }, 9000);
+                      },
+                      function(err) {
+                        console.log(
+                          "The following error occurred: " + err.name
+                        );
+                      }
+                    );
+                  }              
+          }
+      camera();
+          
+    }; 
     lib.control();
   }
 
 var body = ""; var t = ""; var d = ""; var num = 0; var cssd = "";
-  for (var element in elements) {
-var b = elements[element]; var data = ""; var form = ""; var _break; var items = b.items; var gaid = b.gaid; var br = ""; num = num + 1;
+for (var element in elements) {
+  var b = elements[element]; var data = ""; var form = ""; var _break; var items = b.items; var gaid = b.gaid; var br = ""; num = num + 1;
 
     if (action == "edit") {
       b.display = "block";
@@ -1858,10 +1856,7 @@ a > svg {
       }
     }
 
-      cssd += ` #${b.id} { text-align: ${b.align}; background-color:${b.background}; outline: ${b.outline}; draggable: ${b.isdrag};
-  } 
-
-  `;
+      cssd += ` #${b.id} { text-align: ${b.align}; background-color:${b.background}; outline: ${b.outline}; draggable: ${b.isdrag};}  `;
 
     if (num == 1) {
       t = "<title>" + b.title + "</title>";
@@ -1897,11 +1892,463 @@ a > svg {
     var standard = body;
   } else {
     var standard =
-      "<!DOCTYPE html id='page'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'>" + t + d + "<style>" + cssd + "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" + action + "'>" + body + "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='https://code.fastur.com/api2'></script><script>render()</script></html>";
+      "<!DOCTYPE html id='page'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'>" + t + d + "<style>" + cssd + "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" + action + "'>" + body + "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script><script>render()</script></html>";
   }
   return standard;   
 }
 
+function movie(dream) {
+  var q = "19 21 2 18 15 21 20 9 14 5";
+
+  function github(url) {
+    var gs = require("github-scraper"); // require the module
+    //var url = 'alanshaw' // a random username (of someone you should follow!)
+    gs(url, function(err, data) {
+      console.log(data); // or what ever you want to do with the data
+    });
+    console.log("finished");
+  }
+  //github("fasturdotcom");
+  function saveImage(url) {
+    var http = require("http"),
+      Stream = require("stream").Transform,
+      fs = require("fs");
+
+    http
+      .request(url, function(response) {
+        var data = new Stream();
+
+        response.on("data", function(chunk) {
+          data.push(chunk);
+        });
+
+        response.on("end", function() {
+          fs.writeFileSync("sun.png", data.read());
+          console.log("finished image download");
+        });
+      })
+      .end();
+  }
+  //saveImage("http://code.fastur.com/api/server.png");
+  function run(a) {
+    const jsdom = require("jsdom");
+    const { JSDOM } = jsdom;
+
+    function cap(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    var https = require("https");
+    https.get(
+      {
+        host: "en.wikipedia.org",
+        port: 443,
+        path: "/wiki/" + a
+      },
+      function(response) {
+        var body = "";
+        response.on("data", function(data) {
+          body += data;
+        });
+        response.on("end", function() {
+          function filterLinks(links) {
+            const filtered = [];
+            const ignoredWords = [
+              "/",
+              "disambiguation",
+              "doi",
+              "Article",
+              "Wikipedia indefinitely semi-protected pages",
+              "Wikidata",
+              "Wikipedia",
+              "Certification Table Entry"
+            ];
+            const ignoredLinks = [
+              "Special:Search",
+              "Help:",
+              "Wikipedia:Verifiability"
+            ];
+            for (let i = 0; i < links.length; ++i) {
+              const text = links[i].title;
+              const link = links[i].href;
+              // removes lots of strange articles
+              if (text.length < 2) {
+                continue;
+              }
+              // get rid of all numbers (for now)
+              if (text.match(/\d+/g) !== null) {
+                continue;
+              }
+              // avoid things like User:This_Person
+              if (text.match(/\w:\w/g) !== null) {
+                continue;
+              }
+              if (link.match(/\w:\w/g) !== null) {
+                continue;
+              }
+              let skip = false;
+              // skip all ignored text and links
+              for (let j = 0; j < ignoredWords.length; j++) {
+                if (text.includes(ignoredWords[j])) {
+                  skip = true;
+                }
+              }
+              for (let j = 0; j < ignoredLinks.length; j++) {
+                if (link.includes(ignoredLinks[j])) {
+                  skip = true;
+                }
+              }
+              if (skip) {
+                continue;
+              }
+              // make sure they aren't weird editor notes
+              if (links[i].outerHTML.includes("<i")) {
+                continue;
+              }
+              // make sure href leads to wikipedia page
+              if (!link.includes("/wiki/")) {
+                continue;
+              }
+              // lastly, make sure item doesn't exist already
+              for (let j = 0; j < filtered.length; j++) {
+                if (text === filtered[j].text) {
+                  skip = true;
+                  break;
+                }
+              }
+              if (skip) {
+                continue;
+              }
+
+              let item = { text: text, href: link };
+              filtered.push(item);
+            }
+            console.log("number of articles: ", filtered.length);
+            return filtered;
+          }
+          let filtered = [];
+          const dom = new JSDOM(body);
+          let all = dom.window.document.querySelectorAll("p");
+          var page = "";
+          for (var entry in all) {
+            page += all[entry].textContent;
+          }
+
+          function count(sentence) {
+            function numerate(a) {
+              var result = "";
+              for (var i in a) {
+                var b = a[i].toLowerCase().charCodeAt(0) - 96;
+                result += b;
+                result += " ";
+              }
+              return result;
+            }
+
+            var list = sentence.split(" ");
+            var words = {};
+            for (var i = 0; i < list.length; i++) {
+              var word = list[i];
+
+              if (words.hasOwnProperty(word)) {
+                var one = words[word].count + 1;
+                words[word] = {
+                  count: one,
+                  word: word,
+                  index: numerate(word)
+                };
+              } else {
+                words[word] = {
+                  count: 1,
+                  word: word,
+                  index: numerate(word)
+                };
+              }
+            }
+            return words;
+          }
+
+          var count = count(page);
+
+          var percentage = count / page.length;
+
+          var values = Object.values(count);
+
+          var sort_by = function(field, reverse, primer) {
+            var key = primer
+              ? function(x) {
+                  return primer(x[field]);
+                }
+              : function(x) {
+                  return x[field];
+                };
+            reverse = !reverse ? 1 : -1;
+            return function(a, b) {
+              return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
+            };
+          };
+          values.sort(sort_by("count", true, parseInt));
+
+          var json = {
+            page: page,
+            count: count,
+            values: values
+          };
+          require("fs").writeFileSync("sun.json", JSON.stringify(json));
+
+          console.log("finished");
+        });
+      }
+    );
+  }
+  //run("Abcdefghijklmnopqrstuvwxyz");
+  //run("Light Dark Faith");
+  function gif(a, b, c) {
+    const GIFEncoder = require("gifencoder");
+    const { createCanvas } = require("canvas");
+    const fs = require("fs");
+
+    const encoder = new GIFEncoder(c, c);
+    // stream the results as they are available into myanimated.gif
+    encoder.createReadStream().pipe(fs.createWriteStream(a + ".gif"));
+
+    encoder.start();
+    encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
+    encoder.setDelay(50); // frame delay in ms
+    encoder.setQuality(3); // image quality. 10 is default.
+
+    // use node-canvas
+    const canvas = createCanvas(c, c);
+    const ctx = canvas.getContext("2d");
+    function getColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, c, c);
+    encoder.addFrame(ctx);
+
+    function encode(amount) {
+      for (var y = 0; y < amount; y++) {
+        for (let i = 0; i < c; i++) {
+          for (let j = 0; j < c; j++) {
+            ctx.fillStyle = getColor();
+            ctx.fillRect(j, i, 1, 1);
+          }
+        }
+        encoder.addFrame(ctx);
+      }
+    }
+    encode(b);
+
+    encoder.finish();
+    console.log("Gif Generator finished");
+  }
+  //gif('sun',30,320);
+  function pixel(image, amount) {
+    for (var y = 0; y < amount; y++) {
+      var image = "public/" + image + y + ".png";
+
+      function imageSize(image) {
+        var sizeOf = require("image-size");
+        var dimensions = sizeOf(image);
+        return { width: dimensions.width, height: dimensions.height };
+      }
+      var size = imageSize(image);
+      var width = size.width;
+      var height = size.height;
+
+      require("get-pixels")(image, function(err, pixels) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        function get_pixels(x, y, pixels) {
+          var out = [];
+          var pointer =
+            pixels.offset + pixels.stride[0] * x + pixels.stride[1] * y;
+          for (var i = 0; i < 4; i++) {
+            out.push(pixels.data[pointer + pixels.stride[2] * i]);
+          }
+          return out;
+        }
+
+        var pixelarray = [];
+        for (var y = 0; y < width; y++) {
+          for (var x = 0; x < height; x++) {
+            var pixel = get_pixels(x, y, pixels);
+            pixelarray.push(pixel);
+          }
+        }
+
+        console.log(pixelarray);
+      });
+    }
+  }
+  //pixel('sun',30);
+  var tweets = require("fs").readFileSync("twitter.json");
+  var url = process.env.PROJECT_DOMAIN + ".gltch.me";
+  function twitter_post($, id) {
+    var Twitter = require("twitter");
+    var client = new Twitter({
+      consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
+      consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
+      access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
+      access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
+    });
+    client.post(
+      "statuses/update",
+      {
+        in_reply_to_status_id: id,
+        status: $
+      },
+      function(err, t, r) {
+        if (!err) {
+          var body = JSON.parse(r.body);
+          var tweets = require("fs").readFileSync("twitter.json");
+
+          require("fs").writeFileSync("twitter.json", tweets);
+          console.log(body.id);
+        }
+      }
+    );
+  }
+  // twitter_post('@Fasturdotcom life oh my bosh',1221183159334776800)
+  function twitter_search($) {
+    var Twitter = require("twitter");
+    var client = new Twitter({
+      consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
+      consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
+      access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
+      access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
+    });
+    client.get(
+      "search/tweets",
+      {
+        q: $
+      },
+      function(err, t, r) {
+        var date = new Date()
+          .toISOString()
+          .replace(/T/, " ")
+          .replace(/\..+/, "");
+
+        var arr = [];
+        for (var y = 0; y < t.statuses.length; y++) {
+          arr.push({
+            name: t.statuses[y].user.screen_name,
+            date: t.statuses[y].created_at,
+            text: t.statuses[y].text,
+            url: t.statuses[y].user.url
+          });
+        }
+        console.log(arr);
+      }
+    );
+  }
+  //twitter_search('jobs')
+  function twitter_gif_post() {
+    var bufferLength,
+      filePath,
+      finished,
+      fs,
+      oauthCredentials,
+      offset,
+      request,
+      segment_index,
+      theBuffer;
+
+    request = require("request");
+    fs = require("fs");
+    filePath = "/thevideo.mp4";
+    bufferLength = 1000000;
+    theBuffer = new Buffer(bufferLength);
+    offset = 0;
+    segment_index = 0;
+    finished = 0;
+    oauthCredentials = {
+      consumer_key: "",
+      consumer_secret: "",
+      token: "",
+      token_secret: ""
+    };
+
+    fs.stat(filePath, function(err, stats) {
+      var formData, normalAppendCallback, options;
+
+      formData = {
+        command: "INIT",
+        media_type: "video/mp4",
+        total_bytes: stats.size
+      };
+      options = {
+        url: "https://upload.twitter.com/1.1/media/upload.json",
+        oauth: oauthCredentials,
+        formData: formData
+      };
+
+      normalAppendCallback = function(media_id) {
+        return function(err, response, body) {
+          finished++;
+          if (finished === segment_index) {
+            options.formData = {
+              command: "FINALIZE",
+              media_id: media_id
+            };
+            request.post(options, function(err, response, body) {
+              console.log("FINALIZED", response.statusCode, body);
+
+              delete options.formData;
+
+              //Note: This is not working as expected yet.
+              options.qs = {
+                command: "STATUS",
+                media_id: media_id
+              };
+              request.get(options, function(err, response, body) {
+                console.log("STATUS: ", response.statusCode, body);
+              });
+            });
+          }
+        };
+      };
+
+      request.post(options, function(err, response, body) {
+        var media_id;
+        media_id = JSON.parse(body).media_id_string;
+
+        fs.open(filePath, "r", function(err, fd) {
+          var bytesRead, data;
+
+          while (offset < stats.size) {
+            bytesRead = fs.readSync(fd, theBuffer, 0, bufferLength, null);
+            data =
+              bytesRead < bufferLength
+                ? theBuffer.slice(0, bytesRead)
+                : theBuffer;
+            options.formData = {
+              command: "APPEND",
+              media_id: media_id,
+              segment_index: segment_index,
+              media_data: data.toString("base64")
+            };
+            request.post(options, normalAppendCallback(media_id));
+            offset += bufferLength;
+            segment_index++;
+          }
+        });
+      });
+    });
+  }
+  //twitter_gif_post("sun.mp4")
+}
+movie("authentic neural network");
+  
 var server = require("http")
   .createServer(function(request, response) { 
     if (request.method == "GET") {
@@ -1974,14 +2421,21 @@ var server = require("http")
         response.writeHead(200, {
           "Content-Type": "js"
         });
-        var data = require("fs").readFileSync("./index2.js");
+        var data = require("fs").readFileSync("./server.js");
+        response.end(data);
+      }
+            if (request.url == "/try") { 
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./try.html");
         response.end(data);
       }
       if (request.url == "/api2") {
         response.writeHead(200, {
           "Content-Type": "js"
         });
-        var data = require("fs").readFileSync("./index2.js", "utf8");
+        var data = require("fs").readFileSync("./server.js", "utf8");
         data = data.split("var server")[0];
         response.end(data);
       }
@@ -1992,6 +2446,30 @@ var server = require("http")
         var data = require("fs").readFileSync("./api/912120bfa38218625d3e8505996f7860.html");
         response.end(data);
       }
+      if (request.url == "/app") {
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./index.html");
+        response.end(data);
+      }
+      if (request.url == "/app1") {
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./index1.html");
+        response.end(data);
+      }
+      if (request.url == "/app2") {
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./api/912120bfa38218625d3e8505996f7860.json");
+        var data = JSON.parse(data);
+        var data = render('false',data)
+        response.end(data);
+      }
+      
       if (request.url == "/logout") {
         response.writeHead(200, {
           "Set-Cookie":
@@ -2004,7 +2482,7 @@ var server = require("http")
             new Date(new Date().getTime() + 86409000).toUTCString()
         });
         var html = require("fs").readFileSync(
-          "/home/ubuntu/api/frames.html",
+          "./api/frames.html",
           "utf8"
         );
         response.end(html);
@@ -2035,7 +2513,7 @@ var server = require("http")
 
         if (typeof id !== "undefined") {
           var elements = require("fs").readFileSync(
-            "/home/ubuntu/api/" + id + ".json"
+            "./api/" + id + ".json"
           );
           var elements = JSON.parse(elements);
         }
@@ -2074,12 +2552,121 @@ var server = require("http")
           }
           if (is_json(string)) {
             var object = JSON.parse(string);
+            console.log(object) 
             switch (object.type) {
-
-              case "show": { 
+              case "commit": {
                 var q = object.query;
-                console.log(object.data)
+                
+                if (object.modifier == "editor") {
+                  var q = object.uin;  
+                  var uid = require("crypto").randomBytes(16).toString("hex");
 
+                  if (process.env.PROJECT_DOMAIN == 'fastur'){
+                    var html = render("false", object.query);   
+                    require("fs").writeFileSync("./" + object.uin + ".html",html);
+                  } else {                                      
+                    if (object.uin.length == 32) {
+                    var i = json.findIndex(function(item, i) {
+                      return item.uid == object.query;
+                    });
+                    var subname = json[i].subname;
+                  	}
+                    subname = object.uin + ".fastur.com"; 
+                  
+                    var string = require("fs").readFileSync("./api/data.json","utf8");
+                    var json = JSON.parse(string);
+                    var i = json.find(function(item) {
+                    return item.active === object.cookie;
+                  	});
+                    var result = json.find(obj => { return obj.subname === subname; });
+                    var results = json.filter(function(entry) { return entry.port; }); 
+                    var port = results[results.length - 1].port + 1;
+                    json.push({
+                      port: port,
+                      subname: subname,
+                      uid: uid, 
+                      publisher: i.email
+                    });
+                    require("fs").writeFileSync("./api/data.json",JSON.stringify(json));
+                  
+                    var nginx_conf = require("fs").readFileSync("./api/nginx","utf8");
+                    nginx_conf = nginx_conf.replace(/ab.fastur.com/g, subname).replace(/7002/g, port);
+                    require("fs").writeFileSync("/etc/nginx/sites-enabled/" + subname.replace(/\./g, ""),nginx_conf);
+                  
+                    var index = require("fs").readFileSync("./index2.js","utf8");
+                    index = index.replace(/7002/g, port).replace(/frames.html/g, uid + ".html");
+                    require("fs").writeFileSync("./api/index" + port + ".js",index);
+                  
+                    var html = render("false", object.query);   
+                    require("fs").writeFileSync("./api/" + uid + ".html",html);
+                    require("fs").writeFileSync("./api/" + uid + ".json",object.query);
+
+                    require("child_process").exec("./restart.sh " + port + " " + subname + " new",(err, stdout, stderr) => { console.log(err, stdout, stderr); });
+                    response.end("success");
+                  } 
+                }  
+                if (object.modifier == "data") {
+                  if (typeof object.query !== "object") {
+                    var data = JSON.parse(object.query);
+                  }
+
+                  require("fs").writeFileSync("./api/912120bfa38218625d3e8505996f7860.json",JSON.stringify(data, null, 4));
+
+                  var html = render("hard", data);
+                  require("fs").writeFileSync("./api/912120bfa38218625d3e8505996f7860.html",html);
+                  require("fs").writeFileSync("./api/frames.html", html );  
+                  
+                  response.end(JSON.stringify({data: "save complete"})
+                  );
+                }
+                if (object.modifier == "server") {
+                  var string = "index2.js"; 
+                  var time = Date.now(); 
+                  var datam = require("fs").readFileSync("./api/history/analytics.json","utf8");
+                  var json = JSON.parse(datam);
+                  json.push({
+                    time: time
+                  });
+                  require("fs").writeFileSync("./api/history/analytics.json",JSON.stringify(json));
+
+                  var data = require("fs").readFileSync("./" + string, "utf8");
+                  data = data.split("var server")[0];
+
+                  var r1 = " var elements =   require('fs').readFileSync('./api/912120bfa38218625d3e8505996f7860.json');  		if (typeof elements !== 'object') { var elements = JSON.parse(elements) }         require('fs').writeFileSync('./api/912120bfa38218625d3e8505996f7860.html', render('false',elements));";
+
+                  require("fs").writeFileSync("./api/render1.js", data + r1);
+
+                  require("child_process").exec("node ./api/render1.js", (err, stdout, stderr) => {
+                      console.log(err, stdout, stderr);
+                    });
+
+                  try {
+                    var re = eval(object.query.replace(".listen(7002)", ""));
+
+                    require("fs").writeFileSync(
+                      "./api/history/index2.js" + time,
+                      object.query
+                    );
+                    require("fs").writeFileSync("./" + string, object.query);
+
+                    var string1 =
+                      "require('http').createServer(function (req, res) { res.write(''); res.end(); }).listen(7000); ";
+
+                    require("child_process").exec(
+                      "./restart.sh restart " + string,
+                      (err, stdout, stderr) => {
+                        console.log(err, stdout, stderr);
+                      }
+                    );
+                  } catch (e) {
+                    if (e instanceof SyntaxError) {
+                      response.end(
+                        JSON.stringify({ type: "error", data: e.message })
+                      );
+                    }
+                  }
+                }
+                
                 var json = require("fs").readFileSync("./api/analytics.json","utf8");
                 try {
                   var json = JSON.parse(json);
@@ -2139,7 +2726,7 @@ var server = require("http")
                         }
                       }
                     }
-                    var data = require("fs").readFileSync("/home/ubuntu/api/data.json", "utf8");
+                    var data = require("fs").readFileSync("./api/data.json", "utf8");
                     var json = JSON.parse(data);   
 
                     var result = JSON.parse(data).find(obj => {
@@ -2155,15 +2742,18 @@ var server = require("http")
                         links: Links,
                         time: Date.now()
                       }); 
-                      require("fs").writeFileSync("/home/ubuntu/api/data.json",JSON.stringify(json));
+                      require("fs").writeFileSync("./api/data.json",JSON.stringify(json));
                     }
 
                     await page.setViewport({
                       width: 800,
                       height: 1000
                     });
+                    var pathd = path.join(__dirname, "/api/" + q.replace(/\W+/g, '-').toLowerCase() + ".png")
+                    console.log(pathd)
+                    
                     await page.screenshot({ 
-                      path: path.join(__dirname, "/api/" + q.replace(/\W+/g, '-').toLowerCase() + ".png")
+                      path: pathd
                     });
                     await browser.close();
                   } catch (error) {
@@ -2172,10 +2762,8 @@ var server = require("http")
                 }
                 puppet("https://google.com","input.gLFyf.gsfi",q,"div#resultStats","links");
  
-                var data = require("fs").readFileSync("/home/ubuntu/api/data.json","utf8");  
-                
-                var q = JSON.parse(data).pop()
-                
+                var data = require("fs").readFileSync("./api/data.json","utf8");  
+                               
                 if (q == "subscription") {
                   function subscription($) {
                     require("stripe")(
@@ -2543,118 +3131,11 @@ var server = require("http")
 
                 break;
               }
-              case "commit": {
-                if (object.modifier == "editor") { 
-                  
-                    if (object.uin.length == 32) {
-                    var i = json.findIndex(function(item, i) {
-                      return item.uid == object.query;
-                    });
-                    var subname = json[i].subname;
-                  	}
-                    subname = object.uin + ".fastur.com"; 
-                  
-                    var string = require("fs").readFileSync("/home/ubuntu/api/data.json","utf8");
-                    var json = JSON.parse(string);
-                    var i = json.find(function(item) {
-                    return item.active === object.cookie;
-                  	});
-                    var result = json.find(obj => { return obj.subname === subname; });
-                    var uid = require("crypto").randomBytes(16).toString("hex");
-                    var results = json.filter(function(entry) { return entry.port; }); 
-                    var port = results[results.length - 1].port + 1;
-                    json.push({
-                      port: port,
-                      subname: subname,
-                      uid: uid, 
-                      publisher: i.email
-                    });
-                    require("fs").writeFileSync("/home/ubuntu/api/data.json",JSON.stringify(json));
-                  
-                    var nginx_conf = require("fs").readFileSync("/home/ubuntu/api/nginx","utf8");
-                    nginx_conf = nginx_conf.replace(/ab.fastur.com/g, subname).replace(/7002/g, port);
-                    require("fs").writeFileSync("/etc/nginx/sites-enabled/" + subname.replace(/\./g, ""),nginx_conf);
-                  
-                    var index = require("fs").readFileSync("/home/ubuntu/index2.js","utf8");
-                    index = index.replace(/7002/g, port).replace(/frames.html/g, uid + ".html");
-                    require("fs").writeFileSync("./api/index" + port + ".js",index);
-                  
-                    var html = render("false", object.query);   
-                    require("fs").writeFileSync("./api/" + uid + ".html",html);
-                    require("fs").writeFileSync("./api/" + uid + ".json",object.query);
-
-                    require("child_process").exec("./restart.sh " + port + " " + subname + " new",(err, stdout, stderr) => { console.log(err, stdout, stderr); });
-                    response.end("success");
-                  
-                }  
-                if (object.modifier == "data") {
-                  if (typeof object.query !== "object") {
-                    var data = JSON.parse(object.query);
-                  }
-
-                  require("fs").writeFileSync("./api/912120bfa38218625d3e8505996f7860.json",JSON.stringify(data, null, 4));
-
-                  var html = render("hard", data);
-                  require("fs").writeFileSync("./api/912120bfa38218625d3e8505996f7860.html",html);
-                  require("fs").writeFileSync("./api/frames.html", html );  
-                  
-                  response.end(JSON.stringify({data: "save complete"})
-                  );
-                }
-                if (object.modifier == "server") {
-                  var string = "index2.js"; 
-                  var time = Date.now(); 
-                  var datam = require("fs").readFileSync("/home/ubuntu/api/history/analytics.json","utf8");
-                  var json = JSON.parse(datam);
-                  json.push({
-                    time: time
-                  });
-                  require("fs").writeFileSync("/home/ubuntu/api/history/analytics.json",JSON.stringify(json));
-
-                  var data = require("fs").readFileSync("./" + string, "utf8");
-                  data = data.split("var server")[0];
-
-                  var r1 = " var elements =   require('fs').readFileSync('/home/ubuntu/api/912120bfa38218625d3e8505996f7860.json');  		if (typeof elements !== 'object') { var elements = JSON.parse(elements) }         require('fs').writeFileSync('./api/912120bfa38218625d3e8505996f7860.html', render('false',elements));";
-
-                  require("fs").writeFileSync("./api/render1.js", data + r1);
-
-                  require("child_process").exec("node ./api/render1.js", (err, stdout, stderr) => {
-                      console.log(err, stdout, stderr);
-                    });
-
-                  try {
-                    var re = eval(object.query.replace(".listen(7002)", ""));
-
-                    require("fs").writeFileSync(
-                      "./api/history/index2.js" + time,
-                      object.query
-                    );
-                    require("fs").writeFileSync("./" + string, object.query);
-
-                    var string1 =
-                      "require('http').createServer(function (req, res) { res.write(''); res.end(); }).listen(7000); ";
-
-                    require("child_process").exec(
-                      "./restart.sh restart " + string,
-                      (err, stdout, stderr) => {
-                        console.log(err, stdout, stderr);
-                      }
-                    );
-                  } catch (e) {
-                    if (e instanceof SyntaxError) {
-                      response.end(
-                        JSON.stringify({ type: "error", data: e.message })
-                      );
-                    }
-                  }
-                }
-                break;
-              }
               case "login": {
                 function login(email, password, uuid) {
                   var salt = {};
                   var data = require("fs").readFileSync(
-                    "/home/ubuntu/api/data.json",
+                    "./api/data.json",
                     "utf8"
                   );
 
@@ -2674,7 +3155,7 @@ var server = require("http")
                       });
                       json[i].active = uuid;
                       require("fs").writeFileSync(
-                        "/home/ubuntu/api/data.json",
+                        "./api/data.json",
                         JSON.stringify(json)
                       );
 
@@ -2722,7 +3203,7 @@ var server = require("http")
                     .update(password)
                     .digest("hex");
                   var data = require("fs").readFileSync(
-                    "/home/ubuntu/api/data.json",
+                    "./api/data.json",
                     "utf8"
                   );
 
@@ -2747,7 +3228,7 @@ var server = require("http")
                       salt: salt
                     });
                     require("fs").writeFileSync(
-                      "/home/ubuntu/api/data.json",
+                      "./api/data.json",
                       JSON.stringify(json)
                     );
                     response.end("success, log in!");
@@ -2765,4 +3246,4 @@ var server = require("http")
       }, 50);
     }
   }) 
-  .listen(7002);  
+  .listen(process.env.PORT || 7002);          
