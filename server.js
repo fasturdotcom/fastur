@@ -2451,7 +2451,7 @@ var server = require("http")
         response.writeHead(200, {
           "Content-Type": "js"
         });
-        var data = require("fs").readFileSync("./index.html");
+        var data = require("fs").readFileSync("./sun.gif");
         response.end(data);
       }
       if (request.url == "/app1") {
