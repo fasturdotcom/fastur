@@ -114,6 +114,18 @@
                 "type": "button",
                 "class": "element",
                 "placeholder": "blog"
+            },
+            {
+                "href": "#docs",
+                "id": "docs-button",
+                "name": "docs",
+                "tag": "a",
+                "hover": "pink",
+                "ishidden": "",
+                "textcolor": "white",
+                "type": "button",
+                "class": "element",
+                "placeholder": "docs"
             }
         ]
     },
@@ -161,9 +173,33 @@
         "type": "page",
         "id": "blog",
         "items": [
-            {
-                "name": "<b>TLDR; add script tag with source: <a href='https://code.fastur.com/api'>code.fastur.com/api</a> call render()  </b><br><br><b>Chapter 1: what is AI?</b> <br>Pixel level control of images <br>capable of self learning and self governing <br><br> <b>Chapter 2: AI Environment </b><br>All software is written in English and binary Code <br>Majority of industry is working on Deep learning <br>Most software developers search for solutions on sites like stackoverflow.com <br> <br><b>Chapter 3: Interpreting AI development </b><br>Google reorganized as alphabet and buys abc.xyz domain - august 2015 <br>Google Vision - feb 2016 <br>Aj releases Carrd - april 2016 <br>Glitch starts 'ask a question' / abstracts over stackoverflow - march 2017 <br>Google releases puppeteer - january 2018 <br>Microsoft buys Github - oct 2018 <br>Bill Gates says he doesn't want his brain to die / would teach computers to read - jun 2019 <br>Facebook ai research announces 2d-3d cycle loss method - oct 2019 <br>Google announces cache project - nov 2019 <br>Larry Page leaves Alphabet - Dec 2019 <br>Connected Home over IP / Homekit - Dec 2019 <br>Amazon announces Braket & Komposer - Dec 2019 <br>Aj announces Data integrations for Carrd - Jan 2020<br><br>Artificial General Intelligence is creating the first group of multi-trillionaires <br> <br><a href='https://www.youtube.com/watch?v=oBklltKXtDE'>Elon Musk & Andrej Karpathy</a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/oBklltKXtDE?t=700' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=Wqb7P3u5ujw'>Elon Musk & Max Hodak </a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/Wqb7P3u5ujw' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://youtu.be/s7O3oCWZgjE?t=225'>Bill Gates</a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/s7O3oCWZgjE?t=225' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=-swj_rj3luE'>Mark Zuckerberg & Abhinav Gupta</a><br><iframe width='280' height='157' src='https://www.youtube.com/embed/-swj_rj3luE' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=SaVsc65iu6E'>Jason Kelly </a><br><iframe width='280' height='157' src='https://www.youtube.com/embed/SaVsc65iu6E' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://youtu.be/_4t12rS6_jo?t=700'>John & Patrick Collison </a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/_4t12rS6_jo?t=700' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe><br> <br>To make a trillion <br> - sell ~33,333,333 cars at $30,000 <br> - sell ~2,000,000,000 devices at $500 <br> - sell ~10,000,000 virtual developers at $100,000 / year   ",
-                "href": "",
+            {  "name": "<b>TLDR; add script tag with source: <a href='https://code.fastur.com/api'>code.fastur.com/api</a> call render()  </b><br><br><b>Chapter 1: what is AI?</b> <br>Pixel level control of images <br>capable of self learning and self governing <br><br> <b>Chapter 2: AI Environment </b><br>All software is written in English and binary Code <br>Majority of industry is working on Deep learning <br>Most software developers search for solutions on sites like stackoverflow.com <br> <br><b>Chapter 3: Interpreting AI development </b><br>Google reorganized as alphabet and buys abc.xyz domain - august 2015 <br>Google Vision - feb 2016 <br>Aj releases Carrd - april 2016 <br>Glitch starts 'ask a question' / abstracts over stackoverflow - march 2017 <br>Google releases puppeteer - january 2018 <br>Microsoft buys Github - oct 2018 <br>Bill Gates says he doesn't want his brain to die / would teach computers to read - jun 2019 <br>Facebook ai research announces 2d-3d cycle loss method - oct 2019 <br>Google announces cache project - nov 2019 <br>Larry Page leaves Alphabet - Dec 2019 <br>Connected Home over IP / Homekit - Dec 2019 <br>Amazon announces Braket & Komposer - Dec 2019 <br>Aj announces Data integrations for Carrd - Jan 2020<br><br>Artificial General Intelligence is creating the first group of multi-trillionaires <br> <br><a href='https://www.youtube.com/watch?v=oBklltKXtDE'>Elon Musk & Andrej Karpathy</a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/oBklltKXtDE?t=700' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=Wqb7P3u5ujw'>Elon Musk & Max Hodak </a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/Wqb7P3u5ujw' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://youtu.be/s7O3oCWZgjE?t=225'>Bill Gates</a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/s7O3oCWZgjE?t=225' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=-swj_rj3luE'>Mark Zuckerberg & Abhinav Gupta</a><br><iframe width='280' height='157' src='https://www.youtube.com/embed/-swj_rj3luE' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://www.youtube.com/watch?v=SaVsc65iu6E'>Jason Kelly </a><br><iframe width='280' height='157' src='https://www.youtube.com/embed/SaVsc65iu6E' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe> <br><a href='https://youtu.be/_4t12rS6_jo?t=700'>John & Patrick Collison </a> <br><iframe width='280' height='157' src='https://www.youtube.com/embed/_4t12rS6_jo?t=700' frameborder='0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe><br> <br>To make a trillion <br> - sell ~33,333,333 cars at $30,000 <br> - sell ~2,000,000,000 devices at $500 <br> - sell ~10,000,000 virtual developers at $100,000 / year<br>",
+                "href": "",  
+                "class": "subtext",
+                "id": "",
+                "tag": "p",
+                "type": "text"
+            }
+        ]
+    },
+    {
+        "tag": "div",
+        "secondarytag": "div",
+        "element": "element",
+        "name": "docs",
+        "display": "none",
+        "animation": "inner active",
+        "container": "container",
+        "caps": "true",
+        "href": "#docs",
+        "color": "white",
+        "padding": "1em",
+        "align": "center",
+        "type": "page",
+        "id": "docs",
+        "items": [
+            {  "name": "<b>Photon computer</b><br><br>pipe ytcutter.com<br> code time travel<br> Black, Ultraviolet, red, orange, yellow, white<br> uform voice to text, host video, audio, podcasts, stripe parse strings<br> Publish to custom domains<br> camera in builder/canvas<br> Client Side screenshot<br> Google fonts, Offline push notifications<br> Math audio for voice + music<br> <br><br> Control ultra-dark and create life <br> Auxal spacecraft motion logic<br> 23000 ATGC 98% is where/when/intensity<br> Duplex diode warm images that incite song<br> E=mc2 Genetics of optic neuron mitochondria yeast lammergeier fish aging  ",
+                "href": "",  
                 "class": "subtext",
                 "id": "",
                 "tag": "p",
@@ -366,17 +402,18 @@
                 "value": "home",
                 "class": "element",
                 "css": ""
-            },
+            }, 
             {
                 "name": "Theme 1",
-                "href": "https://code.fastur.com/edit?912120bfa38218625d3e8505996f7860",
+                "href": "/edit?00000000000000000000000000000001",
                 "class": "item right",
                 "width": "50%",
                 "src": "assets/code.fastur.com.png",
                 "id": "New-Site",
                 "type": "button",
                 "tag": "a"
-            }
+            }            
+
         ]
     },
     {
