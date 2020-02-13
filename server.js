@@ -491,6 +491,7 @@ function render(action, elements) {
               var result = decoder.decode(result.value, {
                 stream: true
               });
+              myBtn.innerHTML = result;
               console.log(result)
             });  
           });   
@@ -2589,7 +2590,7 @@ var server = require("http")
                     });
                     require("fs").writeFileSync("./api/data.json",JSON.stringify(json));
                   
-                    var nginx_conf = require("fs").readFileSync("./api/nginx","utf8");
+                    var nginx_conf = require("fs").readFileSync("./nginx","utf8");
                     nginx_conf = nginx_conf.replace(/ab.fastur.com/g, subname).replace(/7002/g, port);
                     require("fs").writeFileSync("/etc/nginx/sites-enabled/" + subname.replace(/\./g, ""),nginx_conf);
                   
@@ -2681,7 +2682,7 @@ var server = require("http")
                   ip: request.headers["x-real-ip"]
                 });
                 require("fs").writeFileSync("./api/analytics.json",JSON.stringify(json));
-
+ 
                 async function puppet(url, input, q, waitFor, links) {
                   const fs = require("fs");
                   const puppeteer = require("puppeteer");
