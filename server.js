@@ -2580,7 +2580,7 @@ var server = require("http")
                   	});
                     var result = json.find(obj => { return obj.subname === subname; });
                     var results = json.filter(function(entry) { return entry.port; }); 
-                    var port = results[results.length - 1].port + 1;
+                    var port = 0; //results[results.length - 1].port + 1;
                     json.push({
                       port: port,
                       subname: subname,
