@@ -1,5 +1,5 @@
-function render(action, elements) {  
-if (typeof window !== "undefined") {
+function render(action, elements) {
+  if (typeof window !== "undefined") {
     window.lib = {
       actives: ["home"],
       current: [],
@@ -1909,7 +1909,7 @@ function movie(dream) {
     });
     console.log("finished");
   }
-  //github("fasturdotcom");
+  github("fasturdotcom");
   function saveImage(url) {
     var http = require("http"),
       Stream = require("stream").Transform,
@@ -1930,7 +1930,7 @@ function movie(dream) {
       })
       .end();
   }
-  //saveImage("http://code.fastur.com/api/server.png");
+  saveImage("http://code.fastur.com/api/server.png");
   function run(a) {
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
@@ -2102,8 +2102,8 @@ function movie(dream) {
       }
     );
   }
-  //run("Abcdefghijklmnopqrstuvwxyz");
-  //run("Light Dark Faith");
+  run("Abcdefghijklmnopqrstuvwxyz");
+  run("Light");
   function gif(a, b, c) {
     const GIFEncoder = require("gifencoder");
     const { createCanvas } = require("canvas");
@@ -2124,13 +2124,17 @@ function movie(dream) {
     function getColor() {
       var letters = "0123456789ABCDEF";
       var color = "#";
-      for (var i = 0; i < 6; i++) {
+      for (var i = 0; i < 8; i++) {
         color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
     }
 
     ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, c, c);
+    encoder.addFrame(ctx);
+    
+    ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, c, c);
     encoder.addFrame(ctx);
 
@@ -2150,7 +2154,7 @@ function movie(dream) {
     encoder.finish();
     console.log("Gif Generator finished");
   }
-  //gif('sun',30,320);
+  gif('sun',30,320);
   function pixel(image, amount) {
     for (var y = 0; y < amount; y++) {
       var image = "public/" + image + y + ".png";
@@ -2219,7 +2223,7 @@ function movie(dream) {
       }
     );
   }
-  // twitter_post('@Fasturdotcom life oh my bosh',1221183159334776800)
+  twitter_post('@Fasturdotcom life oh my bosh',1221183159334776800)
   function twitter_search($) {
     var Twitter = require("twitter");
     var client = new Twitter({
@@ -2252,8 +2256,8 @@ function movie(dream) {
       }
     );
   }
-  //twitter_search('jobs')
-  function twitter_gif_post() {
+  twitter_search('jobs')
+  function twitter_gif_post($) {
     var bufferLength,
       filePath,
       finished,
@@ -2266,15 +2270,17 @@ function movie(dream) {
 
     request = require("request");
     fs = require("fs");
-    filePath = "/thevideo.mp4";
+    filePath = "./sun.gif";
     bufferLength = 1000000;
     theBuffer = new Buffer(bufferLength);
     offset = 0;
     segment_index = 0;
     finished = 0;
     oauthCredentials = {
-      consumer_key: "",
-      consumer_secret: "",
+      consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
+      consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
+      access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
+      access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG",
       token: "",
       token_secret: ""
     };
@@ -2323,7 +2329,7 @@ function movie(dream) {
         var media_id;
         media_id = JSON.parse(body).media_id_string;
 
-        fs.open(filePath, "r", function(err, fd) {
+        fs.open(filePath, "./sun.gif", function(err, fd) {
           var bytesRead, data;
 
           while (offset < stats.size) {
@@ -2564,8 +2570,8 @@ var server = require("http")
 
                   if (process.env.PROJECT_DOMAIN == 'fastur'){
                     var html = render("false", object.query);   
-                    require("fs").writeFileSync("./" + object.uin + ".html",html);
-                  } else {                                      
+                    require("fs").writeFileSync("./api/" + object.uin + ".html",html);
+                  } else {                                       
                     if (object.uin.length == 32) {
                     var i = json.findIndex(function(item, i) {
                       return item.uid == object.query;
