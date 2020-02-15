@@ -461,7 +461,7 @@
             {
                 "href": "#",
                 "id": "myBtn",
-                "name": "Go",
+                "name": "Good",
                 "onclick": " lib.subscribe(100)",
                 "tag": "a",
                 "class": "element",
