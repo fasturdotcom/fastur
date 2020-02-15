@@ -1,6 +1,5 @@
-function render(action, elements) {
-
-  if (typeof window !== "undefined") {
+function render(action, elements) {  
+if (typeof window !== "undefined") {
     window.lib = {
       actives: ["home"],
       current: [],
