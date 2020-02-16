@@ -1902,10 +1902,9 @@ function movie(dream) {
   var q = "19 21 2 18 15 21 20 9 14 5";
 
   function github(url) {
-    var gs = require("github-scraper"); // require the module
-    //var url = 'alanshaw' // a random username (of someone you should follow!)
+    var gs = require("github-scraper"); 
     gs(url, function(err, data) {
-      console.log(data); // or what ever you want to do with the data
+      console.log(data);
     });
     console.log("finished");
   }
@@ -1922,7 +1921,7 @@ function movie(dream) {
         response.on("data", function(chunk) {
           data.push(chunk);
         });
-
+ 
         response.on("end", function() {
           fs.writeFileSync("sun.png", data.read());
           console.log("finished image download");
@@ -2139,15 +2138,19 @@ function movie(dream) {
     encoder.addFrame(ctx);
 
     function encode(amount) {
+      var gifdata = [];
       for (var y = 0; y < amount; y++) {
         for (let i = 0; i < c; i++) {
           for (let j = 0; j < c; j++) {
-            ctx.fillStyle = getColor();
+            var color = getColor()
+            gifdata.push(color)
+            ctx.fillStyle = color;
             ctx.fillRect(j, i, 1, 1);
           }
         }
         encoder.addFrame(ctx);
       }
+      fs.writeFileSync("./gifdata",JSON.stringify(gifdata))
     }
     encode(b);
 
@@ -2689,7 +2692,7 @@ var server = require("http")
                 });
                 require("fs").writeFileSync("./api/analytics.json",JSON.stringify(json));
  
-                async function puppet(url, input, q, waitFor, links) {
+                async function puppet(url, input, q, press, waitFor, links) {
                   const fs = require("fs");
                   const puppeteer = require("puppeteer");
                   const path = require("path");
@@ -2701,7 +2704,7 @@ var server = require("http")
                     await page.goto(url);
                     await page.type(input, q);
 
-                    page.keyboard.press("Enter");
+                    page.keyboard.press(press);
                     await page.waitForSelector(waitFor);
 
                     function getText(linkText) {
@@ -2767,8 +2770,9 @@ var server = require("http")
                     console.log(error);
                   }
                 }
-                puppet("https://google.com","input.gLFyf.gsfi",q,"div#resultStats","links");
- 
+               puppet("https://google.com","input.gLFyf.gsfi",q,"Enter","div#resultStats","links");
+                //https://remote.co/remote-jobs/developer/
+                
                 var data = require("fs").readFileSync("./api/data.json","utf8");  
                                
                 if (q == "subscription") {
