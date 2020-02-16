@@ -1900,13 +1900,94 @@ a > svg {
 
 function movie(dream) {
   var q = "19 21 2 18 15 21 20 9 14 5";
+  
+  async function puppet(url, input, q, press, waitFor, links) {
+                  const fs = require("fs");
+                  const puppeteer = require("puppeteer");
+                  const path = require("path");
+                  try {
+                    const browser = await puppeteer.launch({
+                      args: ["--no-sandbox"]
+                    });
+                    const page = await browser.newPage();
+                    await page.goto(url);
+                    await page.mouse.click(100, 500, { delay: 500 });
+                    await page.type(input, q);
+
+                    page.keyboard.press(press);
+                    await page.waitForSelector(waitFor);
+
+                    function getText(linkText) {
+                      linkText = linkText.replace(/\r\n|\r/g, "\n");
+                      linkText = linkText.replace(/\ +/g, " ");
+
+                      // Replace &nbsp; with a space
+                      var nbspPattern = new RegExp(
+                        String.fromCharCode(160),
+                        "g"
+                      );
+                      return linkText.replace(nbspPattern, " ");
+                    }
+
+                    var Links = [];
+                    if (links) {
+                      const links = await page.$$("div.r");
+                      for (var i = 0; i < links.length; i++) {
+                        let valueHandle = await links[i].getProperty(
+                          "innerText"
+                        );
+                        let linkText = await valueHandle.jsonValue();
+                        const text = getText(linkText);
+                        console.log(linkText);
+                        Links.push(linkText);
+                        if (q == text) {
+                          console.log("Found " + text);
+                          await links[i].click();
+                        }
+                      }
+                    }
+                    var data = require("fs").readFileSync("./api/data.json", "utf8");
+                    var json = JSON.parse(data);   
+
+                    var result = JSON.parse(data).find(obj => {
+                      return obj.query === q;
+                    });
+
+                    if (result) {
+                      console.log(result);
+                    } else {
+                      json.push({
+                        query: q,  
+                        screenshot: 'https://code.fastur.com/'+q.replace(/\W+/g, '-').toLowerCase()+'.png',
+                        links: Links,
+                        time: Date.now()
+                      }); 
+                      require("fs").writeFileSync("./api/data.json",JSON.stringify(json));
+                    }
+
+                    await page.setViewport({
+                      width: 800,
+                      height: 1000
+                    });
+                    var pathd = path.join(__dirname, "/api/" + q.replace(/\W+/g, '-').toLowerCase() + ".png")
+                    console.log(pathd)
+                    
+                    await page.screenshot({ 
+                      path: pathd
+                    });
+                    await browser.close();
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }
+  puppet("https://ytcutter.com","input","c","Enter","div","links")       
 
   function github(url) {
     var gs = require("github-scraper"); 
     gs(url, function(err, data) {
       console.log(data);
     });
-    console.log("finished");
+    console.log("finished"); 
   }
   github("fasturdotcom");
   function saveImage(url) {
@@ -2357,7 +2438,8 @@ function movie(dream) {
   }
   //twitter_gif_post("sun.mp4")
 }
-movie("authentic neural network");
+//movie("authentic neural network");
+movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M")
   
 var server = require("http")
   .createServer(function(request, response) { 
