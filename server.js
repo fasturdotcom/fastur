@@ -2439,7 +2439,7 @@ function movie(dream) {
   //twitter_gif_post("sun.mp4")
 }
 //movie("authentic neural network");
-movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M")
+//movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M")
   
 var server = require("http")
   .createServer(function(request, response) { 
@@ -2473,6 +2473,14 @@ var server = require("http")
       if (request.url == "/favicon.ico") {
         response.end("");
       }
+      if (request.url == "/script.js") { 
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./api/server.js");
+        response.end(data);
+      }
+      
       if (request.url == "/api/codemirror.css") {
         response.writeHead(200, {
           "Content-Type": "css"
