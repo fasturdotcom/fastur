@@ -2441,7 +2441,7 @@ function movie(dream) {
 //movie("authentic neural network");
 movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M")
   
-var server = require("http")
+   var server = require("http")
   .createServer(function(request, response) { 
     if (request.method == "GET") {
       var json = require("fs").readFileSync("./api/analytics.json", "utf8");
@@ -2480,78 +2480,10 @@ var server = require("http")
         var data = require("fs").readFileSync("./api/codemirror.css");
         response.end(data);
       }
-      if (request.url == "/api/codemirror.js") {
-        var data = require("fs").readFileSync("./api/codemirror.js");
-        response.end(data);
-      }
-
-      if (request.url == "/code") {
-        if (cookies.fastur) {
-        } else {
-          response.writeHead(200, {
-            "Content-Type": "text/html",
-            "Set-Cookie":
-              "fastur=" +
-              require("crypto")
-                .randomBytes(16)
-                .toString("hex")
-          });
-        }
-        var data = require("fs").readFileSync("./api/index.html");
-        response.end(data);
-      }
-      if (request.url == "/data") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync(
-          "./api/912120bfa38218625d3e8505996f7860.json"
-        );
-        response.end(data);
-      }
-      if (request.url == "/api") { 
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./server.js");
-        response.end(data);
-      }
-            if (request.url == "/try") { 
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./try.html");
-        response.end(data);
-      }
-      if (request.url == "/api2") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./server.js", "utf8");
-        data = data.split("var server")[0];
-        response.end(data);
-      }
-      if (request.url == "/frames.html") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./api/912120bfa38218625d3e8505996f7860.html");
-        response.end(data);
-      }
-      if (request.url == "/app") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./sun.gif");
-        response.end(data);
-      }
-      if (request.url == "/app1") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./index1.html");
-        response.end(data);
-      }
+       
+      
+      
+       
       if (request.url == "/app2") {
         response.writeHead(200, {
           "Content-Type": "js"
@@ -2645,7 +2577,7 @@ var server = require("http")
           if (is_json(string)) {
             var object = JSON.parse(string);
             console.log(object) 
-            switch (object.type) {
+          switch (object.type) {
               case "commit": {
                 var q = object.query;
                 
