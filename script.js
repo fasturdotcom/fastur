@@ -6,6 +6,8 @@ If you're feeling fancy you can add interactivity
 
 var url =
   "https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1";
+var url = "https://aisafetyceo.glitch.me/app2";
+
 fetch(url)
   .then(function(res) {
     return res.text();
@@ -79,8 +81,8 @@ fetch(url)
     
     
       if (x == cvHeight) {
-        
-        alert(cvHeight)
+        y = 0;
+        //alert(cvHeight)
       
       }
     }
