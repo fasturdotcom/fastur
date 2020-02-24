@@ -2,85 +2,94 @@
 <html lang="en">
   <head>
     <title>Hello!</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    
+    <link rel="stylesheet" href="/style.css" />
+
     <!-- import the webpage's javascript file -->
     <script src="/script.js" defer></script>
-  </head>  
+  </head>
   <body>
-    <a href="https://glitch.com/edit/#!/remix/aiprofitceo"><img src="https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg" alt="Remix on Glitch" /></a>
+    <a href="https://glitch.com/edit/#!/remix/aiprofitceo"
+      ><img
+        src="https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg"
+        alt="Remix on Glitch"
+    /></a>
     <h1>Hi there!</h1>
-    
+
     <p>
-      I'm your new site. 
-      Property of <a href="https://en.m.wikipedia.org/wiki/Law">Fastur Incorporated</a>!
-      <a href="https://aisafetyceo.glitch.me/app2">Lead list</a>
+      I'm your new site. Property of
+      <a href="https://en.m.wikipedia.org/wiki/Law">Fastur Incorporated</a>!
     </p>
     <div id="page"></div>
     <canvas id="cv" width="320" height="320"></canvas>
-    
-    <video style="display:none" id="video" width="320" height="320" autoplay></video>
-<button style="display:none" id="snap">Snap Photo</button>
-    
-<canvas style="padding:10px" id="canvas" width="320" height="320"></canvas>
-  
+
+    <video
+      style="display:none"
+      id="video"
+      width="320"
+      height="320"
+      autoplay
+    ></video>
+    <button style="display:none" id="snap">Snap Photo</button>
+
+    <canvas style="padding:10px" id="canvas" width="320" height="320"></canvas>
+
     <div>
-		
-		<!-- Redirect to the desired URL e.g. https://yourwebsite.com OR section #scroll_here -->
-		
-		<a class="carrd_bttn" href="https://try.carrd.co/gift">
-			
-			<!--  If you want to attach the image/SVG file on the left side of the button, provide the URL to its location  -->
-			
-			<img class="carrd_bttn_img" src="https://image.crd.co/assets/images/image01.svg?v20745735302851" alt="carrd_bttn_img">
-			
-				<!--  Change text of the button  -->
-			
-			<div class="carrd_bttn_text">Try Carrd</div>
-		</a>
-	</div>
+      <!-- Redirect to the desired URL e.g. https://yourwebsite.com OR section #scroll_here -->
 
-	<style>
+      <a class="carrd_bttn" href="https://try.carrd.co/gift">
+        <!--  If you want to attach the image/SVG file on the left side of the button, provide the URL to its location  -->
 
-		.carrd_bttn {
-			position: fixed;
+        <img
+          class="carrd_bttn_img"
+          src="https://image.crd.co/assets/images/image01.svg?v20745735302851"
+          alt="carrd_bttn_img"
+        />
 
-			/* change color of the button */
-			background-color:#70788F;
-			z-index: 1;
+        <!--  Change text of the button  -->
 
-			/* change position of the button, e.g. set top:0 to bottom:0 OR from top:0 to top:50%  */
-			right: 0;
-			top: 0;
+        <div class="carrd_bttn_text">Try Carrd</div>
+      </a>
+    </div>
 
-			/* depending on the location of the button, you have to adjust the border-radius of the button */
-			border-bottom-right-radius: 0rem;
-			border-bottom-left-radius: .5rem;
-			padding: .8rem 1rem .8rem 1rem;
-			display: flex;
-			align-items: center;
-			text-decoration: none;
-		}
+    <style>
+      .carrd_bttn {
+        position: fixed;
 
-		.carrd_bttn_img {
-			width: 1.125rem;
-			height: auto;
-			margin-right: 0.525rem;
-		}
+        /* change color of the button */
+        background-color: #70788F;
+        z-index: 1;
 
-		.carrd_bttn_text {
-			font-family: "Arial";
-			font-size: .9rem;
-			color: #fff;
-			letter-spacing:0.010rem;
-		}
+        /* change position of the button, e.g. set top:0 to bottom:0 OR from top:0 to top:50%  */
+        right: 0;
+        top: 0;
 
-	</style>
+        /* depending on the location of the button, you have to adjust the border-radius of the button */
+        border-bottom-right-radius: 0rem;
+        border-bottom-left-radius: 0.5rem;
+        padding: 0.8rem 1rem 0.8rem 1rem;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+
+      .carrd_bttn_img {
+        width: 1.125rem;
+        height: auto;
+        margin-right: 0.525rem;
+      }
+
+      .carrd_bttn_text {
+        font-family: "Arial";
+        font-size: 0.9rem;
+        color: #fff;
+        letter-spacing: 0.01rem;
+      }
+    </style>
     <script src="https://checkout.stripe.com/checkout.js"></script>
   </body>
 </html>

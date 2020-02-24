@@ -27,6 +27,35 @@ fetch(url)
     var cvHeight = cv.height;
     var x = 0;
     var y = 0;
+    var shape = 1;
+  
+    // make an array to hold our old pixel values
+var previous_frame = [];
+// choose a brightness threshold, if the old pixel values differs enough then we know there's movement
+var threshold = 50; 
+// sample the colour every 50 pixels
+var sample_size = 50;
+  
+   var data = ctx.getImageData(0, 0, w, h).data;
+  ctx.background(0);
+  
+  for (var y = 0; y < h; y+= sample_size) {
+    
+     for (var x = 0; x < w; x+= sample_size) {    
+       var pos = (x + y * w) * 4;
+        
+       var r = data[pos];
+      var g = data[pos+1];
+      var b = data[pos+2];
+  
+       if(previous_frame[pos] 
+          && Math.abs(previous_frame[pos] - r) > threshold) {
+                      ctx.fillStyle = rgb(r, g, b);
+         ctx.fillRect(x, y, sample_size,sample_size); 
+       
+         previous_frame[pos] = r;    }
+  
+  }}
     // animation : always running loop.
     function animate() {
       // call again next time we can draw
@@ -34,8 +63,8 @@ fetch(url)
       // clear canvas
       ctx.clearRect(0, 0, cvWidth, cvHeight);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
- x = x + 1;
- y = y + 1;
+      //x = x + 1;
+      y = y + 1;
       // draw everything
       function getColor() {
         var letters = "0123456789ABCDEF";
@@ -46,21 +75,21 @@ fetch(url)
         return color;
       }
 
-      function screen(x,y,h,w,c){
-      for (let i = 0; i < c; i++) {
-        for (let j = 0; j < c; j++) {
-          ctx.fillStyle = getColor();
-          ctx.fillRect(x+j, y+ i, h, w);
+      function screen(x, y, h, w, c) {
+        for (let i = 0; i < c; i++) {
+          for (let j = 0; j < c; j++) {
+            ctx.fillStyle = getColor();
+            ctx.fillRect(x + j, y + i, shape, shape);
+          }
         }
       }
-      }
-      
-      var pix = ctx.getImageData(x,y,1,1);
+
+      var pix = ctx.getImageData(x, y, 1, 1);
       pix = pix.data;
-      
-      screen(0,y,16,16,8)
-      screen(cvWidth - 24,y,16,16,8)
-    
+
+      screen(x, y, shape, shape, 8);
+      screen(cvWidth - 24, y, shape, shape, 8);
+
       var n;
       for (var i = 0; (n = pix.length), i < n; i += 4) {
         var red = pix[i];
@@ -78,12 +107,11 @@ fetch(url)
       var ts = new Date();
       var t = ts.toGMTString();
       ctx.fillText(color + " click to buy  " + t + "   " + Date.now(), 10, 10);
-    
-    
-      if (x == cvHeight) {
+
+      if (y == cvHeight) {
         y = 0;
-        //alert(cvHeight)
-      
+        x = x + shape;
+        //alert(shape)
       }
     }
 
