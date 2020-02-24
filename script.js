@@ -6,6 +6,8 @@ If you're feeling fancy you can add interactivity
 
 var url =
   "https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1";
+var url = "https://aisafetyceo.glitch.me/app2";
+
 fetch(url)
   .then(function(res) {
     return res.text();
@@ -25,6 +27,35 @@ fetch(url)
     var cvHeight = cv.height;
     var x = 0;
     var y = 0;
+    var shape = 1;
+  
+    // make an array to hold our old pixel values
+var previous_frame = [];
+// choose a brightness threshold, if the old pixel values differs enough then we know there's movement
+var threshold = 50; 
+// sample the colour every 50 pixels
+var sample_size = 50;
+  
+   var data = ctx.getImageData(0, 0, w, h).data;
+  ctx.background(0);
+  
+  for (var y = 0; y < h; y+= sample_size) {
+    
+     for (var x = 0; x < w; x+= sample_size) {    
+       var pos = (x + y * w) * 4;
+        
+       var r = data[pos];
+      var g = data[pos+1];
+      var b = data[pos+2];
+  
+       if(previous_frame[pos] 
+          && Math.abs(previous_frame[pos] - r) > threshold) {
+                      ctx.fillStyle = rgb(r, g, b);
+         ctx.fillRect(x, y, sample_size,sample_size); 
+       
+         previous_frame[pos] = r;    }
+  
+  }}
     // animation : always running loop.
     function animate() {
       // call again next time we can draw
@@ -32,8 +63,8 @@ fetch(url)
       // clear canvas
       ctx.clearRect(0, 0, cvWidth, cvHeight);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
- x = x + 1;
- y = y + 1;
+      //x = x + 1;
+      y = y + 1;
       // draw everything
       function getColor() {
         var letters = "0123456789ABCDEF";
@@ -44,21 +75,21 @@ fetch(url)
         return color;
       }
 
-      function screen(x,y,h,w,c){
-      for (let i = 0; i < c; i++) {
-        for (let j = 0; j < c; j++) {
-          ctx.fillStyle = getColor();
-          ctx.fillRect(x+j, y+ i, h, w);
+      function screen(x, y, h, w, c) {
+        for (let i = 0; i < c; i++) {
+          for (let j = 0; j < c; j++) {
+            ctx.fillStyle = getColor();
+            ctx.fillRect(x + j, y + i, shape, shape);
+          }
         }
       }
-      }
-      
-      var pix = ctx.getImageData(x,y,1,1);
+
+      var pix = ctx.getImageData(x, y, 1, 1);
       pix = pix.data;
-      
-      screen(0,y,16,16,8)
-      screen(cvWidth - 12,y,16,16,8)
-    
+
+      screen(x, y, shape, shape, 8);
+      screen(cvWidth - 24, y, shape, shape, 8);
+
       var n;
       for (var i = 0; (n = pix.length), i < n; i += 4) {
         var red = pix[i];
@@ -76,12 +107,11 @@ fetch(url)
       var ts = new Date();
       var t = ts.toGMTString();
       ctx.fillText(color + " click to buy  " + t + "   " + Date.now(), 10, 10);
-    
-    
-      if (x == cvHeight) {
-        
-        alert(cvHeight)
-      
+
+      if (y == cvHeight) {
+        y = 0;
+        x = x + shape;
+        //alert(shape)
       }
     }
 
@@ -163,44 +193,3 @@ window.lib = {
   }
 };
 //lib.subscribe(1000)
-​// client-side js, loaded by index.html
-// run by the browser each time the page is loaded
-
-console.log("hello world :o");
-
-// define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
-
-// a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
-  const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
-}
-
-// fetch the initial list of dreams
-fetch("/dreams")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
-    // remove the loading text
-    dreamsList.firstElementChild.remove();
-  
-    // iterate through every dream and add it to our page
-    dreams.forEach(appendNewDream);
-  
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
-
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
-
-      // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
-    });
-  });
