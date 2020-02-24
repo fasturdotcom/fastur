@@ -27,35 +27,23 @@ fetch(url)
     var cvHeight = cv.height;
     var x = 0;
     var y = 0;
+    var h = 1;
+    var w = 1;
     var shape = 1;
+     
+  var old = [];
+  var scalefactor = 4;
+  function setup(){
+   video.width = w/scalefactor;
+   video.height = h/scalefactor;
+  }
   
     // make an array to hold our old pixel values
-var previous_frame = [];
-// choose a brightness threshold, if the old pixel values differs enough then we know there's movement
-var threshold = 50; 
-// sample the colour every 50 pixels
-var sample_size = 50;
-  
-   var data = ctx.getImageData(0, 0, w, h).data;
-  ctx.background(0);
-  
-  for (var y = 0; y < h; y+= sample_size) {
-    
-     for (var x = 0; x < w; x+= sample_size) {    
-       var pos = (x + y * w) * 4;
-        
-       var r = data[pos];
-      var g = data[pos+1];
-      var b = data[pos+2];
-  
-       if(previous_frame[pos] 
-          && Math.abs(previous_frame[pos] - r) > threshold) {
-                      ctx.fillStyle = rgb(r, g, b);
-         ctx.fillRect(x, y, sample_size,sample_size); 
-       
-         previous_frame[pos] = r;    }
-  
-  }}
+    var previous_frame = [];
+    // choose a brightness threshold, if the old pixel values differs enough then we know there's movement
+    var threshold = 50;
+    // sample the colour every 50 pixels
+    var sample_size = 50;
     // animation : always running loop.
     function animate() {
       // call again next time we can draw
@@ -63,6 +51,7 @@ var sample_size = 50;
       // clear canvas
       ctx.clearRect(0, 0, cvWidth, cvHeight);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
+
       //x = x + 1;
       y = y + 1;
       // draw everything
@@ -116,6 +105,57 @@ var sample_size = 50;
     }
 
     animate();
+
+    function rgb(red,green,blue){
+      var rgb = blue | (green << 8) | (red << 16);
+        return "#" + (0x1000000 + rgb).toString(16).slice(1);
+   
+    }
+    function motionDetection() {
+      var motion = []; // draw the video and get its pixels
+      ctx.drawImage(video, 0, 0, video.width, video.height);
+      var data = ctx.getImageData(0, 0, video.width, video.height).data; // we can now loop over all the pixels of the video
+      for (var y = 0; y < video.height; y++) {
+        for (var x = 0; x < video.width; x++) {
+          var pos = (x + y * video.width) * 4;
+          var r = data[pos];
+          var g = data[pos + 1];
+          var b = data[pos + 2];
+          if (old[pos] && Math.abs(old[pos].red - r) > threshold) {
+            ctx.fillStyle = rgb(r, g, b);
+            ctx.fillRect(
+              x * scalefactor,
+              y * scalefactor,
+              scalefactor,
+              scalefactor
+            );
+            // push the x, y and rgb values into the motion array
+            // but multiply the x and y values bck up by scalefactor
+            // to get their actual screen position
+            motion.push({
+              x: x * scalefactor,
+              y: y * scalefactor,
+              r: r,
+              g: g,
+              b: b
+            });
+          }
+          old[pos] = { red: r, green: g, blue: b };
+        }
+      }
+
+      return motion;
+    }
+
+    function draw() {
+      ctx.background(250);
+      var motion = motionDetection();
+      for (var i = 0; i < motion.length; i++) {
+        var m = motion[i];
+        ctx.fillStyle = rgb(m.r, m.g, m.b);
+        ctx.fillEllipse(m.x, m.y, sample_size, sample_size);
+      }
+    }
 
     // click handler to add random rects
     window.addEventListener("click", function() {
