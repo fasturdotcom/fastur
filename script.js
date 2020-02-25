@@ -1,11 +1,6 @@
-/*
+/*study form 4 law
+shopify to fastur plugin*/
 
-shopify to fastur plugin
-If you're feeling fancy you can add interactivity 
-    to your site with Javascript */
-
-var url =
-  "https://baconipsum.com/api/?type=all-meat&sentences=1&start-with-lorem=1";
 var url = "https://aisafetyceo.glitch.me/app2";
 
 fetch(url)
@@ -17,54 +12,27 @@ fetch(url)
     doc.innerHTML = html;
     doc.style.background = "red";
 
-    var page = document.getElementById("page");
-    page.appendChild(doc);
+    document.getElementById("page").appendChild(doc);
 
     var video = document.getElementById("video");
     var cv = document.getElementById("cv");
     var ctx = cv.getContext("2d");
     var cvWidth = cv.width;
     var cvHeight = cv.height;
-    var x = 0;
-    var y = 0;
+    var x = 1;
+    var y = 1;
+    var h = 1;
+    var w = 1;
     var shape = 1;
-  
-    // make an array to hold our old pixel values
-var previous_frame = [];
-// choose a brightness threshold, if the old pixel values differs enough then we know there's movement
-var threshold = 50; 
-// sample the colour every 50 pixels
-var sample_size = 50;
-  
-   var data = ctx.getImageData(0, 0, w, h).data;
-  ctx.background(0);
-  
-  for (var y = 0; y < h; y+= sample_size) {
-    
-     for (var x = 0; x < w; x+= sample_size) {    
-       var pos = (x + y * w) * 4;
-        
-       var r = data[pos];
-      var g = data[pos+1];
-      var b = data[pos+2];
-  
-       if(previous_frame[pos] 
-          && Math.abs(previous_frame[pos] - r) > threshold) {
-                      ctx.fillStyle = rgb(r, g, b);
-         ctx.fillRect(x, y, sample_size,sample_size); 
-       
-         previous_frame[pos] = r;    }
-  
-  }}
+    var motion = [];
+    var old = [];
+
+    // brightness threshold for movement
+    var threshold = 50;
     // animation : always running loop.
     function animate() {
-      // call again next time we can draw
-      requestAnimationFrame(animate);
       // clear canvas
-      ctx.clearRect(0, 0, cvWidth, cvHeight);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
-      //x = x + 1;
-      y = y + 1;
       // draw everything
       function getColor() {
         var letters = "0123456789ABCDEF";
@@ -75,49 +43,58 @@ var sample_size = 50;
         return color;
       }
 
-      function screen(x, y, h, w, c) {
+      function draw(x, y, h, w, c) {
         for (let i = 0; i < c; i++) {
           for (let j = 0; j < c; j++) {
+            function rgb2hex(red, green, blue) {
+              var rgb = blue | (green << 8) | (red << 16);
+              return "#" + (0x1000000 + rgb).toString(16).slice(1);
+            }
+            var pix = ctx.getImageData(x, y, 1, 1).data;
+
             ctx.fillStyle = getColor();
             ctx.fillRect(x + j, y + i, shape, shape);
+
+            var pos = x + y;
+            if (old[pos] && old[pos].r - pix[3] > threshold) {
+              motion.push({
+                x: x,
+                y: y,
+                r: pix[0],
+                g: pix[1],
+                b: pix[2],
+                a: pix[3]
+              });
+            }
+            old[pos] = {
+              x: x,
+              y: y,
+              r: pix[0],
+              g: pix[1],
+              b: pix[2],
+              a: pix[3]
+            };
           }
         }
       }
-
-      var pix = ctx.getImageData(x, y, 1, 1);
-      pix = pix.data;
-
-      screen(x, y, shape, shape, 8);
-      screen(cvWidth - 24, y, shape, shape, 8);
-
-      var n;
-      for (var i = 0; (n = pix.length), i < n; i += 4) {
-        var red = pix[i];
-        var green = pix[i + 1];
-        var blue = pix[i + 2];
-        var alpha = pix[i + 3];
-        var color = rgb2hex(red, green, blue);
-      }
-      function rgb2hex(red, green, blue) {
-        var rgb = blue | (green << 8) | (red << 16);
-        return "#" + (0x1000000 + rgb).toString(16).slice(1);
-      }
-
-      ctx.fillStyle = "#000";
-      var ts = new Date();
-      var t = ts.toGMTString();
-      ctx.fillText(color + " click to buy  " + t + "   " + Date.now(), 10, 10);
-
-      if (y == cvHeight) {
-        y = 0;
-        x = x + shape;
-        //alert(shape)
-      }
+      
+        if (y > cvHeight) {
+          y = y - cvHeight;
+        }
+        if (x > cvWidth) {
+          x = x - cvWidth;
+        }
+        draw(x,y,shape,shape,8)
+        x = x + 10;
+        y = y + 10;
+        draw(x,y,shape,shape,16);
+      
+      requestAnimationFrame(animate);
     }
 
     animate();
 
-    // click handler to add random rects
+    // click handler
     window.addEventListener("click", function() {
       lib.subscribe();
     });
@@ -125,7 +102,6 @@ var sample_size = 50;
 
 // Grab elements, create settings, etc.
 var video = document.getElementById("video");
-
 // Get access to the camera!
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   // Not adding `{ audio: true }` since we only want video now
@@ -135,7 +111,6 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     video.play();
   });
 }
-
 // Elements for taking the snapshot
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
@@ -147,7 +122,6 @@ document.getElementById("snap").addEventListener("click", function() {
 });
 
 //checkout
-
 window.lib = {
   subscribe: function(e) {
     var amount = e;
@@ -192,4 +166,3 @@ window.lib = {
     });
   }
 };
-//lib.subscribe(1000)
