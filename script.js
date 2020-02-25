@@ -1,4 +1,5 @@
-/*shopify to fastur plugin*/
+/*study form 4 law
+shopify to fastur plugin*/
 
 var url = "https://aisafetyceo.glitch.me/app2";
 
@@ -26,15 +27,12 @@ fetch(url)
     var motion = [];
     var old = [];
 
-    // choose a brightness threshold, if the old pixel values differs enough then we know there's movement
+    // brightness threshold for movement
     var threshold = 50;
     // animation : always running loop.
     function animate() {
       // clear canvas
-      //ctx.clearRect(0, 0, cvWidth, cvHeight);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
-
-      y = y + 1;
       // draw everything
       function getColor() {
         var letters = "0123456789ABCDEF";
@@ -56,35 +54,41 @@ fetch(url)
 
             ctx.fillStyle = getColor();
             ctx.fillRect(x + j, y + i, shape, shape);
-            
+
             var pos = x + y;
-            if (old[pos] && old[pos].r - pix[0] > threshold) {
-              ctx.fillStyle = "#000000";
-              ctx.fillRect(x + j,y + i,8,8);
-              motion.push({ x: x, y: y, r: pix[0], g: pix[1], b: pix[2] });
+            if (old[pos] && old[pos].r - pix[3] > threshold) {
+              motion.push({
+                x: x,
+                y: y,
+                r: pix[0],
+                g: pix[1],
+                b: pix[2],
+                a: pix[3]
+              });
             }
-            old[pos] = { x: x, y: y, r: pix[0], g: pix[1], b: pix[2] };
-          
+            old[pos] = {
+              x: x,
+              y: y,
+              r: pix[0],
+              g: pix[1],
+              b: pix[2],
+              a: pix[3]
+            };
           }
         }
       }
-
-      draw(x, y, shape, shape, 2);
-
-      ctx.fillStyle = "#000000";
-      var ts = new Date();
-      var t = ts.toGMTString();
-      ctx.fillText(" click to buy  " + t + "   " + Date.now(), 10, 10);
-
-      if (motion) {
-      if (y == cvHeight){
-        y = 1;
-      }
-      if (x == cvWidth){
-        x = 1;
-      }
-        x = x + motion.length;
-      }
+      
+        if (y > cvHeight) {
+          y = y - cvHeight;
+        }
+        if (x > cvWidth) {
+          x = x - cvWidth;
+        }
+        draw(x,y,shape,shape,8)
+        x = x + 10;
+        y = y + 10;
+        draw(x,y,shape,shape,16);
+      
       requestAnimationFrame(animate);
     }
 
