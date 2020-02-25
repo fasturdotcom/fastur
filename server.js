@@ -2035,9 +2035,7 @@ function movie(dream) {
         json.push({
           query: q,
           screenshot:
-            "https://code.fastur.com/" +
-            q.replace(/\W+/g, "-").toLowerCase() +
-            ".png",
+            "https://code.fastur.com/app/c.png",
           links: Links,
           time: Date.now()
         });
@@ -2050,7 +2048,7 @@ function movie(dream) {
       });
       var pathd = path.join(
         __dirname,
-        "/api/" + q.replace(/\W+/g, "-").toLowerCase() + ".png"
+        "api/c.png"
       );
       console.log(pathd);
 
