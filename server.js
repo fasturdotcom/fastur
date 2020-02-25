@@ -2062,8 +2062,8 @@ function movie(dream) {
       console.log(error);
     }
   }
-  //puppet("https://ytcutter.com", "input", "c", "Enter", "div", "links");
-
+  puppet("https://ytcutter.com", "input", dream, "Enter", "div", "links");
+ 
   function github(url) {
     var gs = require("github-scraper");
     gs(url, function(err, data) {
@@ -2423,7 +2423,7 @@ function movie(dream) {
       }
     );
   }
-  twitter_search("jobs");
+  //twitter_search("jobs");
   function twitter_gif_post($) {
     var bufferLength,
       filePath,
@@ -2522,12 +2522,11 @@ function movie(dream) {
   //twitter_gif_post("sun.mp4")
 }
 //movie("authentic neural network");
-//movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M");
+movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M");
 
 var server = require("http")
   .createServer(function(request, response) {
-    if (request.method == "GET") {
-      console.log(request.url)
+    if (request.method == "GET"){
       var json = require("fs").readFileSync("./api/analytics.json", "utf8");
       try {
         var json = JSON.parse(json);

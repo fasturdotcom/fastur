@@ -1,7 +1,19 @@
 /*study form 4 law
 shopify to fastur plugin*/
 
+var images;
+var data = "https://aisafetyceo.glitch.me/api/data.json";
+fetch(data)
+  .then(function(r) {
+    return r.json();
+  })
+  .then(function(h) {
+    images = h;
+  });
+
 var url = "https://aisafetyceo.glitch.me/app2";
+//var url = "https://gasdigitalnetwork.com/";
+//var url = "https://en.m.wikipedia.org/wiki/Subroutine";
 
 fetch(url)
   .then(function(res) {
@@ -11,7 +23,6 @@ fetch(url)
     var doc = document.createElement("html");
     doc.innerHTML = html;
     doc.style.background = "red";
-
     document.getElementById("page").appendChild(doc);
 
     var video = document.getElementById("video");
@@ -30,10 +41,19 @@ fetch(url)
     // brightness threshold for movement
     var threshold = 50;
     // animation : always running loop.
-    function animate() {
-      // clear canvas
+
+    for (var i in images) {
+      var u = JSON.stringify(images[i].screenshot);
       ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
-      // draw everything
+      var img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
+      };
+    
+      img.src = u;
+    }
+  
+  function animate(){ // draw everything
       function getColor() {
         var letters = "0123456789ABCDEF";
         var color = "#";
@@ -77,28 +97,29 @@ fetch(url)
           }
         }
       }
-      
-        if (y > cvHeight) {
-          y = y - cvHeight;
-        }
-        if (x > cvWidth) {
-          x = x - cvWidth;
-        }
-        draw(x,y,shape,shape,8)
-        x = x + 10;
-        y = y + 10;
-        draw(x,y,shape,shape,16);
-      
+
+      if (y > cvHeight) {
+        y = y - cvHeight;
+      }
+      if (x > cvWidth) {
+        x = x - cvWidth;
+      }
+      draw(x, y, shape, shape, 8);
+      x = x + 10;
+      y = y + 10;
+      draw(x, y, shape, shape, 16);
+
       requestAnimationFrame(animate);
     }
 
     animate();
-
-    // click handler
-    window.addEventListener("click", function() {
-      lib.subscribe();
-    });
   });
+// click handler
+window.addEventListener("click", function() {
+  // lib.record();
+  var stream = cv.captureStream(25);
+  alert(JSON.stringify(stream));
+});
 
 // Grab elements, create settings, etc.
 var video = document.getElementById("video");
@@ -123,6 +144,104 @@ document.getElementById("snap").addEventListener("click", function() {
 
 //checkout
 window.lib = {
+  record: function(e) {
+    function camera(audio, video, stop) {
+      if (stop) {
+        localStream.getTracks().forEach(track => {
+          track.stop();
+        });
+        startRecord.disabled = false;
+        stopRecord.disabled = true;
+        rec.stop();
+      }
+      if (navigator.getUserMedia) {
+        navigator.getUserMedia(
+          { audio: true, video: true },
+          function(stream) {
+            window.localStream = stream;
+            var video = document.querySelector("video");
+            /*video.srcObject = localStream;
+              video.onloadedmetadata = function(e) {
+                video.play();
+              };*/
+
+            // Optional frames per second argument.
+            var stream = video.captureStream(25);
+            var recordedChunks = [];
+
+            alert(JSON.stringify(stream));
+            var options = { mimeType: "video/webm; codecs=vp9" };
+            var mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = handleDataAvailable;
+            mediaRecorder.start();
+
+            function handleDataAvailable(event) {
+              console.log("data-available");
+              if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+                alert(JSON.stringify(recordedChunks));
+                download();
+              } else {
+                // ...
+              }
+            }
+            function download() {
+              var blob = new Blob(recordedChunks, {
+                type: "video/webm"
+              });
+
+              var payload = JSON.stringify({
+                type: "commit",
+                modifier: "media",
+                data: JSON.stringify(recordedChunks)
+              });
+              fetch("/", {
+                method: "post",
+                mode: "no-cors",
+                body: payload
+              }).then(function(response) {
+                var decoder = new TextDecoder();
+                var reader = response.body.getReader();
+                reader.read().then(function processResult(result) {
+                  if (result.done) return;
+                  var result = decoder.decode(result.value, {
+                    stream: true
+                  });
+
+                  try {
+                    var result = JSON.parse(result);
+                  } catch (e) {}
+                  if (result.type == "success") {
+                    console.log(result);
+                  }
+                });
+              });
+
+              /*var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = "test.webm";
+  a.click();
+  window.URL.revokeObjectURL(url);*/
+            }
+
+            //download after 9sec
+            setTimeout(event => {
+              console.log("stopping");
+              mediaRecorder.stop();
+            }, 9000);
+          },
+          function(err) {
+            console.log("The following error occurred: " + err.name);
+          }
+        );
+      }
+    }
+    camera();
+  },
   subscribe: function(e) {
     var amount = e;
     StripeCheckout.configure({
