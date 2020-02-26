@@ -1,59 +1,35 @@
-/*study form 4 law
-shopify to fastur plugin*/
-
-var images;
-var data = "https://aisafetyceo.glitch.me/api/data.json"
-fetch(data).then(function (r){
+var images; fetch("https://aisafetyceo.glitch.me/api/data.json").then(function (r){
   return r.json();
 }).then(function(h){
   images = h;
-})
-
-var url = "https://aisafetyceo.glitch.me/app2";
-//var url = "https://gasdigitalnetwork.com/";
-//var url = "https://en.m.wikipedia.org/wiki/Subroutine";
-
-fetch(url)
-  .then(function(res) {
-    return res.text();
-  })
-  .then(function(html) {
+});
+fetch("https://aisafetyceo.glitch.me/app").then(function(res) {
+  return res.text();
+}).then(function(html) {
     var doc = document.createElement("html");
     doc.innerHTML = html;
-    doc.style.background = "red";
+    //doc.style.background = "red";
     document.getElementById("page").appendChild(doc);
-  
+});
 
-var video = document.getElementById("video");
 var cv = document.getElementById("cv");
 var ctx = cv.getContext("2d");
-var cvWidth = cv.width;
-var cvHeight = cv.height;
-var x = 1;
-var y = 1;
-var h = 1;
-var w = 1;
-var shape = 1;
-var motion = [];
-var old = [];
-
-// brightness threshold for movement
-var threshold = 50;
-// animation : always running loop.
+  
+var cvWidth = cv.width; var cvHeight = cv.height;
+var x = 1; var y = 1; var h = 1; var w = 1;
+var shape = 1; var threshold = 50;
+var motion = []; var old = [];
+  
 function animate() {
   
-  for (var i in images){
-  //alert(JSON.stringify(images[i]))
-  
-  // clear canvas
-  //ctx.drawImage(video, 0, 0, cvWidth, cvHeight);
-  var img = new Image();
-img.onload = function() {
-    ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
-}
+  for (var i in images){  
+    var img = new Image();
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
+    }
+    img.src = 'https://aisafetyceo.glitch.me/app/c.png';
   }
-img.src = 'https://aisafetyceo.glitch.me/app/c.png';
-  // draw everything
+
   function getColor() {
     var letters = "0123456789ABCDEF";
     var color = "#";
@@ -71,10 +47,8 @@ img.src = 'https://aisafetyceo.glitch.me/app/c.png';
           return "#" + (0x1000000 + rgb).toString(16).slice(1);
         }
         var pix = ctx.getImageData(x, y, 1, 1).data;
-
         ctx.fillStyle = getColor();
         ctx.fillRect(x + j, y + i, shape, shape);
-
         var pos = x + y;
         if (old[pos] && old[pos].r - pix[3] > threshold) {
           motion.push({
@@ -111,39 +85,23 @@ img.src = 'https://aisafetyceo.glitch.me/app/c.png';
 
   requestAnimationFrame(animate);
 }
-
 animate();
 
-});
-// click handler
-window.addEventListener("click", function() {
- // lib.record();
-  var stream = cv.captureStream(25);
-  alert(JSON.stringify(stream));
-});
-
-// Grab elements, create settings, etc.
 var video = document.getElementById("video");
-// Get access to the camera!
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-  // Not adding `{ audio: true }` since we only want video now
   navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
     //video.src = window.URL.createObjectURL(stream);
     video.srcObject = stream;
     video.play();
   });
 }
-// Elements for taking the snapshot
+
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 var video = document.getElementById("video");
 
-// Trigger photo take
-document.getElementById("snap").addEventListener("click", function() {
-  context.drawImage(video, 0, 0, 320, 320);
+window.addEventListener("click", function() { 
 });
-
-//checkout
 window.lib = {
   record: function(e) {
       

@@ -1287,680 +1287,36 @@ function render(action, elements) {
     if (b.class == "inner inactive") {
       b.animation = "inner active";
     }
+    
+    cssd += ` .${(b.id || "card")} { 
+text-align: ${(b.align || "center")};
+background: ${(b.background || "#000000")};  
+border-radius: ${(b.rounding || "10px")};
+outline: ${(b.outline || "dashed")}; 
+draggable: ${(b.isdrag||"true")};  
+font-family: ${(b.font || "Arial, Helvetica, sans-serif;")};
+transition: ${(b.transition || "all 0.5s ease-out;")};
+opacity: ${(b.opacity || "0.85;" )};
+margin: ${(b.margin || "5px;"  )};
+position: ${(b.position || "relative;")}; 
+font-size: ${(b.size || " 1rem; ")};  
 
-    for (var item in items) {
-      var c = items[item];
-      var text = "";
-      var btn = "";
-      var inp = "";
-      var image = "";
-
-      if (action == "edit") {
-        c.top = "0";
-        c.edit = "true";
-      }
-      //if (c.type == "body") {
-      if (c){
-        cssd += ` 
-@media only screen and(max-width: 400px) {
-      body { 
-  overscroll-behavior: none;
-
-          background-color: ${c.mobile};
-      }
-  }
-   
-  @media only screen and (min-width: 401px) and (max-width: 960px) {
-      body {
-  overscroll-behavior: none;
-
-          background-color: ${c.tablet};
-      } 
-  }    
- 
-  @media only screen and (min-width: 961px) { 
-      body { 
-  overscroll-behavior: none;
-
-          background-color: ${c.desktop}; 
-      }
-  }  
-
-
-  body {  
-	  overflow-y:hidden
-   	  touch-action: none;
-  	  overscroll-behavior: none;
-      min-width: $ {
-          (colWidth+colSpace) * colNum
-      }
-      px;
-      font-family: Arial,
-      Helvetica,
-      sans-serif;
-      margin-top: var (--space);
-      margin: auto;
-      top: 25px;
-      right: 0;
-      bottom: 0; 
-      left: 0;
-  width: ${c.width};
-      border-radius: 3px; 
-      opacity:1;
-      animation: fadein 1s;
-      background-image: ${c.background};
-	  /* height: 25%; width: 75%; parallax effect */ 
-	  background-attachment: fixed;
-      background-position: center; 
-      background-size:  100% 100%;
-  }
-
-
-  #${c.id} { 
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-  }  
-
-
-
-      .strike {
-          display: block;
-          text-align: center;
-          overflow: hidden;
-          white-space: nowrap; 
-      }
-
-      .strike > span {
-          position: relative;
-          display: inline-block;
-      }
-
-      .strike > span:before,
-      .strike > span:after {
-          content: "";
-          position: absolute;
-          top: 50%;
-          width: 9999px;
-          height: 1px;
-          background: red;
-      }
-
-      .strike > span:before {
-          right: 100%;
-          margin-right: 15px;
-      }
-
-      .strike > span:after {
-          left: 100%;
-          margin-left: 15px;
-      }
-
-
-  span[draggable=true]:hover {
-      outline: 1px dashed blue;
-  }
-  div[draggable=true]:hover {
-      outline: 1px dashed blue;
-  } 
-  .fill { 
-    cursor: pointer;
-  }
-  .droptarget {
-    background-color: #f4f4f4;
-    border-style: dashed;
-   }
-  .hold {
-    border: 4px green solid;
-  }
-  .hovered {
-    border-bottom: 4px green solid;
-
-  }
-  .focused {
-    border:2px solid red;
-
-  }
-  .invisible {
-    display: none;
-  }
-
-  [contenteditable]:focus {
-      outline: 0px solid transparent;
-  } 
-  input {
-      display: inline-block;
-      box-sizing: border-box;
-      outline: none;
-      border: 1px solid lightgray;
-      border-radius: 3px;
-      padding: 10px;
-      transition: all 0.1s ease-out;
-      opacity: .85;
-      margin: 5px; 
-  }
-
-  textarea {
-      width: 100%;
-      min-width: 50px; 
-      border: none;
-      opacity: .5;
-      overflow: auto;
-      outline: none;
-      -webkit-box-sizing: none;
-      -moz-box-sizing: none;
-      box-sizing: none;
-      border-radius: 20px;
-      margin-top: 10px;
-  } 
-  div {
-      padding-top: 5px;
-      padding-right: 5px;
-      padding-bottom: 5px;
-      padding-left: 5px;
-      transition: all 0.5s linear;
-  }  
-  p {
-      padding: 5px; 
-	  margin: 5px; 
-      transition: all 0.5s linear;
-  }  
-
-  .inner {
-       background: #ffffff3d;
-      border-radius: 10px;
-      margin: 15px;
-      text-decoration: none;
-  }
-
-  @-webkit-keyframes sk-scaleout {
-      0% {
-          -webkit-transform: scale(0)
-      }
-      100% {
-          -webkit-transform: scale(1.0);
-          opacity: 0;
-      }
-  }
-  @keyframes sk-scaleout {
-      0% {
-          -webkit-transform: scale(0);
-          transform: scale(0);
-      }
-      100% {
-          -webkit-transform: scale(1.0);
-          transform: scale(1.0);
-          opacity: 0;
-      }
-  }
-  @keyframes fade {
-      0% {
-          opacity: 0;
-      }
-      66% {
-          opacity: 0;
-      }
-      100% {
-          opacity: 1;
-      }
-  }
-  .fade {
-      transition: opacity 0.7s linear;
-  }
-  .inactive {
-      opacity: 0;
-  }
-  .active { 
-      opacity: 1;
-  }
- 
-#color-label {
-  margin-left: 1px;
-  position: absolute;
-  height: 30px;
-  width: 50px;
-}  
-#color-picker-no {
-  background-color: white; 
-  border: solid 1px #ccc;
-}
-canvas:hover {
-  cursor: crosshair;
-}
-.container { 
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* fraction*/
-}
-.dimension {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* fraction*/ 
-}
-
-.dimension input {
-width: 80px;    
-padding: 5px 5px 5px 5px;
-
-}
-a {
-  position: relative;
-}
-a::after {
-  content: "";
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-} 
-a > svg {
-  pointer-events: none;
-}  
-  `;
-      }
-      if (c.type == "html") {
-        cssd += ` 
-
-  #${c.id} { 
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-  } 
-
-  `;
-      }
-      if (c.type == "image") {
-        image +=
-          "<" +
-          c.tag +
-          "  id='" +
-          c.id +
-          "' class='" +
-          c.class +
-          "' width='" +
-          c.width +
-          "' height='" +
-          c.height +
-          "'   src='" +
-          c.src +
-          "'></" +
-          c.tag +
-          ">";
-        cssd += ` 
-
-  #${c.id} {  
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor}; 
-    border-radius: 5px;
-    opacity: 0.8;
-  }    
-
-  `;
-      }
-      if (c.type == "imaged") {
-        image +=
-          "<div class='device-collection'>  <div id='device-desktop' class='device desktop'> <br><canvas style='display:none' id='canvas' width='300' height='300'></canvas><img id='theimage' /></div></div>";
-        cssd += ` 
-  
-  #${c.id} {   
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor}; 
-  } 
-  
-.device {
-  border-radius: 20px;
-  position: relative;
-  box-sizing: border-box;
-  background: #fff;
-  box-shadow: inset 0 4px 7px 1px #fff,
-    inset 0 -5px 20px rgba(173, 186, 204, .25),
-    0 2px 6px rgba(0, 21, 64, .14),
-    0 10px 20px rgba(0, 21, 64, .05);
-} 
-.device img {
-  width: 100%;
-  border-radius: 4px;
-  
-}
-
-.device::before,
-.device::after {
-  content: "";
-  display: block;
-  position: absolute;
-  background: #fff;
-  box-shadow: inset 0 4px 7px 1px #fff,
-    inset 0 -5px 20px rgba(173, 186, 204, .25),
-    0 2px 6px rgba(0, 21, 64, .14),
-    0 10px 20px rgba(0, 21, 64, .05);
-}
- 
-
-// Desktop arm
-.desktop::before {
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  bottom: -18%;
-  width: 20%;
-  height: 20%;
-  background: #fafafa;
-  z-index: -1;
-}
-
-// Bottom of desktop stand
-.desktop::after {
-  border-radius: 4px 4px 24px 24px;
-  margin: 0 auto;
-  left: 0;
-  right: 0;
-  bottom: -19.5%;
-  width: 34%;
-  height: 2%;
-}
-
-// Phone, tablet, and desktop together
-.device-collection {
-  width: 100%;
-  position: relative;
-}
-
-.device-collection::after {
-  content: "";
-  display: block;
-  padding-top: 62.75%;
-}
-  
-.device-collection .desktop {
-  left: 0;
-  right: 0;
-  margin: 0 5% 10.25%;
-  height: 75%; 
-  top:33%;  
-}  
-  `;
-      }
-      if (c.type == "input") {
-        inp +=
-          "<" +
-          c.tag +
-          " id='" +
-          c.id +
-          "' data-action='" +
-          c.action +
-          "' class='" +
-          c.class +
-          "' contenteditable='" +
-          c.edit +
-          "'  type='" +
-          c.formtype +
-          "' style='" +
-          c.ishidden +
-          "' placeholder='" +
-          c.placeholder +
-          "' " +
-          (c.disabled || "") +
-          "></" +
-          c.tag +
-          ">";
-        cssd += ` 
-
-  #${c.id} { 
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-  } 
-
-  `;
-      }
-      //if (c.type == "button") {
-      if (c){ btn +=
-          "lol<" +
-          c.tag +
-          " id='" +
-          c.id +
-          "' data-action='" +
-          c.action +
-          "' onclick='" +
-          c.onclick +
-          "' class='" +
-          c.class +
-          "' contenteditable='" +
-          c.edit +
-          "' autocomplete='" +
-          (c.ac || "off") +
-          "' style='" +
-          c.ishidden +
-          "' href='" +
-          c.href +
-          "' " +
-          (c.disabled || "") +
-          ">" +
-          (c.name || "") +
-          "</" +
-          c.tag +
-          ">";
-
-        cssd += ` 
-
-  #${c.id} { 
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-      border-radius: 2.5px;
-      display: inline-block;
-      border: none;
-      margin: 10px;
-      text-decoration: none;
-      font-family: sans-serif;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 250ms ease-in-out, transform 150ms ease;
-      appearance: none;
-      padding-top: 10px;
-      padding-right: 10px;
-      padding-bottom: 10px;
-      padding-left: 10px;
-      outline: 1px solid #0069ed;
-  } 
-
-  #${c.id}:hover {
-  background-color:  ${c.hover};  
-  }
-  
-  #${c.id}:focus {
-      outline: 1px solid #fff;
-      outline-offset: -4px;
-  }
-
-  #${c.id}:active {
-      transform: scale(0.99);
-  }
-
-  `;
-      }
-      if (c.type == "special") {
-        btn +=
-          "<" +
-          c.tag +
-          " data-action='" +
-          "INPUT" +
-          "'id='" +
-          c.id +
-          "' class='" +
-          c.class +
-          "' style='" +
-          c.ishidden +
-          "' href='" +
-          c.href +
-          "' " +
-          (c.disabled || "") +
-          ">" +
-          (c.name || "") +
-          "</" +
-          c.tag +
-          ">";
-
-        cssd += ` 
-
-  #${c.id} {     
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-  } 
-
-#uform-ul {   
-    list-style-type: none;
-    opacity: .85;
-    cursor: pointer;
-    padding: 0; 
-    margin: 0;
-  }
-
-  #uform-ul li a { 
-    background-color: #fdfdfd;  
-    padding: 5px; 
-    text-decoration: none;  
-    color: black;  
-    display: block; 
-  }
-  #uform-ul li a:hover {
-    background-color: #3d3d3d;  
-    padding: 5px; 
-    text-decoration: none;  
-    color: white;  
-    display: block; 
-  }
-
-  .uform { 
-      position: fixed;
-      right: 0;
-      top: ${c.top};    
-      padding: 25px;
-   z-index: 10; 
-  }  
-
-  `;
-      }
-      if (c.type == "text") {
-        text +=
-          "<" +
-          c.tag +
-          " id='" +
-          c.id +
-          "' class='" +
-          c.class +
-          "' draggable='" +
-          c.drag +
-          "' contenteditable='" +
-          c.edit +
-          "' style='" +
-          c.ishidden +
-          "' href='" +
-          c.href +
-          "' " +
-          (c.disabled || "") +
-          ">" +
-          (c.name || "") +
-          "</" +
-          c.tag +
-          ">";
-
-        cssd += ` 
-  #${c.id} { 
-    text-align: ${c.align}; 
-	background-color:${c.background}; 
-	color:${c.textcolor};
-	height:${c.height};  
-    font-size: ${c.size}; 
-    display: ${c.display};
-    font-family: ${c.family}; 
-    font-weight: ${c.weight};
-  }
-
-  `;
-      }
-      if (c.type == "form") {
-        form +=
-          "<" +
-          (c.tag || "div") +
-          " id='" +
-          c.id +
-          "' name=" +
-          c.name +
-          "'  class='" +
-          c.class +
-          "' type='" +
-          c.formtype +
-          "' value='" +
-          (c.value || "") +
-          "'  style='" +
-          c.ishidden +
-          "' placeholder='" +
-          c.placeholder +
-          "'>" +
-          br;
-
-        cssd += ` 
-
-  #${c.id} { 
-    text-align: ${c.align};
-	background-color:${c.background}; 
-	color:${c.textcolor};
-  } 
-
-  `;
-      } else {
-        data += image || btn || inp || text;
-      }
-    }
-
-    cssd += ` #${b.id} { text-align: ${b.align}; background-color:${b.background}; outline: ${b.outline}; draggable: ${b.isdrag};}  `;
+}`;
 
     if (num == 1) {
-      t = "<title>" + b.title + "</title>";
-      d = "<meta name='description' content='" + b.description + "'>";
-    }
-
-    var isform = "";
-    if (b.secondarytag == "form") {
-      if (action == "edit") {
-        b.drag = "true";
-      }
-
-      isform +=
-        "<" +
-        (b.secondarytag || "div") +
-        " " +
-        (b.secondaryp || "") +
-        " draggable='" +
-        b.drag +
-        "'  id='form-" +
-        b.id +
-        "' >" +
-        (form || "") +
-        "</" +
-        (b.secondarytag || "div") +
-        ">";
+      t = "<title>" + (b.title ||  "Fastur") + "</title>";
+      d = "<meta name='description' content='" + (b.description || "Property of Fastur Incorporated")+ "'>";
     }
 
     body +=
-      (b._break || "") +
-      "<" +
-      b.tag +
-      " id='" +
-      b.id +
-      "' style=' display:" +
-      b.display +
-      "' class='" +
-      (b.class || b.animation) +
-      "' data-action='1'>" + "<a href='https://twitter.com/"+b.name +"' >"+b.name+"</a> " + b.text + "  <br>" +
-      (isform || "") +
-      (data || "") +
-      "</" +
-      (b.tag || "") +
-      "><br>";
+      "<" + (b.tag || "a") + " href='/" + b.name +
+      "' style=' display:" + (b.display || "block") +
+      "' class='" + (b.class || b.animation || "card") + "' data-action='1'>" + b.name+ 
+      "</" + (b.tag || "a") + "><br>";
   }
+  
+  
+  
   if (action == "client") {
     var standard = body;
   } else {
@@ -1980,9 +1336,7 @@ a > svg {
 }
 
 function movie(dream) {
-  var q = "19 21 2 18 15 21 20 9 14 5";
-
-  async function puppet(url, input, q, press, waitFor, links) {
+  async function puppet(url, input, q, press, links) {
     const fs = require("fs");
     const puppeteer = require("puppeteer");
     const path = require("path");
@@ -1992,36 +1346,9 @@ function movie(dream) {
       });
       const page = await browser.newPage();
       await page.goto(url);
-      await page.mouse.click(100, 500, { delay: 500 });
+      //await page.mouse.click(100, 500, { delay: 500 });
       await page.type(input, q);
-
       page.keyboard.press(press);
-      await page.waitForSelector(waitFor);
-
-      function getText(linkText) {
-        linkText = linkText.replace(/\r\n|\r/g, "\n");
-        linkText = linkText.replace(/\ +/g, " ");
-
-        // Replace &nbsp; with a space
-        var nbspPattern = new RegExp(String.fromCharCode(160), "g");
-        return linkText.replace(nbspPattern, " ");
-      }
-
-      var Links = [];
-      if (links) {
-        const links = await page.$$("div.r");
-        for (var i = 0; i < links.length; i++) {
-          let valueHandle = await links[i].getProperty("innerText");
-          let linkText = await valueHandle.jsonValue();
-          const text = getText(linkText);
-          console.log(linkText);
-          Links.push(linkText);
-          if (q == text) {
-            console.log("Found " + text);
-            await links[i].click();
-          }
-        }
-      }
       var data = require("fs").readFileSync("./api/data.json", "utf8");
       var json = JSON.parse(data);
 
@@ -2036,15 +1363,14 @@ function movie(dream) {
           query: q,
           screenshot:
             "https://code.fastur.com/app/c.png",
-          links: Links,
           time: Date.now()
         });
         require("fs").writeFileSync("./api/data.json", JSON.stringify(json));
       }
 
       await page.setViewport({
-        width: 800,
-        height: 1000
+        width: 1200,
+        height: 1200
       });
       var pathd = path.join(
         __dirname,
@@ -2060,38 +1386,10 @@ function movie(dream) {
       console.log(error);
     }
   }
-  puppet("https://ytcutter.com", "input", dream, "Enter", "div", "links");
- 
-  function github(url) {
-    var gs = require("github-scraper");
-    gs(url, function(err, data) {
-      console.log(data);
-    });
-    console.log("finished");
-  }
-  //github("fasturdotcom");
-  function saveImage(url) {
-    var http = require("http"),
-      Stream = require("stream").Transform,
-      fs = require("fs");
-
-    http
-      .request(url, function(response) {
-        var data = new Stream();
-
-        response.on("data", function(chunk) {
-          data.push(chunk);
-        });
-
-        response.on("end", function() {
-          fs.writeFileSync("sun.png", data.read());
-          console.log("finished image download");
-        });
-      })
-      .end();
-  }
-  //saveImage("http://code.fastur.com/api/server.png");
+  //puppet("https://google.com","input.gLFyf.gsfi",dream,"Enter","div#resultStats","links");
   function run(a) {
+    var r = require("fs").readFileSync("sun.json",'utf8');
+    console.log(r)
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
 
@@ -2263,105 +1561,7 @@ function movie(dream) {
     );
   }
   //run("Abcdefghijklmnopqrstuvwxyz");
-  //run("Light");
-  function gif(a, b, c) {
-    const GIFEncoder = require("gifencoder");
-    const { createCanvas } = require("canvas");
-    const fs = require("fs");
-
-    const encoder = new GIFEncoder(c, c);
-    // stream the results as they are available into myanimated.gif
-    encoder.createReadStream().pipe(fs.createWriteStream(a + ".gif"));
-
-    encoder.start();
-    encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
-    encoder.setDelay(50); // frame delay in ms
-    encoder.setQuality(3); // image quality. 10 is default.
-
-    // use node-canvas
-    const canvas = createCanvas(c, c);
-    const ctx = canvas.getContext("2d");
-    function getColor() {
-      var letters = "0123456789ABCDEF";
-      var color = "#";
-      for (var i = 0; i < 8; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, c, c);
-    encoder.addFrame(ctx);
-
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, c, c);
-    encoder.addFrame(ctx);
-
-    function encode(amount) {
-      var gifdata = [];
-      for (var y = 0; y < amount; y++) {
-        for (let i = 0; i < c; i++) {
-          for (let j = 0; j < c; j++) {
-            var color = getColor();
-            gifdata.push(color);
-            ctx.fillStyle = color;
-            ctx.fillRect(j, i, 1, 1);
-          }
-        }
-        encoder.addFrame(ctx);
-      }
-      fs.writeFileSync("./gifdata", JSON.stringify(gifdata));
-    }
-    encode(b);
-
-    encoder.finish();
-    console.log("Gif Generator finished");
-  }
-  //gif("sun", 30, 320);
-  function pixel(image, amount) {
-    for (var y = 0; y < amount; y++) {
-      var image = "public/" + image + y + ".png";
-
-      function imageSize(image) {
-        var sizeOf = require("image-size");
-        var dimensions = sizeOf(image);
-        return { width: dimensions.width, height: dimensions.height };
-      }
-      var size = imageSize(image);
-      var width = size.width;
-      var height = size.height;
-
-      require("get-pixels")(image, function(err, pixels) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-        function get_pixels(x, y, pixels) {
-          var out = [];
-          var pointer =
-            pixels.offset + pixels.stride[0] * x + pixels.stride[1] * y;
-          for (var i = 0; i < 4; i++) {
-            out.push(pixels.data[pointer + pixels.stride[2] * i]);
-          }
-          return out;
-        }
-
-        var pixelarray = [];
-        for (var y = 0; y < width; y++) {
-          for (var x = 0; x < height; x++) {
-            var pixel = get_pixels(x, y, pixels);
-            pixelarray.push(pixel);
-          }
-        }
-
-        console.log(pixelarray);
-      });
-    }
-  }
-  //pixel('sun',30);
-  //var tweets = require("fs").readFileSync("twitter.json");
-  var url = process.env.PROJECT_DOMAIN + ".gltch.me";
+  
   function twitter_post($, id) {
     var Twitter = require("twitter");
     var client = new Twitter({
@@ -2387,7 +1587,7 @@ function movie(dream) {
       }
     );
   }
-  //twitter_post("@Fasturdotcom life oh my bosh", 1221183159334776800);
+  //twitter_post("@aisafetyceo wow", 1221183159334776800);
   function twitter_search($) {
     var Twitter = require("twitter");
     var client = new Twitter({
@@ -2518,10 +1718,135 @@ function movie(dream) {
     });
   }
   //twitter_gif_post("sun.mp4")
-}
-//movie("authentic neural network");
-movie("https://m.youtube.com/watch?v=9fZ_MjoKF2M");
+  
+  function gif(a, b, c) {
+    const GIFEncoder = require("gifencoder");
+    const { createCanvas } = require("canvas");
+    const fs = require("fs");
 
+    const encoder = new GIFEncoder(c, c);
+    // stream the results as they are available into myanimated.gif
+    encoder.createReadStream().pipe(fs.createWriteStream(a + ".gif"));
+
+    encoder.start();
+    encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
+    encoder.setDelay(50); // frame delay in ms
+    encoder.setQuality(3); // image quality. 10 is default.
+
+    // use node-canvas
+    const canvas = createCanvas(c, c);
+    const ctx = canvas.getContext("2d");
+    function getColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 8; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, c, c);
+    encoder.addFrame(ctx);
+
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, c, c);
+    encoder.addFrame(ctx);
+
+    function encode(amount) {
+      var gifdata = [];
+      for (var y = 0; y < amount; y++) {
+        for (let i = 0; i < c; i++) {
+          for (let j = 0; j < c; j++) {
+            var color = getColor();
+            gifdata.push(color);
+            ctx.fillStyle = color;
+            ctx.fillRect(j, i, 1, 1);
+          }
+        }
+        encoder.addFrame(ctx);
+      }
+      fs.writeFileSync("./api/gifdata", JSON.stringify(gifdata));
+    }
+    encode(b);
+
+    encoder.finish();
+    console.log("Gif Generator finished");
+  }
+  //gif("sun", 15, 320);
+  function pixel(image, amount) {
+    for (var y = 0; y < amount; y++) {
+      var image = "public/" + image + y + ".png";
+
+      function imageSize(image) {
+        var sizeOf = require("image-size");
+        var dimensions = sizeOf(image);
+        return { width: dimensions.width, height: dimensions.height };
+      }
+      var size = imageSize(image);
+      var width = size.width;
+      var height = size.height;
+
+      require("get-pixels")(image, function(err, pixels) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        function get_pixels(x, y, pixels) {
+          var out = [];
+          var pointer =
+            pixels.offset + pixels.stride[0] * x + pixels.stride[1] * y;
+          for (var i = 0; i < 4; i++) {
+            out.push(pixels.data[pointer + pixels.stride[2] * i]);
+          }
+          return out;
+        }
+
+        var pixelarray = [];
+        for (var y = 0; y < width; y++) {
+          for (var x = 0; x < height; x++) {
+            var pixel = get_pixels(x, y, pixels);
+            pixelarray.push(pixel);
+          }
+        }
+
+        console.log(pixelarray);
+      });
+    }
+  }
+  //pixel('sun',30); 
+  function saveImage(url) {
+    var http = require("http"),
+      Stream = require("stream").Transform,
+      fs = require("fs");
+
+    http
+      .request(url, function(response) {
+        var data = new Stream();
+
+        response.on("data", function(chunk) {
+          data.push(chunk);
+        });
+
+        response.on("end", function() {
+          fs.writeFileSync("sun.png", data.read());
+          console.log("finished image download");
+        });
+      })
+      .end();
+  }
+  //saveImage("http://code.fastur.com/api/server.png");
+  function github(url) {
+    var gs = require("github-scraper");
+    gs(url, function(err, data) {
+      console.log(data);
+    });
+    console.log("finished");
+  }
+  //github("fasturdotcom");
+}
+movie("subroutine");
+  
 var server = require("http")
   .createServer(function(request, response) {
     if (request.method == "GET"){
@@ -2553,89 +1878,20 @@ var server = require("http")
       var cookies = parseCookies(request);
       if (request.url == "/favicon.ico") {
         response.end("");
-      }
-      if (request.url == "/api/style.css") {
-        response.writeHead(200, {
-          "Content-Type": "css"
-        });
-        var data = require("fs").readFileSync("./style.css");
-        response.end(data);
-      }
+      } 
       if (request.url == "/script.js") {
         var data = require("fs").readFileSync("./script.js");
         response.end(data);
       }
-
-      if (request.url == "/code") {
-        if (cookies.fastur) {
-        } else {
-          response.writeHead(200, {
-            "Content-Type": "text/html",
-            "Set-Cookie":
-              "fastur=" +
-              require("crypto")
-                .randomBytes(16)
-                .toString("hex")
-          });
-        }
-        var data = require("fs").readFileSync("./api/index.html");
-        response.end(data);
-      }
-      if (request.url == "/data") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync(
-          "./api/912120bfa38218625d3e8505996f7860.json"
-        );
-        response.end(data);
-      }
-      if (request.url == "/api") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./server.js");
-        response.end(data);
-      }
-      if (request.url == "/try") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./try.html");
-        response.end(data);
-      }
-      if (request.url == "/api2") {
+      if (request.url == "/server") {
         response.writeHead(200, {
           "Content-Type": "js"
         });
         var data = require("fs").readFileSync("./server.js", "utf8");
         data = data.split("var server")[0];
         response.end(data);
-      }
-      if (request.url == "/frames.html") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync(
-          "./api/912120bfa38218625d3e8505996f7860.html"
-        );
-        response.end(data);
-      }
+      } 
       if (request.url == "/app") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./sun.gif");
-        response.end(data);
-      }
-      if (request.url == "/app1") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./index1.html");
-        response.end(data);
-      }
-      if (request.url == "/app2") {
         response.writeHead(200, {
           "Content-Type": "js"
         });
@@ -2645,21 +1901,6 @@ var server = require("http")
         var data = JSON.parse(data);
         var data = render("false", data);
         response.end(data);
-      }
-
-      if (request.url == "/logout") {
-        response.writeHead(200, {
-          "Set-Cookie":
-            "fastur=" +
-            require("crypto")
-              .randomBytes(16)
-              .toString("hex") +
-            "; " +
-            "expires=" +
-            new Date(new Date().getTime() + 86409000).toUTCString()
-        });
-        var html = require("fs").readFileSync("./api/frames.html", "utf8");
-        response.end(html);
       }
 
       if (request.url == "/") {
@@ -2693,11 +1934,7 @@ var server = require("http")
         var html = render("edit", elements);
         response.end(html);
       } else {
-        if (
-          require("fs").existsSync(
-            __dirname + "/api/" + request.url.split("/")[2]
-          )
-        ) {
+        if (require("fs").existsSync(__dirname + "/api/" + request.url.split("/")[2])) {
           var img =
             require("fs").readFileSync(
               __dirname + "/api/" + request.url.split("/")[2]
@@ -2916,10 +2153,7 @@ var server = require("http")
                   time: Date.now(),
                   ip: request.headers["x-real-ip"]
                 });
-                require("fs").writeFileSync(
-                  "./api/analytics.json",
-                  JSON.stringify(json)
-                );
+                require("fs").writeFileSync("./api/analytics.json",JSON.stringify(json));
 
                 async function puppet(url, input, q, press, waitFor, links) {
                   const fs = require("fs");
@@ -3011,20 +2245,9 @@ var server = require("http")
                     console.log(error);
                   }
                 }
-                puppet(
-                  "https://google.com",
-                  "input.gLFyf.gsfi",
-                  q,
-                  "Enter",
-                  "div#resultStats",
-                  "links"
-                );
-                //https://remote.co/remote-jobs/developer/
+                puppet("https://google.com","input.gLFyf.gsfi",q,"Enter","div#resultStats","links");
 
-                var data = require("fs").readFileSync(
-                  "./api/data.json",
-                  "utf8"
-                );
+                var data = require("fs").readFileSync("./api/data.json","utf8");
 
                 if (q == "subscription") {
                   function subscription($) {
@@ -3222,175 +2445,7 @@ var server = require("http")
                   console.log(json[0]);
                   response.end(total + " page views/requests");
                 }
-
-                function twitter_post($) {
-                  var Twitter = require("twitter");
-                  var client = new Twitter({
-                    consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
-                    consumer_secret:
-                      "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
-                    access_token_key:
-                      "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
-                    access_token_secret:
-                      "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
-                  });
-                  client.post(
-                    "statuses/update",
-                    {
-                      status: $
-                    },
-                    function(err, t, r) {
-                      if (!err) {
-                        console.log(t + r);
-                      }
-                    }
-                  );
-                  console.log("Menu sent");
-                }
-                //twitter_post(q)
-                function twitter_search($) {
-                  var Twitter = require("twitter");
-                  var client = new Twitter({
-                    consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
-                    consumer_secret:
-                      "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
-                    access_token_key:
-                      "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
-                    access_token_secret:
-                      "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
-                  });
-                  client.get(
-                    "search/tweets",
-                    {
-                      q: $
-                    },
-                    function(err, t, r) {
-                      var date = new Date()
-                        .toISOString()
-                        .replace(/T/, " ")
-                        .replace(/\..+/, "");
-
-                      var arr = [];
-                      for (var y = 0; y < t.statuses.length; y++) {
-                        arr.push({
-                          name: t.statuses[y].user.screen_name,
-                          date: t.statuses[y].created_at,
-                          text: t.statuses[y].text,
-                          url: t.statuses[y].user.url
-                        });
-                      }
-                      console.log(arr);
-                    }
-                  );
-                }
-                //twitter_search('jobs')
-                function twitter_gif_post() {
-                  var bufferLength,
-                    filePath,
-                    finished,
-                    fs,
-                    oauthCredentials,
-                    offset,
-                    request,
-                    segment_index,
-                    theBuffer;
-
-                  request = require("request");
-                  fs = require("fs");
-                  filePath = "/thevideo.mp4";
-                  bufferLength = 1000000;
-                  theBuffer = new Buffer(bufferLength);
-                  offset = 0;
-                  segment_index = 0;
-                  finished = 0;
-                  oauthCredentials = {
-                    consumer_key: "",
-                    consumer_secret: "",
-                    token: "",
-                    token_secret: ""
-                  };
-
-                  fs.stat(filePath, function(err, stats) {
-                    var formData, normalAppendCallback, options;
-
-                    formData = {
-                      command: "INIT",
-                      media_type: "video/mp4",
-                      total_bytes: stats.size
-                    };
-                    options = {
-                      url: "https://upload.twitter.com/1.1/media/upload.json",
-                      oauth: oauthCredentials,
-                      formData: formData
-                    };
-
-                    normalAppendCallback = function(media_id) {
-                      return function(err, response, body) {
-                        finished++;
-                        if (finished === segment_index) {
-                          options.formData = {
-                            command: "FINALIZE",
-                            media_id: media_id
-                          };
-                          request.post(options, function(err, response, body) {
-                            console.log("FINALIZED", response.statusCode, body);
-
-                            delete options.formData;
-
-                            //Note: This is not working as expected yet.
-                            options.qs = {
-                              command: "STATUS",
-                              media_id: media_id
-                            };
-                            request.get(options, function(err, response, body) {
-                              console.log(
-                                "STATUS: ",
-                                response.statusCode,
-                                body
-                              );
-                            });
-                          });
-                        }
-                      };
-                    };
-
-                    request.post(options, function(err, response, body) {
-                      var media_id;
-                      media_id = JSON.parse(body).media_id_string;
-
-                      fs.open(filePath, "r", function(err, fd) {
-                        var bytesRead, data;
-
-                        while (offset < stats.size) {
-                          bytesRead = fs.readSync(
-                            fd,
-                            theBuffer,
-                            0,
-                            bufferLength,
-                            null
-                          );
-                          data =
-                            bytesRead < bufferLength
-                              ? theBuffer.slice(0, bytesRead)
-                              : theBuffer;
-                          options.formData = {
-                            command: "APPEND",
-                            media_id: media_id,
-                            segment_index: segment_index,
-                            media_data: data.toString("base64")
-                          };
-                          request.post(options, normalAppendCallback(media_id));
-                          offset += bufferLength;
-                          segment_index++;
-                        }
-                      });
-                    });
-                  });
-                }
-                //twitter_gif_post("sun.mp4")
-
                 response.end(JSON.stringify(data));
-
                 break;
               }
               case "login": {
