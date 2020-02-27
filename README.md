@@ -1,13 +1,21 @@
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/fasturdotcom/t)
 
+
 send payment to
 **Transit 21a2222 Inst 004 Account 6169875**
 33% Canadian Income Tax
 
+deep fake detection
 Authentic Intelligence certification program
 client side voice power for banking and legal sites
 it simply minimizes the cost between code and signal
 renders directories as Gifs that Talk Contracts
+
+
+[Square Finances](https://s21.q4cdn.com/114365585/files/doc_financials/2019/q4/Square-2019-10-K.pdf)
+
+[Bitcoin Original](https://github.com/bitcoin/bitcoin/blob/v0.12.0rc2/autogen.sh)
+
 
 [Jansport Backpack](https://www.amazon.ca/slp/jansport-backpack/ma5jsxxc9dkm6yg)
 [Rasberry Pi 4](https://www.amazon.ca/s?k=raspberry-pi)
