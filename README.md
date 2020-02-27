@@ -39,21 +39,26 @@ Drag in `assets`, like images or music, to add them to your project
 
 ### What
 
-Authentic Intelligence certification program
-client side voice power for banking and legal sites
-it simply minimizes the cost between code and signal
+This is an Intelligence certification program.
+
+You build client side voice power for banking and legal sites.
+
+minimizing the cost between code and signal
+
 renders directories as Gifs that Talk Contracts
+
 Deep fake detection 
 
+Photodiamonetric Battery
 
-usb battery and sd card
-bluetooth headphones w mic
+Bluetooth headphones w mic
 
-snippets of code and production ready templates
-for building web applications with carrd and glitch
+Snippets of code and production ready templates for building web applications 
+with [Carrd](https://www.carrd.co) and [Glitch](https://www.glitch.com)
 
-camera image recognition of credit/debit card
-1 gif with pixels of company stocks over time
+Optical Camera Recognition of Credit + Debit Cards
+
+1 Gif with pixels of company stocks over time
 
 🚀 Node & Browser Support
 
