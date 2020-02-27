@@ -1,5 +1,4 @@
 ### send payment to 
-
 ### **Transit 21a2222 Inst 004 Account 6169875**
 ### 33% Canadian Income Tax
 
@@ -38,22 +37,14 @@ Drag in `assets`, like images or music, to add them to your project
 
 \ ゜ o ゜)ノ
 
-deep fake detection == If (source != string)
+### What
 
 Authentic Intelligence certification program
 client side voice power for banking and legal sites
 it simply minimizes the cost between code and signal
 renders directories as Gifs that Talk Contracts
+Deep fake detection 
 
-[Square Finances](https://s21.q4cdn.com/114365585/files/doc_financials/2019/q4/Square-2019-10-K.pdf)
-
-[Bitcoin Original](https://github.com/bitcoin/bitcoin/blob/v0.12.0rc2/autogen.sh)
-
-[Jansport Backpack](https://www.amazon.ca/slp/jansport-backpack/ma5jsxxc9dkm6yg)
-
-[Rasberry Pi 4](https://www.amazon.ca/s?k=raspberry-pi)
-
-[Pi OS with Chromium](https://downloads.raspberrypi.org/NOOBS_latest)
 
 usb battery and sd card
 bluetooth headphones w mic
@@ -76,7 +67,18 @@ camera image recognition of credit/debit card
 
 ⏱ Slow Down or Speed Up Time
 
+[Square Finances](https://s21.q4cdn.com/114365585/files/doc_financials/2019/q4/Square-2019-10-K.pdf)
 
+[Bitcoin Original](https://github.com/bitcoin/bitcoin/blob/v0.12.0rc2/autogen.sh)
+
+[Jansport Backpack](https://www.amazon.ca/slp/jansport-backpack/ma5jsxxc9dkm6yg)
+
+[Rasberry Pi 4](https://www.amazon.ca/s?k=raspberry-pi)
+
+[Pi OS with Chromium](https://downloads.raspberrypi.org/NOOBS_latest)
+
+
+### How
 `var A = ['Math.E','Math.LN2','Math.LN10','Math.LOG2E','Math.LOG10E','Math.PI','Math.SQRT1_2','Math.SQRT2','Math.abs', 'Math.acos','Math.acosh' ,'Math.asin','Math.asinh','Math.atan','Math.atanh','Math.atan2','Math(x).cbrt','Math(x).ceil', 'Math(x).clz32','Math(x).cos','Math(x).cosh','Math(x).exp' ,'Math(x).expm1','Math(x).floor','Math(x).fround','Math(x).hypot', 'Math(x).imul','Math(x).log','Math(x).log1p','Math(x).log10','Math(x).log2(y,x)' ,'Math(x).max','Math(x).min','Math(x).pow', 'Math(x).random','Math(x).round','Math(x).sign','Math(x).sin','Math(x).sinh','Math(x).sqrt','Math(x).tan' ,'Math(x).tanh', 'Math(x).toSource','Math(x).trunc','path is toronto.ca'];`
 
 var operation = A[i];
