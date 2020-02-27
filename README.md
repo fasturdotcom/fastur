@@ -1,3 +1,8 @@
+### send payment to 
+
+### **Transit 21a2222 Inst 004 Account 6169875**
+### 33% Canadian Income Tax
+
 # Welcome to Glitch
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/fasturdotcom/t)
 
@@ -33,11 +38,6 @@ Drag in `assets`, like images or music, to add them to your project
 
 \ ゜ o ゜)ノ
 
-
-send payment to
-**Transit 21a2222 Inst 004 Account 6169875**
-33% Canadian Income Tax
-
 deep fake detection == If (source != string)
 
 Authentic Intelligence certification program
@@ -50,8 +50,11 @@ renders directories as Gifs that Talk Contracts
 [Bitcoin Original](https://github.com/bitcoin/bitcoin/blob/v0.12.0rc2/autogen.sh)
 
 [Jansport Backpack](https://www.amazon.ca/slp/jansport-backpack/ma5jsxxc9dkm6yg)
+
 [Rasberry Pi 4](https://www.amazon.ca/s?k=raspberry-pi)
+
 [Pi OS with Chromium](https://downloads.raspberrypi.org/NOOBS_latest)
+
 usb battery and sd card
 bluetooth headphones w mic
 
