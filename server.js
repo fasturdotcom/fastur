@@ -1287,43 +1287,49 @@ function render(action, elements) {
     if (b.class == "inner inactive") {
       b.animation = "inner active";
     }
-    
-    cssd += ` .${(b.id || "card")} { 
-text-align: ${(b.align || "center")};
-background: ${(b.background || "#000000")};  
-border-radius: ${(b.rounding || "10px")};
-outline: ${(b.outline || "dashed")}; 
-draggable: ${(b.isdrag||"true")};  
-font-family: ${(b.font || "Arial, Helvetica, sans-serif;")};
-transition: ${(b.transition || "all 0.5s ease-out;")};
-opacity: ${(b.opacity || "0.85;" )};
-margin: ${(b.margin || "5px;"  )};
-position: ${(b.position || "relative;")}; 
-font-size: ${(b.size || " 1rem; ")};  
+
+    cssd += ` .${b.id || "card"} { 
+text-align: ${b.align || "center"};
+background: ${b.background || "#000000"};  
+border-radius: ${b.rounding || "10px"};
+outline: ${b.outline || "dashed"}; 
+draggable: ${b.isdrag || "true"};  
+font-family: ${b.font || "Arial, Helvetica, sans-serif;"};
+transition: ${b.transition || "all 0.5s ease-out;"};
+opacity: ${b.opacity || "0.85;"};
+margin: ${b.margin || "5px;"};
+position: ${b.position || "relative;"}; 
+font-size: ${b.size || " 1rem; "};  
 
 }`;
 
-    if (num == 1) {
-      t = "<title>" + (b.title ||  "Fastur") + "</title>";
-      d = "<meta name='description' content='" + (b.description || "Property of Fastur Incorporated")+ "'>";
-    }
-
     body +=
-      "<" + (b.tag || "a") + " href='/" + b.name +
-      "' style=' display:" + (b.display || "block") +
-      "' class='" + (b.class || b.animation || "card") + "' data-action='1'>" + b.name+ 
-      "</" + (b.tag || "a") + "><br>";
+      "<" +
+      (b.tag || "a") +
+      " href='/" +
+      b.name +
+      "' style=' display:" +
+      (b.display || "block") +
+      "' class='" +
+      (b.class || b.animation || "card") +
+      "' data-action='1'>" +
+      b.name +
+      "</" +
+      (b.tag || "a") +
+      "><br>";
   }
-  
-  
-  
+
   if (action == "client") {
     var standard = body;
   } else {
     var standard =
       "<!DOCTYPE html id='page'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'>" +
-      t +
-      d +
+      "<title>" +
+      (b.title || "Fastur") +
+      "</title>" +
+      "<meta name='description' content='" +
+      (b.description || "Property of Fastur Incorporated") +
+      "'>" +
       "<style>" +
       cssd +
       "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" +
@@ -1361,8 +1367,7 @@ function movie(dream) {
       } else {
         json.push({
           query: q,
-          screenshot:
-            "https://code.fastur.com/app/c.png",
+          screenshot: "https://code.fastur.com/app/c.png",
           time: Date.now()
         });
         require("fs").writeFileSync("./api/data.json", JSON.stringify(json));
@@ -1372,10 +1377,7 @@ function movie(dream) {
         width: 1200,
         height: 1200
       });
-      var pathd = path.join(
-        __dirname,
-        "api/c.png"
-      );
+      var pathd = path.join(__dirname, "api/c.png");
       console.log(pathd);
 
       await page.screenshot({
@@ -1388,8 +1390,8 @@ function movie(dream) {
   }
   //puppet("https://google.com","input.gLFyf.gsfi",dream,"Enter","div#resultStats","links");
   function run(a) {
-    var r = require("fs").readFileSync("sun.json",'utf8');
-    console.log(r)
+    var r = require("fs").readFileSync("sun.json", "utf8");
+    console.log(r);
     const jsdom = require("jsdom");
     const { JSDOM } = jsdom;
 
@@ -1561,7 +1563,7 @@ function movie(dream) {
     );
   }
   //run("Abcdefghijklmnopqrstuvwxyz");
-  
+
   function twitter_post($, id) {
     var Twitter = require("twitter");
     var client = new Twitter({
@@ -1616,7 +1618,7 @@ function movie(dream) {
             url: t.statuses[y].user.url
           });
         }
-        require('fs').writeFileSync('a.json',JSON.stringify(arr));
+        require("fs").writeFileSync("a.json", JSON.stringify(arr));
         console.log(arr);
       }
     );
@@ -1718,7 +1720,7 @@ function movie(dream) {
     });
   }
   //twitter_gif_post("sun.mp4")
-  
+
   function gif(a, b, c) {
     const GIFEncoder = require("gifencoder");
     const { createCanvas } = require("canvas");
@@ -1814,7 +1816,7 @@ function movie(dream) {
       });
     }
   }
-  //pixel('sun',30); 
+  //pixel('sun',30);
   function saveImage(url) {
     var http = require("http"),
       Stream = require("stream").Transform,
@@ -1846,10 +1848,10 @@ function movie(dream) {
   //github("fasturdotcom");
 }
 movie("subroutine");
-  
+
 var server = require("http")
   .createServer(function(request, response) {
-    if (request.method == "GET"){
+    if (request.method == "GET") {
       var json = require("fs").readFileSync("./api/analytics.json", "utf8");
       try {
         var json = JSON.parse(json);
@@ -1858,7 +1860,7 @@ var server = require("http")
         var json = [];
       }
       json.push({
-        url: request.url, 
+        url: request.url,
         domain: request.headers.host,
         time: Date.now(),
         ip: request.headers["x-real-ip"]
@@ -1878,7 +1880,7 @@ var server = require("http")
       var cookies = parseCookies(request);
       if (request.url == "/favicon.ico") {
         response.end("");
-      } 
+      }
       if (request.url == "/script.js") {
         var data = require("fs").readFileSync("./script.js");
         response.end(data);
@@ -1890,14 +1892,12 @@ var server = require("http")
         var data = require("fs").readFileSync("./server.js", "utf8");
         data = data.split("var server")[0];
         response.end(data);
-      } 
+      }
       if (request.url == "/app") {
         response.writeHead(200, {
           "Content-Type": "js"
         });
-        var data = require("fs").readFileSync(
-          "./a.json"
-        );
+        var data = require("fs").readFileSync("./a.json");
         var data = JSON.parse(data);
         var data = render("false", data);
         response.end(data);
@@ -1934,7 +1934,11 @@ var server = require("http")
         var html = render("edit", elements);
         response.end(html);
       } else {
-        if (require("fs").existsSync(__dirname + "/api/" + request.url.split("/")[2])) {
+        if (
+          require("fs").existsSync(
+            __dirname + "/api/" + request.url.split("/")[2]
+          )
+        ) {
           var img =
             require("fs").readFileSync(
               __dirname + "/api/" + request.url.split("/")[2]
@@ -2153,7 +2157,10 @@ var server = require("http")
                   time: Date.now(),
                   ip: request.headers["x-real-ip"]
                 });
-                require("fs").writeFileSync("./api/analytics.json",JSON.stringify(json));
+                require("fs").writeFileSync(
+                  "./api/analytics.json",
+                  JSON.stringify(json)
+                );
 
                 async function puppet(url, input, q, press, waitFor, links) {
                   const fs = require("fs");
@@ -2245,9 +2252,19 @@ var server = require("http")
                     console.log(error);
                   }
                 }
-                puppet("https://google.com","input.gLFyf.gsfi",q,"Enter","div#resultStats","links");
+                puppet(
+                  "https://google.com",
+                  "input.gLFyf.gsfi",
+                  q,
+                  "Enter",
+                  "div#resultStats",
+                  "links"
+                );
 
-                var data = require("fs").readFileSync("./api/data.json","utf8");
+                var data = require("fs").readFileSync(
+                  "./api/data.json",
+                  "utf8"
+                );
 
                 if (q == "subscription") {
                   function subscription($) {

@@ -1,13 +1,6 @@
-// deep fake detection audio/video
-
-//https://s21.q4cdn.com/114365585/files/doc_financials/2019/q4/Square-2019-10-K.pdf
-//https://github.com/bitcoin/bitcoin/blob/v0.12.0rc2/autogen.sh
-
 var images; fetch("https://aisafetyceo.glitch.me/api/data.json").then(function (r){
   return r.json();
-}).then(function(h){
-  images = h;
-});
+}).then(function(h){ images = h; });
 fetch("https://aisafetyceo.glitch.me/app").then(function(res) {
   return res.text();
 }).then(function(html) {
