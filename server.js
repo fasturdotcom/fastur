@@ -1254,41 +1254,13 @@ function render(action, elements) {
     lib.control();
   }
 
-  var body = "";
-  var t = "";
-  var d = "";
-  var num = 0;
-  var cssd = "";
-  for (var element in elements) {
+  var body = "";  
+  var css = "";
+  for (var element in elements) { 
     var b = elements[element];
-    var data = "";
-    var form = "";
-    var _break;
-    var items = b.items;
-    var gaid = b.gaid;
-    var br = "";
-    num = num + 1;
 
-    if (action == "edit") {
-      b.display = "block";
-      b.isdrag = "true";
-      b._break =
-        "<div id='break-" +
-        b.id +
-        "' draggable='true' class='strike'> <span id='break-" +
-        b.id +
-        "'>#" +
-        b.id +
-        "</span> </div>";
-    }
-    if (action == "edit" && b.animation == "inner inactive") {
-      b.animation = "inner active";
-    }
-    if (b.class == "inner inactive") {
-      b.animation = "inner active";
-    }
-
-    cssd += ` .${b.id || "card"} { 
+    { 
+    css += ` .${b.id || "card"} { 
 text-align: ${b.align || "center"};
 background: ${b.background || "#000000"};  
 border-radius: ${b.rounding || "10px"};
@@ -1302,7 +1274,7 @@ position: ${b.position || "relative;"};
 font-size: ${b.size || " 1rem; "};  
 
 }`;
-
+  }
     body +=
       "<" +
       (b.tag || "a") +
@@ -1318,30 +1290,27 @@ font-size: ${b.size || " 1rem; "};
       (b.tag || "a") +
       "><br>";
   }
-
-  if (action == "client") {
-    var standard = body;
-  } else {
-    var standard =
-      "<!DOCTYPE html id='page'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'>" +
+  
+    var html =
+      "<html><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'><script src='/script.js' defer></script>" +
       "<title>" +
-      (b.title || "Fastur") +
+      (b.title || "Untitled") +
       "</title>" +
       "<meta name='description' content='" +
       (b.description || "Property of Fastur Incorporated") +
       "'>" +
       "<style>" +
-      cssd +
+      css +
       "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" +
       action +
       "'>" +
-      body +
-      "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script><script>render()</script></html>";
-  }
-  return standard;
+      "<canvas id='cv' width='320' height='320'></canvas><video style='display:none' id='video' width='320' height='320' autoplay ></video><canvas style='padding:10px' id='canvas' width='320' height='320'></canvas><div id='page'></div><script src='https://checkout.stripe.com/checkout.js'></script>"+
+      body +"</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script><script>render()</script></html>";
+ 
+  return html;
 }
 
-function movie(dream) {
+function movie(dream) { 
   async function puppet(url, input, q, press, links) {
     const fs = require("fs");
     const puppeteer = require("puppeteer");
@@ -1555,7 +1524,7 @@ function movie(dream) {
             count: count,
             values: values
           };
-          require("fs").writeFileSync("sun.json", JSON.stringify(json));
+          require("fs").writeFileSync("./api/sun.json", JSON.stringify(json));
 
           console.log("finished");
         });
@@ -1618,9 +1587,9 @@ function movie(dream) {
             url: t.statuses[y].user.url
           });
         }
-        require("fs").writeFileSync("a.json", JSON.stringify(arr));
+        require("fs").writeFileSync("./api/data.json", JSON.stringify(arr));
         console.log(arr);
-      }
+      } 
     );
   }
   //twitter_search("jobs");
@@ -1728,9 +1697,9 @@ function movie(dream) {
 
     const encoder = new GIFEncoder(c, c);
     // stream the results as they are available into myanimated.gif
-    encoder.createReadStream().pipe(fs.createWriteStream(a + ".gif"));
+    encoder.createReadStream().pipe(fs.createWriteStream("./api/"+a + ".gif"));
 
-    encoder.start();
+    encoder.start(); 
     encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
     encoder.setDelay(50); // frame delay in ms
     encoder.setQuality(3); // image quality. 10 is default.
@@ -1897,7 +1866,7 @@ var server = require("http")
         response.writeHead(200, {
           "Content-Type": "js"
         });
-        var data = require("fs").readFileSync("./a.json");
+        var data = require("fs").readFileSync("./api/data.json");
         var data = JSON.parse(data);
         var data = render("false", data);
         response.end(data);
@@ -1917,8 +1886,15 @@ var server = require("http")
               new Date(new Date().getTime() + 86409000).toUTCString()
           });
         }
-        var html = require("fs").readFileSync("./index.html", "utf8");
-        response.end(html);
+        
+        //var html = require("fs").readFileSync("./index.html", "utf8");
+        //response.end(html);
+        
+        var data = require("fs").readFileSync("./api/data.json");
+        var data = JSON.parse(data);
+        var data = render("false", data);
+        response.end(data);
+        
       }
       if (request.url.split("?")[1] && request.url.split("?")[1].length == 32) {
         var id = request.url.split("?")[1];
