@@ -1,14 +1,6 @@
-var images; fetch("https://aisafetyceo.glitch.me/api/data.json").then(function (r){
+var images; fetch("https://aisafetyceo.glitch.me/api/data.json", { mode: 'no-cors'}).then(function (r){
   return r.json();
 }).then(function(h){ images = h; });
-fetch("https://aisafetyceo.glitch.me/app").then(function(res) {
-  return res.text();
-}).then(function(html) {
-    var doc = document.createElement("html");
-    doc.innerHTML = html;
-    //doc.style.background = "red";
-    document.getElementById("page").appendChild(doc);
-});
 
 var cv = document.getElementById("cv");
 var ctx = cv.getContext("2d");
@@ -18,6 +10,7 @@ var x = 1; var y = 1; var h = 1; var w = 1;
 var shape = 1; var threshold = 50;
 var motion = []; var old = [];
   
+
 function animate() {
   
   for (var i in images){  
