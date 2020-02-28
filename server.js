@@ -1253,14 +1253,13 @@ function render(action, elements) {
     };
     lib.control();
   }
-
-  var body = "";  
+  var body = "";
   var css = "";
-  for (var element in elements) { 
+  for (var element in elements) {
     var b = elements[element];
 
-    { 
-    css += ` .${b.id || "card"} { 
+    {
+      css += ` .${b.id || "card"} { 
 text-align: ${b.align || "center"};
 background: ${b.background || "#000000"};  
 border-radius: ${b.rounding || "10px"};
@@ -1274,11 +1273,11 @@ position: ${b.position || "relative;"};
 font-size: ${b.size || " 1rem; "};  
 
 }`;
-  }
+    }
     body +=
       "<" +
       (b.tag || "a") +
-      " href='/" +
+      " href='#" +
       b.name +
       "' style=' display:" +
       (b.display || "block") +
@@ -1290,27 +1289,28 @@ font-size: ${b.size || " 1rem; "};
       (b.tag || "a") +
       "><br>";
   }
-  
-    var html =
-      "<html><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'><script src='/script.js' defer></script>" +
-      "<title>" +
-      (b.title || "Untitled") +
-      "</title>" +
-      "<meta name='description' content='" +
-      (b.description || "Property of Fastur Incorporated") +
-      "'>" +
-      "<style>" +
-      css +
-      "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" +
-      action +
-      "'>" +
-      "<canvas id='cv' width='320' height='320'></canvas><video style='display:none' id='video' width='320' height='320' autoplay ></video><canvas style='padding:10px' id='canvas' width='320' height='320'></canvas><div id='page'></div><script src='https://checkout.stripe.com/checkout.js'></script>"+
-      body +"</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script><script>render()</script></html>";
- 
+
+  var html =
+    "<html><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'><script src='/script.js' defer></script>" +
+    "<title>" +
+    (elements[0].title || "Untitled") +
+    "</title>" +
+    "<meta name='description' content='" +
+    (elements[0].description || "Untitled") +
+    "'>" +
+    "<style>" +
+    css +
+    "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" +
+    action +
+    "'>" +
+    "<canvas id='cv' width='320' height='320'></canvas><video style='display:none' id='video' width='320' height='320' autoplay ></video><canvas style='padding:10px' id='canvas' width='320' height='320'></canvas><script src='https://checkout.stripe.com/checkout.js'></script>" +
+    body +
+    "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script></html>";
+
   return html;
 }
 
-function movie(dream) { 
+function movie(dream) {
   async function puppet(url, input, q, press, links) {
     const fs = require("fs");
     const puppeteer = require("puppeteer");
@@ -1343,8 +1343,8 @@ function movie(dream) {
       }
 
       await page.setViewport({
-        width: 1200,
-        height: 1200
+        width: 1280,
+        height: 1280
       });
       var pathd = path.join(__dirname, "api/c.png");
       console.log(pathd);
@@ -1357,7 +1357,14 @@ function movie(dream) {
       console.log(error);
     }
   }
-  //puppet("https://google.com","input.gLFyf.gsfi",dream,"Enter","div#resultStats","links");
+  puppet(
+    "https://google.com",
+    "input.gLFyf.gsfi",
+    dream,
+    "Enter",
+    "div#resultStats",
+    "links"
+  );
   function run(a) {
     var r = require("fs").readFileSync("sun.json", "utf8");
     console.log(r);
@@ -1589,7 +1596,7 @@ function movie(dream) {
         }
         require("fs").writeFileSync("./api/data.json", JSON.stringify(arr));
         console.log(arr);
-      } 
+      }
     );
   }
   //twitter_search("jobs");
@@ -1697,9 +1704,11 @@ function movie(dream) {
 
     const encoder = new GIFEncoder(c, c);
     // stream the results as they are available into myanimated.gif
-    encoder.createReadStream().pipe(fs.createWriteStream("./api/"+a + ".gif"));
+    encoder
+      .createReadStream()
+      .pipe(fs.createWriteStream("./api/" + a + ".gif"));
 
-    encoder.start(); 
+    encoder.start();
     encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
     encoder.setDelay(50); // frame delay in ms
     encoder.setQuality(3); // image quality. 10 is default.
@@ -1886,15 +1895,14 @@ var server = require("http")
               new Date(new Date().getTime() + 86409000).toUTCString()
           });
         }
-        
+
         //var html = require("fs").readFileSync("./index.html", "utf8");
         //response.end(html);
-        
+
         var data = require("fs").readFileSync("./api/data.json");
         var data = JSON.parse(data);
         var data = render("false", data);
         response.end(data);
-        
       }
       if (request.url.split("?")[1] && request.url.split("?")[1].length == 32) {
         var id = request.url.split("?")[1];
@@ -2136,105 +2144,6 @@ var server = require("http")
                 require("fs").writeFileSync(
                   "./api/analytics.json",
                   JSON.stringify(json)
-                );
-
-                async function puppet(url, input, q, press, waitFor, links) {
-                  const fs = require("fs");
-                  const puppeteer = require("puppeteer");
-                  const path = require("path");
-                  try {
-                    const browser = await puppeteer.launch({
-                      args: ["--no-sandbox"]
-                    });
-                    const page = await browser.newPage();
-                    await page.goto(url);
-                    await page.type(input, q);
-
-                    page.keyboard.press(press);
-                    await page.waitForSelector(waitFor);
-
-                    function getText(linkText) {
-                      linkText = linkText.replace(/\r\n|\r/g, "\n");
-                      linkText = linkText.replace(/\ +/g, " ");
-
-                      // Replace &nbsp; with a space
-                      var nbspPattern = new RegExp(
-                        String.fromCharCode(160),
-                        "g"
-                      );
-                      return linkText.replace(nbspPattern, " ");
-                    }
-
-                    var Links = [];
-                    if (links) {
-                      const links = await page.$$("div.r");
-                      for (var i = 0; i < links.length; i++) {
-                        let valueHandle = await links[i].getProperty(
-                          "innerText"
-                        );
-                        let linkText = await valueHandle.jsonValue();
-                        const text = getText(linkText);
-                        console.log(linkText);
-                        Links.push(linkText);
-                        if (q == text) {
-                          console.log("Found " + text);
-                          await links[i].click();
-                        }
-                      }
-                    }
-                    var data = require("fs").readFileSync(
-                      "./api/data.json",
-                      "utf8"
-                    );
-                    var json = JSON.parse(data);
-
-                    var result = JSON.parse(data).find(obj => {
-                      return obj.query === q;
-                    });
-
-                    if (result) {
-                      console.log(result);
-                    } else {
-                      json.push({
-                        query: q,
-                        screenshot:
-                          "https://code.fastur.com/" +
-                          q.replace(/\W+/g, "-").toLowerCase() +
-                          ".png",
-                        links: Links,
-                        time: Date.now()
-                      });
-                      require("fs").writeFileSync(
-                        "./api/data.json",
-                        JSON.stringify(json)
-                      );
-                    }
-
-                    await page.setViewport({
-                      width: 800,
-                      height: 1000
-                    });
-                    var pathd = path.join(
-                      __dirname,
-                      "/api/" + q.replace(/\W+/g, "-").toLowerCase() + ".png"
-                    );
-                    console.log(pathd);
-
-                    await page.screenshot({
-                      path: pathd
-                    });
-                    await browser.close();
-                  } catch (error) {
-                    console.log(error);
-                  }
-                }
-                puppet(
-                  "https://google.com",
-                  "input.gLFyf.gsfi",
-                  q,
-                  "Enter",
-                  "div#resultStats",
-                  "links"
                 );
 
                 var data = require("fs").readFileSync(
@@ -2545,6 +2454,75 @@ var server = require("http")
                   }
                 }
                 register(object.name, object.email, object.password);
+                break;
+              }
+              case "screen": {
+                var coords = object.query;
+                var x = coords.x;
+                var y = coords.y;
+
+                console.log(x + "ok" + y);
+
+                async function puppet(url, input, q, press, coords) {
+                  const fs = require("fs");
+                  const puppeteer = require("puppeteer");
+                  const path = require("path");
+                  try {
+                    const browser = await puppeteer.launch({
+                      args: ["--no-sandbox"]
+                    });
+                    const page = await browser.newPage();
+                    await page.goto(url);
+                    await page.mouse.click(coords.x, coords.y, { delay: 500 });
+                    await page.type(input, q);
+                    page.keyboard.press(press);
+                    var data = require("fs").readFileSync(
+                      "./api/data.json",
+                      "utf8"
+                    );
+                    var json = JSON.parse(data);
+
+                    var result = JSON.parse(data).find(obj => {
+                      return obj.query === q;
+                    });
+
+                    if (result) {
+                      console.log(result);
+                    } else {
+                      json.push({
+                        query: q,
+                        screenshot: "https://code.fastur.com/app/c.png",
+                        time: Date.now()
+                      });
+                      require("fs").writeFileSync(
+                        "./api/data.json",
+                        JSON.stringify(json)
+                      );
+                    }
+
+                    await page.setViewport({
+                      width: 1280,
+                      height: 1280
+                    });
+                    var pathd = path.join(__dirname, "api/c.png");
+                    console.log(pathd);
+
+                    await page.screenshot({
+                      path: pathd
+                    });
+                    await browser.close();
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }
+                puppet(
+                  "https://google.com",
+                  "input.gLFyf.gsfi",
+                  "fastur",
+                  "Enter",
+                  coords
+                );
+
                 break;
               }
               default:
