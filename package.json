@@ -17,7 +17,9 @@
     "gif-frames": "^1.0.1",
     "github-scraper": "^6.8.0",
     "puppeteer": "^2.1.0",
-    "image-size": "^0.8.3"
+    "image-size": "^0.8.3",
+    "canvas": "^2.6.1",
+    "canvas-prebuilt": "^1.6.11"
   },
   "engines": {
     "node": "8.x"
