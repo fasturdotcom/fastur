@@ -1357,14 +1357,7 @@ function movie(dream) {
       console.log(error);
     }
   }
-  puppet(
-    "https://google.com",
-    "input.gLFyf.gsfi",
-    dream,
-    "Enter",
-    "div#resultStats",
-    "links"
-  );
+  //puppet("https://google.com","input.gLFyf.gsfi",dream,"Enter","div#resultStats","links");
   function run(a) {
     var r = require("fs").readFileSync("sun.json", "utf8");
     console.log(r);
@@ -1539,7 +1532,50 @@ function movie(dream) {
     );
   }
   //run("Abcdefghijklmnopqrstuvwxyz");
+  function gif(a, b, c) {
+    const GIFEncoder = require("gifencoder");
+    const Canvas = require("canvas-prebuilt");
+    const fs = require("fs");
 
+    const encoder = new GIFEncoder(c, c);
+    // stream the results as they are available into myanimated.gif
+    encoder
+      .createReadStream()
+      .pipe(fs.createWriteStream("./api/" + a + ".gif"));
+
+    encoder.start();
+    encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
+    encoder.setDelay(50); // frame delay in ms
+    encoder.setQuality(3); // image quality. 10 is default.
+
+    // use node-canvas
+    var canvas = new Canvas(c, c);
+    const ctx = canvas.getContext("2d");
+    
+    function getColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 8; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    var images = fs.readFileSync('api/clicks.json','utf-8')
+    console.log(images)
+    images = JSON.parse(images);
+    for (var i in images) {
+      var data = fs.readFileSync(__dirname + "/api/" + images[i].time + ".png");
+      var img = new Canvas.Image();
+      img.src = data;
+      ctx.drawImage(img, 0, 0, 320, 240);
+      encoder.addFrame(ctx);
+    } 
+
+    encoder.finish();
+    console.log("Gif Generator finished");
+  }
+  gif("sun", 15, 320);
   function twitter_post($, id) {
     var Twitter = require("twitter");
     var client = new Twitter({
@@ -1696,64 +1732,8 @@ function movie(dream) {
     });
   }
   //twitter_gif_post("sun.mp4")
+  
 
-  function gif(a, b, c) {
-    const GIFEncoder = require("gifencoder");
-    const { createCanvas } = require("canvas");
-    const fs = require("fs");
-
-    const encoder = new GIFEncoder(c, c);
-    // stream the results as they are available into myanimated.gif
-    encoder
-      .createReadStream()
-      .pipe(fs.createWriteStream("./api/" + a + ".gif"));
-
-    encoder.start();
-    encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
-    encoder.setDelay(50); // frame delay in ms
-    encoder.setQuality(3); // image quality. 10 is default.
-
-    // use node-canvas
-    const canvas = createCanvas(c, c);
-    const ctx = canvas.getContext("2d");
-    function getColor() {
-      var letters = "0123456789ABCDEF";
-      var color = "#";
-      for (var i = 0; i < 8; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    }
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, c, c);
-    encoder.addFrame(ctx);
-
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, c, c);
-    encoder.addFrame(ctx);
-
-    function encode(amount) {
-      var gifdata = [];
-      for (var y = 0; y < amount; y++) {
-        for (let i = 0; i < c; i++) {
-          for (let j = 0; j < c; j++) {
-            var color = getColor();
-            gifdata.push(color);
-            ctx.fillStyle = color;
-            ctx.fillRect(j, i, 1, 1);
-          }
-        }
-        encoder.addFrame(ctx);
-      }
-      fs.writeFileSync("./api/gifdata", JSON.stringify(gifdata));
-    }
-    encode(b);
-
-    encoder.finish();
-    console.log("Gif Generator finished");
-  }
-  //gif("sun", 15, 320);
   function pixel(image, amount) {
     for (var y = 0; y < amount; y++) {
       var image = "public/" + image + y + ".png";
@@ -1825,7 +1805,7 @@ function movie(dream) {
   }
   //github("fasturdotcom");
 }
-movie("subroutine");
+movie("maps");
 
 var server = require("http")
   .createServer(function(request, response) {
@@ -1956,7 +1936,7 @@ var server = require("http")
           }
           if (is_json(string)) {
             var object = JSON.parse(string);
-            console.log(object);
+            //console.log(object);
             switch (object.type) {
               case "commit": {
                 var q = object.query;
@@ -2125,10 +2105,7 @@ var server = require("http")
                   }
                 }
 
-                var json = require("fs").readFileSync(
-                  "./api/analytics.json",
-                  "utf8"
-                );
+                var json = require("fs").readFileSync("./api/analytics.json","utf8");
                 try {
                   var json = JSON.parse(json);
                 } catch (e) {
@@ -2141,15 +2118,9 @@ var server = require("http")
                   time: Date.now(),
                   ip: request.headers["x-real-ip"]
                 });
-                require("fs").writeFileSync(
-                  "./api/analytics.json",
-                  JSON.stringify(json)
-                );
+                require("fs").writeFileSync("./api/analytics.json",JSON.stringify(json));
 
-                var data = require("fs").readFileSync(
-                  "./api/data.json",
-                  "utf8"
-                );
+                var data = require("fs").readFileSync("./api/data.json","utf8");
 
                 if (q == "subscription") {
                   function subscription($) {
@@ -2458,70 +2429,61 @@ var server = require("http")
               }
               case "screen": {
                 var coords = object.query;
-                var x = coords.x;
-                var y = coords.y;
-
-                console.log(x + "ok" + y);
-
+                
                 async function puppet(url, input, q, press, coords) {
                   const fs = require("fs");
                   const puppeteer = require("puppeteer");
                   const path = require("path");
                   try {
+                   
                     const browser = await puppeteer.launch({
                       args: ["--no-sandbox"]
                     });
                     const page = await browser.newPage();
-                    await page.goto(url);
-                    await page.mouse.click(coords.x, coords.y, { delay: 500 });
-                    await page.type(input, q);
-                    page.keyboard.press(press);
-                    var data = require("fs").readFileSync(
-                      "./api/data.json",
-                      "utf8"
-                    );
-                    var json = JSON.parse(data);
-
-                    var result = JSON.parse(data).find(obj => {
-                      return obj.query === q;
-                    });
-
-                    if (result) {
-                      console.log(result);
-                    } else {
-                      json.push({
-                        query: q,
-                        screenshot: "https://code.fastur.com/app/c.png",
-                        time: Date.now()
-                      });
-                      require("fs").writeFileSync(
-                        "./api/data.json",
-                        JSON.stringify(json)
-                      );
-                    }
-
+                    await page.goto(url);    
                     await page.setViewport({
                       width: 1280,
                       height: 1280
                     });
-                    var pathd = path.join(__dirname, "api/c.png");
-                    console.log(pathd);
+                    await page.type(input, q);
+                    page.keyboard.press(press);
+                    await page.waitFor(1000)
 
-                    await page.screenshot({
-                      path: pathd
-                    });
+                    for (var i in json){    
+                      
+                      var coords = json[i].coords;
+                      coords.x = coords.x * 4;
+                      coords.y = coords.y * 4;
+                    
+                    await page.mouse.click(coords.x, coords.y, { delay: 500 });
+                    await page.waitFor(1000)
+                    }
+                    var data = require("fs").readFileSync("./api/data.json","utf8");
+                    var json = JSON.parse(data);
+
+                    var result = JSON.parse(data).find(obj => {return obj.query === q;});
+                    json.push(coords);
+
+                    require("fs").writeFileSync("./api/data.json",JSON.stringify(json));
+                   
+                    var pathd = path.join(__dirname, "api/"+coords.time+".png");
+                    await page.screenshot({ path: pathd });
+                    
+                    var json = require("fs").readFileSync("./api/clicks.json","utf8");
+                    try {
+                  var json = JSON.parse(json);
+                } catch (e) {
+                  var json = [];
+                }
+                    json.push(object.query);
+                    require("fs").writeFileSync("./api/clicks.json",JSON.stringify(json));
+                    
                     await browser.close();
                   } catch (error) {
                     console.log(error);
                   }
                 }
-                puppet(
-                  "https://google.com",
-                  "input.gLFyf.gsfi",
-                  "fastur",
-                  "Enter",
-                  coords
-                );
+                puppet("https://google.com","input.gLFyf.gsfi","maps","Enter",coords);
 
                 break;
               }

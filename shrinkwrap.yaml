@@ -1,4 +1,6 @@
 dependencies:
+  canvas: 2.6.1
+  canvas-prebuilt: 1.6.11
   gif-frames: 1.0.1
   gifencoder: 2.0.1
   github-scraper: 6.8.0
@@ -150,6 +152,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
+  /canvas-prebuilt/1.6.11:
+    dependencies:
+      node-pre-gyp: 0.10.3
+    dev: false
+    requiresBuild: true
+    resolution:
+      integrity: sha512-ayBAayYLgFbGBX+cwtOzM4iEQP4XB5DuBbtjgvAwQ66/FMzSR7DhlCqtDZIq9UBbpFCb1QpyDgUNVclHDdBixg==
   /canvas/2.6.1:
     dependencies:
       nan: 2.14.0
@@ -924,6 +933,22 @@ packages:
       node: '>=v0.6.5'
     resolution:
       integrity: sha1-GA6scAPgxwdhjvMTaPYvhLKmkJE=
+  /node-pre-gyp/0.10.3:
+    dependencies:
+      detect-libc: 1.0.3
+      mkdirp: 0.5.1
+      needle: 2.3.2
+      nopt: 4.0.1
+      npm-packlist: 1.4.8
+      npmlog: 4.1.2
+      rc: 1.2.8
+      rimraf: 2.7.1
+      semver: 5.7.1
+      tar: 4.4.13
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-d1xFs+C/IPS8Id0qPTZ4bUT8wWryfR/OzzAFxweG+uLN85oPzyo2Iw6bVlLQ/JOdgNonXLCoRyqDzDWq4iw72A==
   /node-pre-gyp/0.11.0:
     dependencies:
       detect-libc: 1.0.3
@@ -1603,6 +1628,8 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
+  canvas: ^2.6.1
+  canvas-prebuilt: ^1.6.11
   gif-frames: ^1.0.1
   gifencoder: ^2.0.1
   github-scraper: ^6.8.0
