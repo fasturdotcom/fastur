@@ -12,45 +12,54 @@ var threshold = 50;
 var motion = [];
 var old = [];
 
-cv.addEventListener("click", function(e) {
-  //console.log(cv.getBoundingClientRect())
-  var bound = cv.getBoundingClientRect()
-  var x = e.clientX - bound.left; 
-  var y = e.clientY - bound.top;
-  
-  fetch("/", {
-              method: "post",
-              mode: "no-cors",
-              body: JSON.stringify({
-                type: "screen",
-                query: {x:x,y:y},
-                modifier: window.commitpath
-              }) 
-            }).then(function(response) {
-              var decoder = new TextDecoder();
-              var reader = response.body.getReader();
-              reader.read().then(function processResult(result) {
-                if (result.done) return;
-                var result = decoder.decode(result.value, {
-                  stream: true
-                });
-                console.log(result);
-              });
-            });
-  
-  console.log("x: " + x + " y: " + y)
+var counter = 0;
+setInterval(function() {
+  var images = lib.images;
+     console.log(images[counter].screenshot);
 
+    var img = new Image();
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
+    };
+    img.src = "https://aisafetyceo.glitch.me/" + images[counter].screenshot;
+  counter++
+ }, 5000);
+
+cv.addEventListener("click", function(e) {
+  var bound = cv.getBoundingClientRect();
+  var x = e.clientX - bound.left;
+  var y = e.clientY - bound.top;
+
+  var now = Date.now();
+  var qoords = {
+    coords: { x: x, y: y },
+    screenshot: "/api/" + now + ".png",
+    time: now
+  };
+  fetch("/", {
+    method: "post",
+    mode: "no-cors",
+    body: JSON.stringify({
+      type: "screen",
+      query: qoords,
+      modifier: window.commitpath
+    })
+  }).then(function(response) {
+    var decoder = new TextDecoder();
+    var reader = response.body.getReader();
+    reader.read().then(function processResult(result) {
+      if (result.done) return;
+      var result = decoder.decode(result.value, {
+        stream: true
+      });
+      console.log(result);
+    });
+  });
+  lib.current = qoords;
+  console.log(lib.current);
 });
 window.lib = {
   start: function(e) {
-    fetch("https://aisafetyceo.glitch.me/api/data.json", { mode: "no-cors" })
-      .then(function(r) {
-        return r.json();
-      })
-      .then(function(h) {
-        lib.images = h;
-      });    
-
     var video = document.getElementById("video");
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
@@ -68,14 +77,6 @@ window.lib = {
     lib.animate();
   },
   animate: function(e) {
-    for (var i in lib.images) {
-      var img = new Image();
-      img.onload = function() {
-        ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
-      };
-      img.src = "https://aisafetyceo.glitch.me/app/c.png";
-    }
-
     function getColor() {
       var letters = "0123456789ABCDEF";
       var color = "#";
@@ -277,3 +278,13 @@ window.lib = {
   }
 };
 lib.start();
+
+setInterval(function() {
+  fetch("https://aisafetyceo.glitch.me/api/clicks.json", { mode: "no-cors" })
+    .then(function(r) {
+      return r.json();
+    })
+    .then(function(h) {
+      lib.images = h;
+    });
+}, 3000);
