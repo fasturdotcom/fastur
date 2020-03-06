@@ -41,24 +41,7 @@ Drag in `assets`, like images or music, to add them to your project
 [Any Computer](https://www.amazon.ca/s?k=raspberry-pi)
 [Any Browser](https://downloads.raspberrypi.org/NOOBS_latest)
 
-This is an Intelligence certification program.
-
-You build client side voice power for banking and legal sites.
-
-minimizing the cost between code and signal
-
-renders directories as Gifs that Talk Contracts
-
-Deep fake detection 
-
-Photodiamonetric Battery
-
-Bluetooth headphones w mic
-
-Snippets of code and production ready templates for building web applications 
-with [Carrd](https://www.carrd.co) and [Glitch](https://www.glitch.com)
-
-Optical Camera Recognition of Credit + Debit Cards
+Code and templates for building web applications with [Carrd](https://www.carrd.co) and [Glitch](https://www.glitch.com)
 
 1 Gif with pixels of company stocks over time
 
@@ -72,14 +55,7 @@ Optical Camera Recognition of Credit + Debit Cards
 
 📼 Record to Disk or Local Storage
 
-⏱ Slow Down or Speed Up Time
-
-[Jansport Backpack](https://www.amazon.ca/slp/jansport-backpack/ma5jsxxc9dkm6yg)
-
-[Rasberry Pi 4](https://www.amazon.ca/s?k=raspberry-pi)
-
-[Pi OS with Chromium](https://downloads.raspberrypi.org/NOOBS_latest)
-
+⏱ Slow Down or Speed Up Time 
 
 ### How
 
