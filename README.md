@@ -2,7 +2,7 @@
 ### **Transit 21a2222 Inst 004 Account 6169875**
 ### 33% Canadian Income Tax
 
-# Welcome to Glitch
+# Welcome to Fastur
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/import/github/fasturdotcom/t)
 
 Click `Show` in the header to see your app live. Updates to your code will instantly deploy and update live.
