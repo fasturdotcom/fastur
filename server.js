@@ -200,9 +200,7 @@ function render(action, elements) {
                 }
               }
             }
-            starthere();
-            var button = document.getElementById("myBtn");
-            button.innerHTML = "$1 Question";
+            starthere(); 
 
             function draw(x, y, w, h) {
               const canvas = document.getElementById("canvas");
@@ -1259,9 +1257,9 @@ function render(action, elements) {
     var b = elements[element];
 
     {
-      css += ` .${b.cssid || "card"} { 
+      css += ` .${b.class || "card"} { 
 text-align: ${b.align || "center"};
-background: ${b.background || "#000000"};  
+background: ${b.background || "#FFFFFF"};  
 border-radius: ${b.rounding || "10px"};
 outline: ${b.outline || "dashed"}; 
 draggable: ${b.isdrag || "true"};  
@@ -1277,16 +1275,24 @@ font-size: ${b.size || " 1rem; "};
     body +=
       "<" +
       (b.tag || "a") +
-      " href='#" +
-      b.name +
-      "' style=' display:" +
-      (b.display || "block") +
+      " href='" +
+      b.href +
+      "' style='" +
+      (b.style || "margin:10px;padding:10px;display:block;") +
       "' id='" +
-      (b.id || "card") +
+      (b.id || "card") + 
+      "' onclick='" +
+      (b.onclick || "card") +  
+      "' src='" +
+      (b.src || "") +   
+      "' type='" +
+      (b.formtype || "") +
+      "' value='" +
+      (b.value || "") +
       "' class='" +
       (b.class || b.animation || "card") +
       "' data-action='1'>" +
-      b.name +
+      (b.name || "") +
       "</" +
       (b.tag || "a") +
       "><br>";
@@ -1302,15 +1308,178 @@ font-size: ${b.size || " 1rem; "};
     "'>" +
     "<style>" +
     css +
-    "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' data-editor='" +
+    "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' style='background-color:"+elements[0].background+"' data-editor='" +
     action +
     "'>" +
-    "<canvas id='cv' width='320' height='320'></canvas><video style='display:none' id='video' width='320' height='320' autoplay ></video><canvas style='padding:10px' id='canvas' width='320' height='320'></canvas><script src='https://checkout.stripe.com/checkout.js'></script>" +
+    "<video style='display:none' id='video' width='640' height='640' autoplay ></video><input type='text' id='input' ><script src='https://checkout.stripe.com/checkout.js'></script>" +
     body +
-    "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/api2'></script></html>";
+    "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/server'></script><script>render()</script></html>";
 
   return html;
 }
+
+async function puppet(url, input, q, press, coords) {
+  const fs = require("fs");
+  const puppeteer = require("puppeteer");
+  const path = require("path");
+  try {
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox"]
+    });
+    const page = await browser.newPage();
+    
+    await page.goto(url);
+    await page.setViewport({
+      width: 1280,
+      height: 1280
+    });
+    await page.type(input, q);
+    page.keyboard.press(press);
+    await page.waitFor(1000);
+
+    for (var i in json) {
+      var coords = json[i].coords;
+      coords.x = coords.x;
+      coords.y = coords.y;
+
+      await page.mouse.click(coords.x, coords.y, {
+        delay: 500
+      });
+      await page.waitFor(1000);
+    }
+    var data = require("fs").readFileSync("./api/data.json", "utf8");
+    var json = JSON.parse(data);
+
+    var result = JSON.parse(data).find(obj => {
+      return obj.query === q;
+    });
+    json.push(coords);
+
+    require("fs").writeFileSync("./api/data.json", JSON.stringify(json));
+
+    var pathd = path.join(__dirname, "api/" + coords.time + ".png");
+    await page.screenshot({ path: pathd });
+
+    var json = require("fs").readFileSync("./api/clicks.json", "utf8");
+    try {
+      var json = JSON.parse(json);
+    } catch (e) {
+      var json = [];
+    }
+    json.push(coords);
+    require("fs").writeFileSync("./api/clicks.json", JSON.stringify(json));
+    console.log("puppet finished");
+    await browser.close();
+  } catch (error) {
+    console.log(error);
+  }
+}
+/*
+var now = Date.now();
+var qoords = {
+    coords: { x: 0, y: 0 },
+    screenshot: "/api/" + now + ".png",
+    time: now
+  };
+var counter = 0;
+setInterval(function() {
+  var data = require("fs").readFileSync("./api/data.json", "utf8");
+  var data = JSON.parse(data);
+  var arr = [];
+  for (var i in data) {
+    if (data[i].text) {
+      arr.push(data[i]);
+    }
+  }
+  var todo = arr[counter].name;
+  
+  var data = require("fs").readFileSync("./api/finished.json", "utf8");
+  if (data.indexOf(todo) == -1) {
+    puppet("https://google.com", "input.gLFyf.gsfi", todo, "Enter", qoords);
+  } else {
+    console.log("already performed this");
+  }
+
+data = JSON.parse(data);
+data.push(todo);
+require("fs").writeFileSync("./api/finished.json", JSON.stringify(data));
+  counter++
+ if (counter == arr.length) {
+    counter = 0;
+  }
+}, 10000);*/
+function gif(a, b, c) {
+  const GIFEncoder = require("gifencoder");
+  const Canvas = require("canvas-prebuilt");
+  const fs = require("fs");
+
+  const encoder = new GIFEncoder(c, c);
+  // stream the results as they are available into myanimated.gif
+  encoder.createReadStream().pipe(fs.createWriteStream("./api/" + a + ".gif"));
+
+  encoder.start();
+  encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
+  encoder.setDelay(50); // frame delay in ms
+  encoder.setQuality(3); // image quality. 10 is default.
+
+  var canvas = new Canvas(c, c);
+  const ctx = canvas.getContext("2d");
+
+  function getColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 8; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  var images = fs.readFileSync("api/clicks.json", "utf-8");
+
+  images = JSON.parse(images);
+  for (var i in images) {
+    var data = fs.readFileSync(__dirname + "/api/" + images[i].time + ".png");
+    var img = new Canvas.Image();
+    img.src = data;
+    ctx.drawImage(img, 0, 0, 640, 240);
+    encoder.addFrame(ctx);
+  }
+
+  encoder.finish();
+  console.log("Gif Generator finished");
+}
+//gif('sun', 15, 640);
+/*
+
+var count = 0;
+setInterval(function() {
+  var data = require("fs").readFileSync("./api/data.json", "utf8");
+  var json = JSON.parse(data);
+     
+  var arr = [];
+  for (var i in json){
+    if (json[i].text){
+      arr.push(json[i]);
+    }
+  } 
+  var todo = arr[count].id;
+ 
+  var data = require("fs").readFileSync("./api/finished.json", "utf8");
+  if (data.indexOf(todo) == -1) {
+  console.log("Not ready");
+  } else {
+  console.log("render GIF");
+  var name = arr[count].name;
+  gif(name, 15, 640);
+  }
+  data = JSON.parse(data);
+  data.push(todo);
+  require("fs").writeFileSync("./api/finished.json", JSON.stringify(data));
+    count++
+ if (count == arr.length) {
+    count = 0;
+  }
+   }, 10000);*/
 function run(a) {
   const jsdom = require("jsdom");
   const { JSDOM } = jsdom;
@@ -1484,153 +1653,107 @@ function run(a) {
   );
 } 
 /*
-   setInterval(function() {
-     var data = require("fs").readFileSync("./api/data.json", "utf8");
-     var json = JSON.parse(data);
-     for (var i in json){
-       if (json[i].text){
-       var text = json[i].text
-       var words = text.split(' ')
-       console.log(words)
-       //run("Abcdefghijklmnopqrstuvwxyz");
-       } 
-     console.log(json);
-     } 
-   }, 5000);
-   */
-function gif(a, b, c) {
-  const GIFEncoder = require("gifencoder");
-  const Canvas = require("canvas-prebuilt");
-  const fs = require("fs");
-
-  const encoder = new GIFEncoder(c, c);
-  // stream the results as they are available into myanimated.gif
-  encoder.createReadStream().pipe(fs.createWriteStream("./api/" + a + ".gif"));
-
-  encoder.start();
-  encoder.setRepeat(0); // 0 for repeat, -1 for no-repeat
-  encoder.setDelay(50); // frame delay in ms
-  encoder.setQuality(3); // image quality. 10 is default.
-
-  var canvas = new Canvas(c, c);
-  const ctx = canvas.getContext("2d");
-
-  function getColor() {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 8; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+var count = 0;
+setInterval(function() {
+  var data = require("fs").readFileSync("./api/data.json", "utf8");
+  var json = JSON.parse(data);
+     
+  var arr = [];
+  for (var i in json){
+    if (json[i].text){
+      arr.push(json[i]);
     }
-    return color;
+  } 
+  var todo = arr[count].id;
+ 
+  var data = require("fs").readFileSync("./api/finished.json", "utf8");
+  if (data.indexOf(todo) == -1) {
+    var text = arr[count].text
+    var words = text.split(' ');
+    console.log(words)  
+
+    //run(words[0]);
+  } else {
+    console.log("already performed this");
   }
-
-  var images = fs.readFileSync("api/clicks.json", "utf-8");
-
-  images = JSON.parse(images);
-  for (var i in images) {
-    var data = fs.readFileSync(__dirname + "/api/" + images[i].time + ".png");
-    var img = new Canvas.Image();
-    img.src = data;
-    ctx.drawImage(img, 0, 0, 320, 240);
-    encoder.addFrame(ctx);
+  data = JSON.parse(data);
+  data.push(todo);
+  require("fs").writeFileSync("./api/finished.json", JSON.stringify(data));
+    count++
+ if (count == arr.length) {
+    count = 0;
   }
+   }, 10000);*/
 
-  encoder.finish();
-  console.log("Gif Generator finished");
-}
-//gif("sun", 15, 320);
-
-//create.gif
-//clientside load gif page! 
-async function puppet(url, input, q, press, coords) {
-  const fs = require("fs");
-  const puppeteer = require("puppeteer");
-  const path = require("path");
-  try {
+async function twitter($) {
+    const puppeteer = require("puppeteer");
+    const path = require("path");
     const browser = await puppeteer.launch({
       args: ["--no-sandbox"]
     });
     const page = await browser.newPage();
-    await page.goto(url);
-    await page.setViewport({
-      width: 1280,
-      height: 1280
-    });
-    await page.type(input, q);
-    page.keyboard.press(press);
-    await page.waitFor(1000);
+    await page.setViewport({ width: 1280, height: 1280 });
 
-    for (var i in json) {
-      var coords = json[i].coords;
-      coords.x = coords.x * 4;
-      coords.y = coords.y * 4;
-
-      await page.mouse.click(coords.x, coords.y, {
-        delay: 500
-      });
-      await page.waitFor(1000);
+    let twitterAccount = {
+      userField: "input[name='session[username_or_email]']",
+      passField: "input[name='session[password]']",
+      loginSubmit: ".css-901oao"
+    };
+    await page.goto("https://twitter.com");
+    await page.waitForSelector(twitterAccount.userField);
+    await page.click(twitterAccount.userField);
+    await page.keyboard.type("aicashceo");
+    await page.waitForSelector(twitterAccount.passField);
+    await page.click(twitterAccount.passField);
+    await page.keyboard.type("Bombsaway!1");
+    await page.keyboard.press("Enter");
+    await page.waitForNavigation();
+    var url = page.url();
+    if (url.indexOf("RetypePhoneNumber") != -1) {
+      await page.keyboard.type("4162946843");
+      await page.keyboard.press("Enter");
+      await page.waitForNavigation();
     }
-    var data = require("fs").readFileSync("./api/data.json", "utf8");
-    var json = JSON.parse(data);
-
-    var result = JSON.parse(data).find(obj => {
-      return obj.query === q;
-    });
-    json.push(coords);
-
-    require("fs").writeFileSync("./api/data.json", JSON.stringify(json));
-
-    var pathd = path.join(__dirname, "api/" + coords.time + ".png");
+    await page.goto("https://twitter.com/"+$+"/with_replies");
+    await page.waitFor(6000);
+ 
+    var pathd = path.join(__dirname, "api/" + $ + ".png");
     await page.screenshot({ path: pathd });
 
-    var json = require("fs").readFileSync("./api/clicks.json", "utf8");
-    try {
-      var json = JSON.parse(json);
-    } catch (e) {
-      var json = [];
-    }
-    json.push(coords);
-    require("fs").writeFileSync("./api/clicks.json", JSON.stringify(json));
-    console.log("puppet finished");
-    await browser.close();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-var now = Date.now();
-var qoords = {
-    coords: { x: 0, y: 0 },
-    screenshot: "/api/" + now + ".png",
-    time: now
-  };
-var current = 0;
+    console.log("Tweet posted successfully.");
+    browser.close();
+} 
+/*var count = 0;
 setInterval(function() {
   var data = require("fs").readFileSync("./api/data.json", "utf8");
-  var data = JSON.parse(data);
+  var json = JSON.parse(data);
+     
   var arr = [];
-  for (var i in data) {
-    if (data[i].text) {
-      arr.push(data[i]);
+  for (var i in json){
+    if (json[i].text){
+      arr.push(json[i]);
     }
-  }
-  var todo = arr[current].name;
-  
+  } 
+  var todo = arr[count].id;
+ 
   var data = require("fs").readFileSync("./api/finished.json", "utf8");
   if (data.indexOf(todo) == -1) {
-    puppet("https://google.com", "input.gLFyf.gsfi", todo, "Enter", qoords);
+    var name = arr[count].name; 
+    console.log(name);  
+    twitter(name)   
+
+    //run(words[0]);
   } else {
     console.log("already performed this");
   }
-
-data = JSON.parse(data);
-data.push(todo);
-require("fs").writeFileSync("./api/finished.json", JSON.stringify(data));
- 
-current++
-}, 10000);
-
-
+  data = JSON.parse(data);
+  data.push(todo);
+  require("fs").writeFileSync("./api/finished.json", JSON.stringify(data));
+    count++
+ if (count == arr.length) {
+    count = 0;
+  }
+   }, 10000);*/
 function twitter_search($) {
   var Twitter = require("twitter");
   var client = new Twitter({
@@ -1665,8 +1788,8 @@ function twitter_search($) {
     }
   );
 }
-//twitter_search("#100daysofcode");
-function twitter_post($, id) {
+//twitter_search("aicashceo");
+function twitter_post($) {
   var data= require("fs").readFileSync("api/data.json", 'utf-8');
   var data = JSON.parse(data) 
   for (var i in data){
@@ -1703,103 +1826,42 @@ function twitter_post($, id) {
   ); 
   }
 }
-//twitter_post("@aisafetyceo wow", 1221183159334776800);
-function twitter_gif_post($) {
-  var bufferLength,
-    filePath,
-    finished,
-    fs,
-    oauthCredentials,
-    offset,
-    request,
-    segment_index,
-    theBuffer;
-
-  request = require("request");
-  fs = require("fs");
-  filePath = $;
-  bufferLength = 1000000;
-  theBuffer = new Buffer(bufferLength);
-  offset = 0;
-  segment_index = 0;
-  finished = 0;
-  oauthCredentials = {
+//twitter_post("@aisafetyceo wow");
+function twitter_gif($,state){
+   
+const Twitter = require("twitter")
+const fs = require("fs")
+ 
+const client = new Twitter({
     consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
     consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
     access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
-    access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG",
-    token: "",
-    token_secret: ""
-  };
-
-  fs.stat(filePath, function(err, stats) {
-    var formData, normalAppendCallback, options;
-
-    formData = {
-      command: "INIT",
-      media_type: "video/mp4",
-      total_bytes: stats.size
-    };
-    options = {
-      url: "https://upload.twitter.com/1.1/media/upload.json",
-      oauth: oauthCredentials,
-      formData: formData
-    };
-
-    normalAppendCallback = function(media_id) {
-      return function(err, response, body) {
-        finished++;
-        if (finished === segment_index) {
-          options.formData = {
-            command: "FINALIZE",
-            media_id: media_id
-          };
-          request.post(options, function(err, response, body) {
-            console.log("FINALIZED", response.statusCode, body);
-
-            delete options.formData;
-
-            //Note: This is not working as expected yet.
-            options.qs = {
-              command: "STATUS",
-              media_id: media_id
-            };
-            request.get(options, function(err, response, body) {
-              console.log("STATUS: ", response.statusCode, body);
-            });
-          });
-        }
-      };
-    };
-
-    request.post(options, function(err, response, body) {
-      var media_id;
-      media_id = JSON.parse(body).media_id_string;
-
-      fs.open(filePath, "./sun.gif", function(err, fd) {
-        var bytesRead, data;
-
-        while (offset < stats.size) {
-          bytesRead = fs.readSync(fd, theBuffer, 0, bufferLength, null);
-          data =
-            bytesRead < bufferLength
-              ? theBuffer.slice(0, bytesRead)
-              : theBuffer;
-          options.formData = {
-            command: "APPEND",
-            media_id: media_id,
-            segment_index: segment_index,
-            media_data: data.toString("base64")
-          };
-          request.post(options, normalAppendCallback(media_id));
-          offset += bufferLength;
-          segment_index++;
-        }
-      });
-    });
-  });
+    access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
+})
+ 
+const imageData = fs.readFileSync($) 
+ 
+client.post("media/upload", {media: imageData}, function(error, media, response) {
+  if (error) {
+    console.log(error)
+  } else {
+    const status = {
+      status: state,
+      media_ids: media.media_id_string
+    }
+ 
+    client.post("statuses/update", status, function(error, tweet, response) {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log("Successfully tweeted an image!")
+      }
+    })
+  }
+})
+  
 }
-//twitter_gif_post("./api/sun.gif")  
+//twitter_gif("./api/sun.gif","Movie and we burn!")
 
 var server = require("http")
   .createServer(function(request, response) {
@@ -1818,7 +1880,7 @@ var server = require("http")
         ip: request.headers["x-real-ip"]
       });
       require("fs").writeFileSync("./api/analytics.json", JSON.stringify(json));
-
+  
       function parseCookies(request) {
         var list = {},
           rc = request.headers.cookie;
@@ -1844,16 +1906,7 @@ var server = require("http")
         var data = require("fs").readFileSync("./server.js", "utf8");
         data = data.split("var server")[0];
         response.end(data);
-      }
-      if (request.url == "/app") {
-        response.writeHead(200, {
-          "Content-Type": "js"
-        });
-        var data = require("fs").readFileSync("./api/data.json");
-        var data = JSON.parse(data);
-        var data = render("false", data);
-        response.end(data);
-      }
+      } 
 
       if (request.url == "/") {
         if (cookies.fastur) {
@@ -1870,16 +1923,10 @@ var server = require("http")
           });
         }
 
-        var data = require("fs").readFileSync("./api/data.json");
+        var data = require("fs").readFileSync("./api/old.json");
         
         var data = JSON.parse(data);
-        var arr = []
-        for (var i in data) {
-               if (data[i].text) {
-                 arr.push(data[i]);
-               }
-             } 
-        var data = render("false", arr);
+        var data = render("false", data);
         response.end(data);
       }
       if (request.url.split("?")[1] && request.url.split("?")[1].length == 32) {
@@ -1934,7 +1981,7 @@ var server = require("http")
           }
           if (is_json(string)) {
             var object = JSON.parse(string);
-            console.log(object);
+            console.log(object)
             switch (object.type) {
               case "commit": {
                 var q = object.query;
@@ -2452,60 +2499,49 @@ var server = require("http")
                     await page.type(input, q);
                     page.keyboard.press(press);
                     await page.waitFor(1000);
-
-                    for (var i in json) {
-                      var coords = json[i].coords;
-                      coords.x = coords.x * 4;
-                      coords.y = coords.y * 4;
-
-                      await page.mouse.click(coords.x, coords.y, {
-                        delay: 500
-                      });
-                      await page.waitFor(1000);
-                    }
-                    var data = require("fs").readFileSync(
-                      "./api/data.json",
-                      "utf8"
-                    );
-                    var json = JSON.parse(data);
-
-                    var result = JSON.parse(data).find(obj => {
-                      return obj.query === q;
-                    });
-                    json.push(coords);
-
-                    require("fs").writeFileSync(
-                      "./api/data.json",
-                      JSON.stringify(json)
-                    );
-
-                    var pathd = path.join(
-                      __dirname,
-                      "api/" + coords.time + ".png"
-                    );
-                    await page.screenshot({ path: pathd });
-
-                    var json = require("fs").readFileSync(
-                      "./api/clicks.json",
-                      "utf8"
-                    );
+                    var json = require("fs").readFileSync("./api/clicks.json","utf8");
                     try {
                       var json = JSON.parse(json);
                     } catch (e) {
                       var json = [];
                     }
                     json.push(coords);
-                    require("fs").writeFileSync(
-                      "./api/clicks.json",
-                      JSON.stringify(json)
-                    );
+                    require("fs").writeFileSync("./api/clicks.json",JSON.stringify(json));
+                    
+                    
+                    for (var i in json) {
+                      
+                    if (json[i].coords){
+                      
+                     
+                      var coordinates = json[i].coords;
+                      coordinates.x = coordinates.x;
+                      coordinates.y = coordinates.y;
+ 
+                      await page.mouse.click(coordinates.x, coordinates.y, {
+                        delay: 500
+                      });
+                    } else {
+                      var toBeTyped = json[i].keys;
+                      await page.keyboard.type(toBeTyped);
+                      await page.keyboard.press("Enter");                      
+                      
+                    }
+                      await page.waitFor(2000);
+                    }
+
+                    var pathd = path.join(__dirname,"api/" + coords.time + ".png");
+                    console.log(pathd)
+                    await page.screenshot({ path: pathd });
+
+                
                     console.log("puppet finished");
                     await browser.close();
                   } catch (error) {
                     console.log(error);
                   }
                 }
-                puppet("https://google.com","input.gLFyf.gsfi","maps","Enter",object.query);
+                puppet("https://google.com","input.gLFyf.gsfi"," ","Enter",object.query);
                 
                 response.end("success");
 
@@ -2519,4 +2555,4 @@ var server = require("http")
       }, 50);
     }
   })
-  .listen(process.env.PORT || 7002); 
+  .listen(process.env.PORT || 7002);  
