@@ -1,5 +1,133 @@
 function render(action, elements) {
   if (typeof window !== "undefined") {
+   var els = document.querySelectorAll("[data-action='0']");
+   for (var x = 0; x < els.length; x++)
+    els[x].style.display = 'none';
+    
+
+    document.getElementById("input").onkeypress = function(e) {
+      if (!e) e = window.event;
+      var keyCode = e.keyCode || e.which;
+      if (keyCode == "13") {
+        var now = Date.now();
+        var qoords = {
+          keys: e.target.value,
+          screenshot: "/api/" + now + ".png",
+          time: now
+        };
+
+        fetch("/", {
+          method: "post",
+          mode: "no-cors",
+          body: JSON.stringify({
+            type: "screen",
+            query: qoords,
+            modifier: window.commitpath
+          })
+        }).then(function(response) {
+          var decoder = new TextDecoder();
+          var reader = response.body.getReader();
+          reader.read().then(function processResult(result) {
+            if (result.done) return;
+            var result = decoder.decode(result.value, {
+              stream: true
+            });
+            console.log(result);
+          });
+        });
+
+        // Enter pressed
+        return false;
+      }
+    };
+    /*
+var elements = document.getElementsByTagName("a");
+for (var i = 0, len = elements.length; i < len; i++) {
+  elements[i].onclick = function(e) {
+    console.log(e.target.text); 
+    window.location = '/api/'+e.target.text+'.gif'
+  };
+}
+*/
+    function getImages() {
+      fetch("https://aisafetyceo.glitch.me/api/clicks.json", {
+        mode: "no-cors"
+      })
+        .then(function(r) {
+          return r.json();
+        })
+        .then(function(h) {
+          lib.images = h;
+        });
+    }
+    getImages();
+
+    {
+      var cv = document.getElementById("cv");
+      var ctx = cv.getContext("2d");
+      var cvWidth = cv.width;
+      var cvHeight = cv.height;
+      var x = 1;
+      var y = 1;
+      var h = 1;
+      var w = 1;
+      var shape = 1;
+      var threshold = 50;
+      var motion = [];
+      var old = [];
+    }
+
+    var counter = 0;
+    setInterval(function() {
+      getImages();
+
+      var images = lib.images;
+      var img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, cvWidth, cvHeight);
+      };
+      img.src = "https://aisafetyceo.glitch.me/" + images[counter].screenshot;
+      counter++;
+      if (counter == images.length) {
+        counter = 0;
+      }
+    }, 2000);
+
+    cv.addEventListener("click", function(e) {
+      var bound = cv.getBoundingClientRect();
+      var x = e.clientX - bound.left;
+      var y = e.clientY - bound.top;
+
+      var now = Date.now();
+      var qoords = {
+        coords: { x: x, y: y },
+        screenshot: "/api/" + now + ".png",
+        time: now
+      };
+
+      fetch("/", {
+        method: "post",
+        mode: "no-cors",
+        body: JSON.stringify({
+          type: "screen",
+          query: qoords,
+          modifier: window.commitpath
+        })
+      }).then(function(response) {
+        var decoder = new TextDecoder();
+        var reader = response.body.getReader();
+        reader.read().then(function processResult(result) {
+          if (result.done) return;
+          var result = decoder.decode(result.value, {
+            stream: true
+          });
+          console.log(result);
+        });
+      });
+
+      lib.current = qoords;
+      console.log(lib.current);
+    });
     window.lib = {
       actives: ["home"],
       current: [],
@@ -29,7 +157,7 @@ function render(action, elements) {
             var val = uin.value;
 
             fetch("/", {
-              method: "post", 
+              method: "post",
               uin: val,
               mode: "no-cors",
               body: JSON.stringify({
@@ -93,6 +221,220 @@ function render(action, elements) {
       },
       dashboard: function() {
         window.location.href = "/#dashboard";
+      },
+      start: function(e) {
+        console.log("started");
+
+        var video = document.getElementById("video");
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices
+            .getUserMedia({ video: true })
+            .then(function(stream) {
+              //video.src = window.URL.createObjectURL(stream);
+              video.srcObject = stream;
+              video.play();
+            });
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext("2d");
+        var video = document.getElementById("video");
+
+        var d1 = document.getElementById("canvas");
+        d1.insertAdjacentHTML(
+          "afterend",
+          '<div><button id="startRecord">start</button><button id="stopRecord" disabled>stop</button><audio id="recordedAudio"></audio> <div id="audioDownload"></div></div>'
+        );
+
+        var audioChunks;
+        startRecord.onclick = e => {
+          startRecord.disabled = true;
+          stopRecord.disabled = false;
+          navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then(stream => {
+              audioChunks = [];
+              rec = new MediaRecorder(stream);
+              rec.ondataavailable = e => {
+                audioChunks.push(e.data);
+                if (rec.state == "inactive") {
+                  let blob = new Blob(audioChunks, { type: "audio/x-mpeg-3" });
+                  recordedAudio.src = URL.createObjectURL(blob);
+                  recordedAudio.controls = true;
+                  recordedAudio.autoplay = true;
+                  audioDownload.href = recordedAudio.src;
+                  audioDownload.download = "mp3";
+                }
+              };
+              rec.start();
+            })
+            .catch(e => console.log(e));
+        };
+        stopRecord.onclick = e => {
+          startRecord.disabled = false;
+          stopRecord.disabled = true;
+          rec.stop();
+        };
+
+        lib.animate();
+      },
+      animate: function(e) {
+        function getColor() {
+          var letters = "0123456789ABCDEF";
+          var color = "#";
+          for (var i = 0; i < 8; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        }
+
+        function draw(x, y, h, w, c) {
+          for (let i = 0; i < c; i++) {
+            for (let j = 0; j < c; j++) {
+              function rgb2hex(red, green, blue) {
+                var rgb = blue | (green << 8) | (red << 16);
+                return "#" + (0x1000000 + rgb).toString(16).slice(1);
+              }
+              var pix = ctx.getImageData(x, y, 1, 1).data;
+
+              //var Image = ctx.getImageData(x, y, cvWidth, cvHeight).data;
+              //localStorage.setItem('Image', Image);
+
+              ctx.fillStyle = getColor();
+              ctx.fillRect(x + j, y + i, shape, shape);
+              var pos = x + y;
+              if (old[pos] && old[pos].r - pix[3] > threshold) {
+                motion.push({
+                  x: x,
+                  y: y,
+                  r: pix[0],
+                  g: pix[1],
+                  b: pix[2],
+                  a: pix[3]
+                });
+              }
+              old[pos] = {
+                x: x,
+                y: y,
+                r: pix[0],
+                g: pix[1],
+                b: pix[2],
+                a: pix[3]
+              };
+            }
+          }
+        }
+
+        if (y > cvHeight) {
+          y = y - cvHeight;
+        }
+        if (x > cvWidth) {
+          x = x - cvWidth;
+        }
+        draw(x, y, shape, shape, 8);
+        x = x + 10;
+        y = y + 10;
+        draw(x, y, shape, shape, 16);
+
+        requestAnimationFrame(lib.animate);
+      },
+      record: function(e) {
+        function camera(audio, video, stop) {
+          if (stop) {
+            localStream.getTracks().forEach(track => {
+              track.stop();
+            });
+            startRecord.disabled = false;
+            stopRecord.disabled = true;
+            rec.stop();
+          }
+          if (navigator.getUserMedia) {
+            navigator.getUserMedia(
+              { audio: true, video: true },
+              function(stream) {
+                window.localStream = stream;
+                var video = document.querySelector("video");
+                /*video.srcObject = localStream;
+              video.onloadedmetadata = function(e) {
+                video.play();
+              };*/
+
+                // Optional frames per second argument.
+                var stream = video.captureStream(25);
+                var recordedChunks = [];
+
+                alert(JSON.stringify(stream));
+                var options = { mimeType: "video/webm; codecs=vp9" };
+                var mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = handleDataAvailable;
+                mediaRecorder.start();
+
+                function handleDataAvailable(event) {
+                  console.log("data-available");
+                  if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                    alert(JSON.stringify(recordedChunks));
+                    download();
+                  } else {
+                    // ...
+                  }
+                }
+                function download() {
+                  var blob = new Blob(recordedChunks, {
+                    type: "video/webm"
+                  });
+
+                  var payload = JSON.stringify({
+                    type: "commit",
+                    modifier: "media",
+                    data: JSON.stringify(recordedChunks)
+                  });
+                  fetch("/", {
+                    method: "post",
+                    mode: "no-cors",
+                    body: payload
+                  }).then(function(response) {
+                    var decoder = new TextDecoder();
+                    var reader = response.body.getReader();
+                    reader.read().then(function processResult(result) {
+                      if (result.done) return;
+                      var result = decoder.decode(result.value, {
+                        stream: true
+                      });
+
+                      try {
+                        var result = JSON.parse(result);
+                      } catch (e) {}
+                      if (result.type == "success") {
+                        console.log(result);
+                      }
+                    });
+                  });
+
+                  /*var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  document.body.appendChild(a);
+  a.style = "display: none";
+  a.href = url;
+  a.download = "test.webm";
+  a.click();
+  window.URL.revokeObjectURL(url);*/
+                }
+
+                //download after 9sec
+                setTimeout(event => {
+                  console.log("stopping");
+                  mediaRecorder.stop();
+                }, 9000);
+              },
+              function(err) {
+                console.log("The following error occurred: " + err.name);
+              }
+            );
+          }
+        }
+        camera();
       }
     };
     lib.control = function(e) {
@@ -145,9 +487,7 @@ function render(action, elements) {
               }
             };
 
-            document.addEventListener(
-              "click",
-              function(event) {
+            document.addEventListener("click",function(event) {
                 event.preventDefault();
                 if (document.getElementById(lib.current[0])) {
                   var activated = document.getElementById(lib.current[0]);
@@ -173,9 +513,7 @@ function render(action, elements) {
                 for (var i = 0; i < data.length; i++) {
                   uin.placeholder = data[i].text;
                 }
-              },
-              true
-            );
+              },true);
             fetch("/api/" + window.location.href.split("edit?")[1] + ".json", {
               method: "get"
             })
@@ -190,17 +528,30 @@ function render(action, elements) {
             var price = Math.floor(Math.random() * 1000 + 1);
 
             function starthere() {
+              fetch("/api/data.json", {
+                method: "get",
+                mode: "no-cors"
+              })
+                .then(r => r.text())
+                .then(data => {
+                  localStorage.setItem("agents", data);
+                  //var results = JSON.parse(data).filter(function(entry) { return entry.publisher === email; });
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+
               var agents = localStorage.getItem("agents");
               var agents = JSON.parse(agents);
               for (var agent in agents) {
-                var agency = agents[agent].links;
+                var agency = agents[agent].name;
                 if (agency) {
                   document.getElementById("blog").innerHTML +=
                     JSON.stringify(agency) + "<br><br>";
                 }
               }
             }
-            starthere(); 
+            starthere();
 
             function draw(x, y, w, h) {
               const canvas = document.getElementById("canvas");
@@ -303,34 +654,28 @@ function render(action, elements) {
             var array = [];
             array.forEach.call(document.querySelectorAll("a"), function(el) {
               el.addEventListener("click", function() {
-                var target = document.getElementById(event.target.innerText);
-                if (target) {
-                  if (event.target.innerText == lib.actives[0]) {
-                  } else {
+                //display none on current (home), display block on clicked element
+           
+                  if (event.target.innerText != lib.actives[0]) {
                     for (var active of lib.actives) {
-                      if (active) {
-                        var activated = document.getElementById(active);
-
-                        activated.classList.replace("active", "inactive");
-                        setTimeout(function() {
-                          activated.style.display = "none";
-                        }, 350);
+                      if (active) {          
+                        var els = document.querySelectorAll(`[data-display=${CSS.escape(active)}]`);
+                        for (var x = 0; x < els.length; x++){
+                          els[x].style.display = 'none';
+                          lib.actives.push(els[x].dataset.display);
+                        }
                         lib.actives = [];
                       }
-                    }
-
-                    var target = document.getElementById(
-                      event.target.innerText
-                    );
-                    target.style.display = "";
-                    setTimeout(function() {
-                      target.classList.replace("inactive", "active");
-                    }, 750);
-                    lib.actives.push(target.id);
+                    }  
                   }
-                } else {
-                  window.location = event.target.href;
+                
+                var named = event.target.innerText;
+                var els = document.querySelectorAll(`[data-display=${CSS.escape(named)}]`);
+                for (var x = 0; x < els.length; x++){
+                  els[x].style.display = 'block';
+                  lib.actives.push(els[x].dataset.display);
                 }
+                
 
                 var loginpage = document.getElementById("login");
                 if (loginpage) {
@@ -466,10 +811,8 @@ function render(action, elements) {
             });
 
             var count = 0;
-            uin.placeholder = "refer";
-            uin.addEventListener(
-              "keydown",
-              function(event) {
+            input.placeholder = "refer";
+            input.addEventListener("keydown",function(event) {
                 if (event.defaultPrevented) {
                   return;
                 }
@@ -494,12 +837,9 @@ function render(action, elements) {
                     return;
                 }
                 event.preventDefault();
-              },
-              true
-            );
+              },true);
           }
-        } else {
-        }
+        } 
       }
 
       setInterval(function() {
@@ -566,20 +906,7 @@ function render(action, elements) {
         }
       }
 
-      fetch("/api/data.json", {
-        method: "get",
-        mode: "no-cors"
-      })
-        .then(r => r.text())
-        .then(data => {
-          localStorage.setItem("agents", data);
-          //var results = JSON.parse(data).filter(function(entry) { return entry.publisher === email; });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-
-      uin.addEventListener("keydown", function(e) {
+      input.addEventListener("keydown", function(e) {
         if (e.key === "Enter") {
           var val = e.target.value;
 
@@ -603,8 +930,8 @@ function render(action, elements) {
             });
           });
 
-          var e = uin.value;
-          var url = "https://code.fastur.com/api/" + uin.value + ".png";
+          var e = input.value;
+          var url = "https://code.fastur.com/api/" + input.value + ".png";
 
           if (e == "data") {
             fetch("/data", {
@@ -1250,6 +1577,7 @@ function render(action, elements) {
       camera();
     };
     lib.control();
+    lib.start();
   }
   var body = "";
   var css = "";
@@ -1268,53 +1596,70 @@ transition: ${b.transition || "all 0.5s ease-out;"};
 opacity: ${b.opacity || "0.85;"};
 margin: ${b.margin || "5px;"};
 position: ${b.position || "relative;"}; 
-font-size: ${b.size || " 1rem; "};  
+right: ${b.right || ""}; 
+top: ${b.top || ""}; 
+padding: ${b.padding || ""}; 
+z-index: ${b.z || ""}; 
 
-}`;
+font-size: ${b.size || " 1rem; "};  
+}
+
+.${b.class || "card"}:hover {
+background: ${b.hover || " green "};
+}
+
+`;
     }
-    body +=
-      "<" +
-      (b.tag || "a") +
+
+    
+    var element =
+        
       " href='" +
       b.href +
       "' style='" +
       (b.style || "margin:10px;padding:10px;display:block;") +
       "' id='" +
-      (b.id || "card") + 
+      (b.id || "card") +
       "' onclick='" +
-      (b.onclick || "card") +  
+      (b.onclick || "card") +
       "' src='" +
-      (b.src || "") +   
+      (b.src || "") +
       "' type='" +
       (b.formtype || "") +
       "' value='" +
       (b.value || "") +
+      "' data-display='" +
+      (b.datadisplay || "") +
+      "' placeholder='" +
+      (b.placeholder || "") +
       "' class='" +
       (b.class || b.animation || "card") +
-      "' data-action='1'>" +
-      (b.name || "") +
-      "</" +
-      (b.tag || "a") +
-      "><br>";
+      "' data-action='" + (b.dataid || "") +"' > " +
+      (b.name || "") ;
+
+    body += "<" + (b.tag || "div")  + element + "<" + "/" + (b.tag || "div") + ">";
+  
   }
-
-  var html =
-    "<html lang='en'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'><script src='/script.js' defer></script>" +
-    "<title>" +
-    (elements[0].title || "Untitled") +
-    "</title>" +
-    "<meta name='description' content='" +
-    (elements[0].description || "Untitled") +
-    "'>" +
-    "<style>" +
-    css +
-    "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' style='background-color:"+elements[0].background+"' data-editor='" +
-    action +
-    "'>" +
-    "<video style='display:none' id='video' width='640' height='640' autoplay ></video><input type='text' id='input' ><script src='https://checkout.stripe.com/checkout.js'></script>" +
-    body +
-    "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/server'></script><script>render()</script></html>";
-
+  if (elements) {
+    var html =
+      "<html lang='en'><head><meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no'>" +
+      "<title>" +
+      (elements[0].title || "Untitled") +
+      "</title>" +
+      "<meta name='description' content='" +
+      (elements[0].description || "Untitled") +
+      "'>" +
+      "<style>" +
+      css +
+      "</style><link type='image/png' rel='shortcut icon' href='api/ico.png'></head><body id='pagebody' style='background-color:" +
+      elements[0].background +
+      "' data-editor='" +
+      action +
+      "'>" +
+      "<script src='https://checkout.stripe.com/checkout.js'></script>" +
+      body +
+      "</body><script src='https://www.gstatic.com/firebasejs/4.3.0/firebase.js'></script><script src='https://checkout.stripe.com/checkout.js'></script><script src='https://js.stripe.com/v3'></script><script src='/server'></script><script>render()</script></html>";
+  }
   return html;
 }
 
@@ -1327,7 +1672,7 @@ async function puppet(url, input, q, press, coords) {
       args: ["--no-sandbox"]
     });
     const page = await browser.newPage();
-    
+
     await page.goto(url);
     await page.setViewport({
       width: 1280,
@@ -1644,14 +1989,14 @@ function run(a) {
           page: page,
           count: count,
           values: values
-        };  console.log(json); 
-
+        };
+        console.log(json);
 
         console.log("finished");
       });
     }
   );
-} 
+}
 /*
 var count = 0;
 setInterval(function() {
@@ -1686,43 +2031,43 @@ setInterval(function() {
    }, 10000);*/
 
 async function twitter($) {
-    const puppeteer = require("puppeteer");
-    const path = require("path");
-    const browser = await puppeteer.launch({
-      args: ["--no-sandbox"]
-    });
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 1280 });
+  const puppeteer = require("puppeteer");
+  const path = require("path");
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox"]
+  });
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1280, height: 1280 });
 
-    let twitterAccount = {
-      userField: "input[name='session[username_or_email]']",
-      passField: "input[name='session[password]']",
-      loginSubmit: ".css-901oao"
-    };
-    await page.goto("https://twitter.com");
-    await page.waitForSelector(twitterAccount.userField);
-    await page.click(twitterAccount.userField);
-    await page.keyboard.type("aicashceo");
-    await page.waitForSelector(twitterAccount.passField);
-    await page.click(twitterAccount.passField);
-    await page.keyboard.type("Bombsaway!1");
+  let twitterAccount = {
+    userField: "input[name='session[username_or_email]']",
+    passField: "input[name='session[password]']",
+    loginSubmit: ".css-901oao"
+  };
+  await page.goto("https://twitter.com");
+  await page.waitForSelector(twitterAccount.userField);
+  await page.click(twitterAccount.userField);
+  await page.keyboard.type("aicashceo");
+  await page.waitForSelector(twitterAccount.passField);
+  await page.click(twitterAccount.passField);
+  await page.keyboard.type("Bombsaway!1");
+  await page.keyboard.press("Enter");
+  await page.waitForNavigation();
+  var url = page.url();
+  if (url.indexOf("RetypePhoneNumber") != -1) {
+    await page.keyboard.type("4162946843");
     await page.keyboard.press("Enter");
     await page.waitForNavigation();
-    var url = page.url();
-    if (url.indexOf("RetypePhoneNumber") != -1) {
-      await page.keyboard.type("4162946843");
-      await page.keyboard.press("Enter");
-      await page.waitForNavigation();
-    }
-    await page.goto("https://twitter.com/"+$+"/with_replies");
-    await page.waitFor(6000);
- 
-    var pathd = path.join(__dirname, "api/" + $ + ".png");
-    await page.screenshot({ path: pathd });
+  }
+  await page.goto("https://twitter.com/" + $ + "/with_replies");
+  await page.waitFor(6000);
 
-    console.log("Tweet posted successfully.");
-    browser.close();
-} 
+  var pathd = path.join(__dirname, "api/" + $ + ".png");
+  await page.screenshot({ path: pathd });
+
+  console.log("Tweet posted successfully.");
+  browser.close();
+}
 /*var count = 0;
 setInterval(function() {
   var data = require("fs").readFileSync("./api/data.json", "utf8");
@@ -1790,76 +2135,77 @@ function twitter_search($) {
 }
 //twitter_search("aicashceo");
 function twitter_post($) {
-  var data= require("fs").readFileSync("api/data.json", 'utf-8');
-  var data = JSON.parse(data) 
-  for (var i in data){
+  var data = require("fs").readFileSync("api/data.json", "utf-8");
+  var data = JSON.parse(data);
+  for (var i in data) {
     var handle = "@" + data[i].name;
     var text = data[i].text;
     var id = data[i].id;
 
     var status = handle + " " + text;
-  
-  var Twitter = require("twitter");
-  var client = new Twitter({
+
+    var Twitter = require("twitter");
+    var client = new Twitter({
+      consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
+      consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
+      access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
+      access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
+    });
+    client.post(
+      "statuses/update",
+      {
+        in_reply_to_status_id: id,
+        status: status
+      },
+      function(err, t, r) {
+        if (!err) {
+          var body = JSON.parse(r.body);
+          //var tweets = require("fs").readFileSync("twitter.json");
+
+          //require("fs").writeFileSync("twitter.json", tweets);
+          console.log(body.id);
+          console.log(err + t + r);
+        }
+      }
+    );
+  }
+}
+//twitter_post("@aisafetyceo wow");
+function twitter_gif($, state) {
+  const Twitter = require("twitter");
+  const fs = require("fs");
+
+  const client = new Twitter({
     consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
     consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
     access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
     access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
   });
-  client.post(
-    "statuses/update",
-    {
-      in_reply_to_status_id: id,
-      status: status
-    },
-    function(err, t, r) {
-      if (!err) {
-        var body = JSON.parse(r.body);
-        //var tweets = require("fs").readFileSync("twitter.json");
 
-        //require("fs").writeFileSync("twitter.json", tweets);
-        console.log(body.id);
-              console.log(err+t+r);
+  const imageData = fs.readFileSync($);
 
-      }
+  client.post("media/upload", { media: imageData }, function(
+    error,
+    media,
+    response
+  ) {
+    if (error) {
+      console.log(error);
+    } else {
+      const status = {
+        status: state,
+        media_ids: media.media_id_string
+      };
+
+      client.post("statuses/update", status, function(error, tweet, response) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Successfully tweeted an image!");
+        }
+      });
     }
-  ); 
-  }
-}
-//twitter_post("@aisafetyceo wow");
-function twitter_gif($,state){
-   
-const Twitter = require("twitter")
-const fs = require("fs")
- 
-const client = new Twitter({
-    consumer_key: "zEy22K3iWIFuTcCEeMzrtK4Yu",
-    consumer_secret: "jYdDkc7SAJaTv22kG6zUcnXVGV93mYU2OJavoRahiyX58If9cP",
-    access_token_key: "724716718006874112-NjBNDluPR74VWGE4hIwcs9r52LZuJhE",
-    access_token_secret: "VHkrp0WnQPayJY8NasJYB66OP1lqXMsT6vvnM9HFTEEZG"
-})
- 
-const imageData = fs.readFileSync($) 
- 
-client.post("media/upload", {media: imageData}, function(error, media, response) {
-  if (error) {
-    console.log(error)
-  } else {
-    const status = {
-      status: state,
-      media_ids: media.media_id_string
-    }
- 
-    client.post("statuses/update", status, function(error, tweet, response) {
-      if (error) {
-        console.log(error)
-      } else {
-        console.log("Successfully tweeted an image!")
-      }
-    })
-  }
-})
-  
+  });
 }
 //twitter_gif("./api/sun.gif","Movie and we burn!")
 
@@ -1880,7 +2226,7 @@ var server = require("http")
         ip: request.headers["x-real-ip"]
       });
       require("fs").writeFileSync("./api/analytics.json", JSON.stringify(json));
-  
+
       function parseCookies(request) {
         var list = {},
           rc = request.headers.cookie;
@@ -1895,10 +2241,6 @@ var server = require("http")
       if (request.url == "/favicon.ico") {
         response.end("");
       }
-      if (request.url == "/script.js") {
-        var data = require("fs").readFileSync("./script.js");
-        response.end(data);
-      }
       if (request.url == "/server") {
         response.writeHead(200, {
           "Content-Type": "js"
@@ -1906,7 +2248,15 @@ var server = require("http")
         var data = require("fs").readFileSync("./server.js", "utf8");
         data = data.split("var server")[0];
         response.end(data);
-      } 
+      }
+      if (request.url == "/api/data.json") {
+        response.writeHead(200, {
+          "Content-Type": "js"
+        });
+        var data = require("fs").readFileSync("./api/data.json", "utf8");
+        data = data.split("var server")[0];
+        response.end(data);
+      }
 
       if (request.url == "/") {
         if (cookies.fastur) {
@@ -1924,7 +2274,7 @@ var server = require("http")
         }
 
         var data = require("fs").readFileSync("./api/old.json");
-        
+
         var data = JSON.parse(data);
         var data = render("false", data);
         response.end(data);
@@ -1943,7 +2293,7 @@ var server = require("http")
         var html = render("edit", elements);
         response.end(html);
       } else {
-        if (
+        if ( 
           require("fs").existsSync(
             __dirname + "/api/" + request.url.split("/")[2]
           )
@@ -1981,7 +2331,7 @@ var server = require("http")
           }
           if (is_json(string)) {
             var object = JSON.parse(string);
-            console.log(object)
+            console.log(object);
             switch (object.type) {
               case "commit": {
                 var q = object.query;
@@ -2499,50 +2849,59 @@ var server = require("http")
                     await page.type(input, q);
                     page.keyboard.press(press);
                     await page.waitFor(1000);
-                    var json = require("fs").readFileSync("./api/clicks.json","utf8");
+                    var json = require("fs").readFileSync(
+                      "./api/clicks.json",
+                      "utf8"
+                    );
                     try {
                       var json = JSON.parse(json);
                     } catch (e) {
                       var json = [];
                     }
                     json.push(coords);
-                    require("fs").writeFileSync("./api/clicks.json",JSON.stringify(json));
-                    
-                    
+                    require("fs").writeFileSync(
+                      "./api/clicks.json",
+                      JSON.stringify(json)
+                    );
+
                     for (var i in json) {
-                      
-                    if (json[i].coords){
-                      
-                     
-                      var coordinates = json[i].coords;
-                      coordinates.x = coordinates.x;
-                      coordinates.y = coordinates.y;
- 
-                      await page.mouse.click(coordinates.x, coordinates.y, {
-                        delay: 500
-                      });
-                    } else {
-                      var toBeTyped = json[i].keys;
-                      await page.keyboard.type(toBeTyped);
-                      await page.keyboard.press("Enter");                      
-                      
-                    }
+                      if (json[i].coords) {
+                        var coordinates = json[i].coords;
+                        coordinates.x = coordinates.x;
+                        coordinates.y = coordinates.y;
+
+                        await page.mouse.click(coordinates.x, coordinates.y, {
+                          delay: 500
+                        });
+                      } else {
+                        var toBeTyped = json[i].keys;
+                        await page.keyboard.type(toBeTyped);
+                        await page.keyboard.press("Enter");
+                      }
                       await page.waitFor(2000);
                     }
 
-                    var pathd = path.join(__dirname,"api/" + coords.time + ".png");
-                    console.log(pathd)
+                    var pathd = path.join(
+                      __dirname,
+                      "api/" + coords.time + ".png"
+                    );
+                    console.log(pathd);
                     await page.screenshot({ path: pathd });
 
-                
                     console.log("puppet finished");
                     await browser.close();
                   } catch (error) {
                     console.log(error);
                   }
                 }
-                puppet("https://google.com","input.gLFyf.gsfi"," ","Enter",object.query);
-                
+                puppet(
+                  "https://google.com",
+                  "input.gLFyf.gsfi",
+                  " ",
+                  "Enter",
+                  object.query
+                );
+
                 response.end("success");
 
                 break;
@@ -2555,4 +2914,4 @@ var server = require("http")
       }, 50);
     }
   })
-  .listen(process.env.PORT || 7002);  
+  .listen(process.env.PORT || 7002);
