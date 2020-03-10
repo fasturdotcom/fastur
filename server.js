@@ -1,9 +1,7 @@
 function render(action, elements) {
   if (typeof window !== "undefined") {
-   var els = document.querySelectorAll("[data-action='0']");
-   for (var x = 0; x < els.length; x++)
-    els[x].style.display = 'none';
-    
+    var els = document.querySelectorAll("[data-action='0']");
+    for (var x = 0; x < els.length; x++) els[x].style.display = "none";
 
     document.getElementById("input").onkeypress = function(e) {
       if (!e) e = window.event;
@@ -154,11 +152,11 @@ for (var i = 0, len = elements.length; i < len; i++) {
           token: function(token) {
             var data = new FormData();
             data.append("json", JSON.stringify(token));
-            var val = uin.value;
+            var val = input.value;
 
             fetch("/", {
               method: "post",
-              uin: val,
+              input: val,
               mode: "no-cors",
               body: JSON.stringify({
                 type: "commit",
@@ -240,7 +238,7 @@ for (var i = 0, len = elements.length; i < len; i++) {
         var context = canvas.getContext("2d");
         var video = document.getElementById("video");
 
-        var d1 = document.getElementById("canvas");
+        var d1 = document.getElementById("myBtn");
         d1.insertAdjacentHTML(
           "afterend",
           '<div><button id="startRecord">start</button><button id="stopRecord" disabled>stop</button><audio id="recordedAudio"></audio> <div id="audioDownload"></div></div>'
@@ -487,7 +485,9 @@ for (var i = 0, len = elements.length; i < len; i++) {
               }
             };
 
-            document.addEventListener("click",function(event) {
+            document.addEventListener(
+              "click",
+              function(event) {
                 event.preventDefault();
                 if (document.getElementById(lib.current[0])) {
                   var activated = document.getElementById(lib.current[0]);
@@ -511,9 +511,11 @@ for (var i = 0, len = elements.length; i < len; i++) {
                 ];
 
                 for (var i = 0; i < data.length; i++) {
-                  uin.placeholder = data[i].text;
+                  input.placeholder = data[i].text;
                 }
-              },true);
+              },
+              true
+            );
             fetch("/api/" + window.location.href.split("edit?")[1] + ".json", {
               method: "get"
             })
@@ -582,7 +584,7 @@ for (var i = 0, len = elements.length; i < len; i++) {
               "checkout-button-plan_GUIOtY8S8shSda"
             );
             checkoutButton.addEventListener("click", function() {
-              if (uin.value) {
+              if (input.value) {
                 stripe
                   .redirectToCheckout({
                     items: [{ plan: "plan_GUIOtY8S8shSda", quantity: 1 }],
@@ -599,14 +601,14 @@ for (var i = 0, len = elements.length; i < len; i++) {
                   });
               } else {
                 myBtn.innerHTML = "please enter an email";
-                uin.style.outline = "2px solid red";
+                input.style.outline = "2px solid red";
               }
             });
             var checkoutButton = document.getElementById(
               "checkout-button-plan_GUInGYzA7Qz43o"
             );
             checkoutButton.addEventListener("click", function() {
-              if (uin.value) {
+              if (input.value) {
                 stripe
                   .redirectToCheckout({
                     items: [{ plan: "plan_GUInGYzA7Qz43o", quantity: 1 }],
@@ -623,17 +625,17 @@ for (var i = 0, len = elements.length; i < len; i++) {
                   });
               } else {
                 myBtn.innerHTML = "please enter an email";
-                uin.style.outline = "2px solid red";
+                input.style.outline = "2px solid red";
               }
             });
             var checkoutButton = document.getElementById(
               "checkout-button-plan_GUIkoAioxfTHcx"
             );
             checkoutButton.addEventListener("click", function() {
-              if (uin.value) {
+              if (input.value) {
                 stripe
                   .redirectToCheckout({
-                    items: [{ plan: "plan_GUIOtY8S8shSda", quantity: 1 }],
+                    items: [{ plan: "plan_GUIkoAioxfTHcx", quantity: 1 }],
                     successUrl: "https://code.fastur.com/success",
                     cancelUrl: "https://code.fastur.com/canceled"
                   })
@@ -647,7 +649,7 @@ for (var i = 0, len = elements.length; i < len; i++) {
                   });
               } else {
                 myBtn.innerHTML = "please enter an email";
-                uin.style.outline = "2px solid red";
+                input.style.outline = "2px solid red";
               }
             });
 
@@ -655,27 +657,30 @@ for (var i = 0, len = elements.length; i < len; i++) {
             array.forEach.call(document.querySelectorAll("a"), function(el) {
               el.addEventListener("click", function() {
                 //display none on current (home), display block on clicked element
-           
-                  if (event.target.innerText != lib.actives[0]) {
-                    for (var active of lib.actives) {
-                      if (active) {          
-                        var els = document.querySelectorAll(`[data-display=${CSS.escape(active)}]`);
-                        for (var x = 0; x < els.length; x++){
-                          els[x].style.display = 'none';
-                          lib.actives.push(els[x].dataset.display);
-                        }
-                        lib.actives = [];
+
+                if (event.target.innerText != lib.actives[0]) {
+                  for (var active of lib.actives) {
+                    if (active) {
+                      var els = document.querySelectorAll(
+                        `[data-display=${CSS.escape(active)}]`
+                      );
+                      for (var x = 0; x < els.length; x++) {
+                        els[x].style.display = "none";
+                        lib.actives.push(els[x].dataset.display);
                       }
-                    }  
+                      lib.actives = [];
+                    }
                   }
-                
+                }
+
                 var named = event.target.innerText;
-                var els = document.querySelectorAll(`[data-display=${CSS.escape(named)}]`);
-                for (var x = 0; x < els.length; x++){
-                  els[x].style.display = 'block';
+                var els = document.querySelectorAll(
+                  `[data-display=${CSS.escape(named)}]`
+                );
+                for (var x = 0; x < els.length; x++) {
+                  els[x].style.display = "block";
                   lib.actives.push(els[x].dataset.display);
                 }
-                
 
                 var loginpage = document.getElementById("login");
                 if (loginpage) {
@@ -812,7 +817,9 @@ for (var i = 0, len = elements.length; i < len; i++) {
 
             var count = 0;
             input.placeholder = "refer";
-            input.addEventListener("keydown",function(event) {
+            input.addEventListener(
+              "keydown",
+              function(event) {
                 if (event.defaultPrevented) {
                   return;
                 }
@@ -837,9 +844,11 @@ for (var i = 0, len = elements.length; i < len; i++) {
                     return;
                 }
                 event.preventDefault();
-              },true);
+              },
+              true
+            );
           }
-        } 
+        }
       }
 
       setInterval(function() {
@@ -848,7 +857,7 @@ for (var i = 0, len = elements.length; i < len; i++) {
           var payload = JSON.stringify({
             type: "commit",
             query: code,
-            uin: uin.value,
+            input: input.value,
             site: code,
             modifier: window.commitpath,
             cookie: lib.cookie("fastur")
@@ -1076,7 +1085,7 @@ for (var i = 0, len = elements.length; i < len; i++) {
               recognition.onresult = function(event) {
                 for (var i = event.resultIndex; i < event.results.length; ++i) {
                   var transcript = event.results[i][0].transcript;
-                  document.getElementById("uin").value = transcript;
+                  document.getElementById("input").value = transcript;
                   lib.menu(transcript);
                 }
               };
@@ -1454,11 +1463,11 @@ for (var i = 0, len = elements.length; i < len; i++) {
             }
 
             window.CM.setValue(elements);
-            if (uin.value) {
+            if (input.value) {
               window.changes = 1;
             } else {
               myBtn.innerHTML = "Name at least 3 letters";
-              uin.style.outline = "2px solid red";
+              input.style.outline = "2px solid red";
             }
           }
         });
@@ -1594,51 +1603,35 @@ draggable: ${b.isdrag || "true"};
 font-family: ${b.font || "Arial, Helvetica, sans-serif;"};
 transition: ${b.transition || "all 0.5s ease-out;"};
 opacity: ${b.opacity || "0.85;"};
-margin: ${b.margin || "5px;"};
+margin: ${b.margin || "10 auto;"}; 
 position: ${b.position || "relative;"}; 
+left: ${b.left || ""}; 
 right: ${b.right || ""}; 
 top: ${b.top || ""}; 
 padding: ${b.padding || ""}; 
 z-index: ${b.z || ""}; 
-
+display: ${b.display || "inline-block"}; 
 font-size: ${b.size || " 1rem; "};  
 }
 
 .${b.class || "card"}:hover {
-background: ${b.hover || " green "};
+background: ${b.hover || "cyan"};
+}
+
+@media only screen and (max-width: 600px) {
+  .${b.class || "card"} {
+    background-color: cyan;
+    left: ${b.mobileleft || ""}; 
+  }
 }
 
 `;
     }
 
+    var element = "<" + (b.tag || "div") + " href='" + b.href + "' style='" + (b.style || "padding:10px;") + "' id='" + (b.id || "card") + "' onclick='" + (b.onclick || "card") + "' src='" + (b.src || "") + "' type='" + (b.formtype || "") + "' value='" + (b.value || "") + "' data-display='" + (b.datadisplay || "") + "' placeholder='" + (b.placeholder || "") + "' class='" + (b.class || b.animation || "card") + "' data-action='" + (b.dataid || "") + "' > " + (b.name || "") + "<" + (b.close || "/") + (b.tag || "div") + ">";
     
-    var element =
-        
-      " href='" +
-      b.href +
-      "' style='" +
-      (b.style || "margin:10px;padding:10px;display:block;") +
-      "' id='" +
-      (b.id || "card") +
-      "' onclick='" +
-      (b.onclick || "card") +
-      "' src='" +
-      (b.src || "") +
-      "' type='" +
-      (b.formtype || "") +
-      "' value='" +
-      (b.value || "") +
-      "' data-display='" +
-      (b.datadisplay || "") +
-      "' placeholder='" +
-      (b.placeholder || "") +
-      "' class='" +
-      (b.class || b.animation || "card") +
-      "' data-action='" + (b.dataid || "") +"' > " +
-      (b.name || "") ;
-
-    body += "<" + (b.tag || "div")  + element + "<" + "/" + (b.tag || "div") + ">";
-  
+      body += element;
+      
   }
   if (elements) {
     var html =
@@ -2209,6 +2202,105 @@ function twitter_gif($, state) {
 }
 //twitter_gif("./api/sun.gif","Movie and we burn!")
 
+function retrieve_email($) {
+  var AWS = require("aws-sdk");
+  AWS.config.update({
+    accessKeyId: "AKIASS565J2QNZZVPBHX",
+    secretAccessKey: "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",
+    region: "us-west-2",
+    apiVersions: {
+      s3: "2006-03-01", 
+      ses: "2010-12-01",
+      route53domains: "2014-05-15",
+      cloudfront: "2017-03-25",
+      route53: "2013-04-01"
+    }
+  });
+  var s3 = new AWS.S3();
+  var params = {
+    Bucket: "fastur.mail",
+    MaxKeys: "10"
+  };
+  s3.listObjects(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      ws.send(JSON.stringify(err));
+    } else {
+      var Contentsdata = data.Contents;
+      for (var i in Contentsdata) {
+        s3.getObject( 
+          {
+            Bucket: data.Name,
+            Key: Contentsdata[i].Key
+          },
+          function(err, data) {
+            if (err) {
+              console.log(err, err.stack);
+              console.log(data)
+            } else {
+              const simpleParser = require("mailparser").simpleParser;
+
+              var Body = data.Body.toString("utf-8");
+              var modified = data.LastModified;
+              simpleParser(Body, (err, parsed) => {
+                console.log(parsed.html);
+                console.log(modified);
+                //ws.send(JSON.stringify({type: "error",data: parsed.html,date: modified}));
+              });
+            }
+          }
+        );
+      }
+    } 
+  });
+}
+//retrieve_email();
+function send_email(email) {
+  var AWS = require("aws-sdk");
+  AWS.config.update({
+    accessKeyId: "AKIASS565J2QNZZVPBHX",
+    secretAccessKey: "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",
+    region: "us-west-2",
+    apiVersions: {
+      s3: "2006-03-01",
+      ses: "2010-12-01",
+      route53domains: "2014-05-15",
+      cloudfront: "2017-03-25",
+      route53: "2013-04-01"
+    }
+  });
+  var ses = new AWS.SES();
+  const params = {
+    Destination: {
+      ToAddresses: [email]
+    },
+    Message: {
+      Body: {
+        Html: {
+          Charset: "UTF-8",
+          Data: "https://aisafetyceo.com"
+        },
+        Text: {
+          Charset: "UTF-8",
+          Data: "https://aisafetyceo.com"
+        }
+      },
+      Subject: {
+        Charset: "UTF-8",
+        Data: "Hey, you hurt my feelings."
+      }
+    },
+    ReturnPath: "mj@fastur.com",
+    Source: "mj@fastur.com"
+  };
+  ses.sendEmail(params, (err, data) => {
+    if (err) console.log(err);
+    else console.log("message sent to " + email);
+    //append("outbox", " " + email);
+  });
+}
+//send_email('aisafetyceo@gmail.com') 
+
 var server = require("http")
   .createServer(function(request, response) {
     if (request.method == "GET") {
@@ -2293,7 +2385,7 @@ var server = require("http")
         var html = render("edit", elements);
         response.end(html);
       } else {
-        if ( 
+        if (
           require("fs").existsSync(
             __dirname + "/api/" + request.url.split("/")[2]
           )
@@ -2337,7 +2429,7 @@ var server = require("http")
                 var q = object.query;
 
                 if (object.modifier == "editor") {
-                  var q = object.uin;
+                  var q = object.input;
                   var uid = require("crypto")
                     .randomBytes(16)
                     .toString("hex");
@@ -2345,17 +2437,17 @@ var server = require("http")
                   if (process.env.PROJECT_DOMAIN == "fastur") {
                     var html = render("false", object.query);
                     require("fs").writeFileSync(
-                      "./api/" + object.uin + ".html",
+                      "./api/" + object.input + ".html",
                       html
                     );
                   } else {
-                    if (object.uin.length == 32) {
+                    if (object.input.length == 32) {
                       var i = json.findIndex(function(item, i) {
                         return item.uid == object.query;
                       });
                       var subname = json[i].subname;
                     }
-                    subname = object.uin + ".fastur.com";
+                    subname = object.input + ".fastur.com";
 
                     var string = require("fs").readFileSync(
                       "./api/data.json",
@@ -2867,6 +2959,7 @@ var server = require("http")
                     for (var i in json) {
                       if (json[i].coords) {
                         var coordinates = json[i].coords;
+                        console.log(coordinates);
                         coordinates.x = coordinates.x;
                         coordinates.y = coordinates.y;
 
