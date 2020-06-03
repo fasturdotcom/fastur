@@ -193,6 +193,14 @@ function render(action, elements) {
             }
           }
         }
+        if(e == "publish"){
+          
+            modalContent.innerHTML =
+              "<div id='register' class='active' style=''><h3>Your account</h3><p>Enter a username and password for your Fastur account</p><input style='padding:10px;' id='register-name'   type='text' data-display='register'  placeholder='name' class='blank' data-action='0'> <input style='padding:10px;' id='register-email'   type='email' data-display='register'  placeholder='email' class='blank' data-action='0'> <input style='padding:10px;' id='register-password'   type='password' data-display='register'  placeholder='password' class='blank' data-action='0'><br><h3>Your Site</h3><p>Settings for your site</p><input style='padding:10px;' id='title-name'   type='text' data-display='register'  placeholder='title' class='blank' data-action='0'> <input style='padding:10px;' id='description-name'   type='text' data-display='register'  placeholder='description' class='blank' data-action='0'> <br><br><label class='container'>Fastur URL <input type='radio' checked='checked' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Custom Domain <input type='radio' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Draft <input type='radio' name='radio'> <span class='checkmark'></span> </label><input style='padding:10px;' id='url-name'   type='text' data-display='register'  placeholder='URL' class='blank' data-action='0'>  <br><br><input style='padding:10px;' id='registerm'  type='submit' value='publish' data-display='register'  placeholder='' class='registerelement' data-action='0'> </div>";
+            document.getElementById("myModal").style.display = "block";
+          document.getElementById("registerm").onclick = function() {lib.login('publish')};
+
+        }
 
         if (e == "add") {
           try {
@@ -1668,6 +1676,26 @@ function render(action, elements) {
           var type = "build";
         } else if (e == "image") {
           var type = "image";
+        } else if (e == "publish") {
+          var type = "publish";
+          
+          var register_name = document.getElementById("register-name").value;
+          var register_email = document.getElementById("register-email").value;
+          var register_password = document.getElementById("register-password").value;          
+          var register_title = document.getElementById("title-name").value;
+          var register_description = document.getElementById("description-name").value;
+          var register_url = document.getElementById("url-name").value;
+          var radios = document.getElementsByName('radio');
+          for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+              // do whatever you want with the checked radio
+              var site = radios[i].id;
+              console.log(radios[i])
+              // only one radio can be logically checked, don't check the rest
+              break;
+            }
+          }
+          
         } else if (e == "register") {
           var type = "register";
           var name = document.getElementById("register-name").value;
@@ -1691,6 +1719,12 @@ function render(action, elements) {
           var password = document.getElementById("login-password").value;
         }
         var label = {
+          register_name:register_name,
+          register_email:register_email,
+          register_password:register_password,
+          register_description:register_description,
+          register_url:register_url,
+          site:site,
           type: type,
           input: a,
           size: s,
@@ -1842,7 +1876,7 @@ function render(action, elements) {
           }
           if (action[0] == "publish") {
             modalContent.innerHTML =
-              "<div id='register' class='active' style=''><h3>Your account</h3><p>Enter a username and password for your Fastur account</p><input style='padding:10px;' id='register-name'   type='text' data-display='register'  placeholder='name' class='blank' data-action='0'> <input style='padding:10px;' id='register-email'   type='email' data-display='register'  placeholder='email' class='blank' data-action='0'> <input style='padding:10px;' id='register-password'   type='password' data-display='register'  placeholder='password' class='blank' data-action='0'><br><h3>Your Site</h3><p>Settings for your site</p><input style='padding:10px;' id='title-name'   type='text' data-display='register'  placeholder='title' class='blank' data-action='0'> <input style='padding:10px;' id='description-name'   type='text' data-display='register'  placeholder='description' class='blank' data-action='0'> <br><br><label class='container'>Fastur URL <input type='radio' checked='checked' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Custom Domain <input type='radio' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Draft <input type='radio' name='radio'> <span class='checkmark'></span> </label><input style='padding:10px;' id='url-name'   type='text' data-display='register'  placeholder='URL' class='blank' data-action='0'>  <br><br><input style='padding:10px;' id='register' onclick='lib.login('publish')''  type='submit' value='publish' data-display='register'  placeholder='' class='registerelement' data-action='0'> </div>";
+              "<div id='register' class='active' style=''><h3>Your account</h3><p>Enter a username and password for your Fastur account</p><input style='padding:10px;' id='register-name'   type='text' data-display='register'  placeholder='name' class='blank' data-action='0'> <input style='padding:10px;' id='register-email'   type='email' data-display='register'  placeholder='email' class='blank' data-action='0'> <input style='padding:10px;' id='register-password'   type='password' data-display='register'  placeholder='password' class='blank' data-action='0'><br><h3>Your Site</h3><p>Settings for your site</p><input style='padding:10px;' id='title-name'   type='text' data-display='register'  placeholder='title' class='blank' data-action='0'> <input style='padding:10px;' id='description-name'   type='text' data-display='register'  placeholder='description' class='blank' data-action='0'> <br><br><label class='container'>Fastur URL <input type='radio' id='fastur' checked='checked' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Custom Domain <input type='radio' id='custom' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Draft <input type='radio' id='draft' name='radio'> <span class='checkmark'></span> </label><input style='padding:10px;' id='url-name'   type='text' data-display='register'  placeholder='URL' class='blank' data-action='0'>  <br><br><input style='padding:10px;' id='register' onclick='lib.login('publish')''  type='submit' value='publish' data-display='register'  placeholder='' class='registerelement' data-action='0'> </div>";
             document.getElementById("myModal").style.display = "block";
           } else if (action[0] == "email") {
             lib.login("email");
