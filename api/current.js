@@ -1,6 +1,3 @@
-   // var json = require("fs").readFileSync("./api/wiki.json", "utf8")
-    console.log(6)
- 
 if (typeof window == "undefined") {
 /*  
   const https = require('https');
@@ -193,10 +190,197 @@ function render(action, elements) {
             }
           }
         }
-        if(e == "publish"){
+        
+         
+        if (e == "text") {
+         if (localStorage.getItem('status') == 0){
+           document.getElementById("alignfix").click(); // Click on the checkbox
+  localStorage.setItem('status', '1');
+        }
+          try {
+            var elements = JSON.parse(lib.value);
+          } catch (e) {
+            var elements = lib.value;
+          }
+
+          var element = [
+            {
+              outline: "none",
+              name: "FASTUR",
+              dataid: "1",
+              datadisplay: "home",
+              onclick: "console.log(this)",
+              display: "block",
+              href: "https://code.fastur.com",
+              class: "h1",
+              contenteditable: "true",
+              background: " ",
+              src: "",
+              hover: " ",
+              size: "3rem",
+              id: "title",
+              type: "imaged",
+              tag: "h1"
+            }
+          ];
+
+          var id = lib.actives[0] || "home";
+          document
+            .getElementById(id)
+            .insertAdjacentHTML("beforeend", render("client", element));
+          console.log("ok")
+        }
+        if (e == "link") {
           
-            modalContent.innerHTML =
-              "<div id='register' class='active' style=''><h3>Your account</h3><p>Enter a username and password for your Fastur account</p><input style='padding:10px;' id='register-name'   type='text' data-display='register'  placeholder='name' class='blank' data-action='0'> <input style='padding:10px;' id='register-email'   type='email' data-display='register'  placeholder='email' class='blank' data-action='0'> <input style='padding:10px;' id='register-password'   type='password' data-display='register'  placeholder='password' class='blank' data-action='0'><br><h3>Your Site</h3><p>Settings for your site</p><input style='padding:10px;' id='title-name'   type='text' data-display='register'  placeholder='title' class='blank' data-action='0'> <input style='padding:10px;' id='description-name'   type='text' data-display='register'  placeholder='description' class='blank' data-action='0'> <br><br><label class='container'>Fastur URL <input type='radio' checked='checked' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Custom Domain <input type='radio' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Draft <input type='radio' name='radio'> <span class='checkmark'></span> </label><input style='padding:10px;' id='url-name'   type='text' data-display='register'  placeholder='URL' class='blank' data-action='0'>  <br><br><input style='padding:10px;' id='registerm'  type='submit' value='publish' data-display='register'  placeholder='' class='registerelement' data-action='0'> </div>";
+         if (localStorage.getItem('status') == 0){
+           document.getElementById("alignfix").click(); // Click on the checkbox
+  localStorage.setItem('status', '1');
+        }
+          try {
+            var elements = JSON.parse(lib.value);
+          } catch (e) {
+            var elements = lib.value;
+          }
+
+          var element = [
+            {
+              outline: "none",
+              name: "FASTUR",
+              dataid: "1",
+              datadisplay: "home",
+              onclick: "console.log(this)",
+              display: "block",
+              href: "https://fastur.com",
+              class: "h1",
+              contenteditable: "true",
+              background: " ",
+              src: "",
+              hover: " ",
+              size: "3rem",
+              id: "title",
+              type: "imaged",
+              tag: "a"
+            }
+          ];
+
+          var id = lib.actives[0] || "home";
+          document
+            .getElementById(id)
+            .insertAdjacentHTML("afterbegin", render("client", element));
+        }
+        if (e == "image") {
+          
+         if (localStorage.getItem('status') == 0){
+           document.getElementById("alignfix").click(); // Click on the checkbox
+  localStorage.setItem('status', '1');
+        }
+          try {
+            var elements = JSON.parse(lib.value);
+          } catch (e) {
+            var elements = lib.value;
+          }
+
+          var element = [
+            {
+              outline: "none",
+              name: "",
+              dataid: "1",
+              datadisplay: "home",
+              onclick: "console.log(this)",
+              display: "block",
+              href: "https://code.fastur.com",
+              class: "icon",
+              style: "width:100px;height:150px;",
+              contenteditable: "true",
+              background: " ",
+              size: " ",
+              src: "https://image.flaticon.com/icons/svg/1001/1001371.svg",
+              hover: " ",
+              id: "icon",
+              type: "imaged",
+              tag: "img"
+            }
+          ];
+
+          var id = lib.actives[0] || "home";
+          document
+            .getElementById(id)
+            .insertAdjacentHTML("afterbegin", render("client", element));
+        }
+        if (e == "form") {
+          
+         if (localStorage.getItem('status') == 0){
+           document.getElementById("alignfix").click(); // Click on the checkbox
+  localStorage.setItem('status', '1');
+        }
+          try {
+            var elements = JSON.parse(lib.value);
+          } catch (e) {
+            var elements = lib.value;
+          }
+
+          var element = [
+            {
+              outline: "none",
+              href: "#login",
+              id: "login-button1",
+              name: "",
+              display: "block",
+              dataid: "1",
+              datadisplay: "home",
+              datalink: "dashboard",
+              type: "buttoned",
+              margin: "auto",
+              width: "100px",
+              left: "",
+              mobileleft: "",
+              tag: "input",
+              background: "",
+              hover: "pink",
+              textcolor: "white",
+              ishidden: "home",
+              placeholder: "email",
+              value: "",
+              class: "loginbutton",
+              css: ""
+            },
+            {
+              outline: "none",
+              href: "#login",
+              id: "login-button",
+              name: "subscribe",
+              display: "block",
+              dataid: "1",
+              datadisplay: "home",
+              datalink: "login",
+              type: "buttoned",
+              margin: "auto",
+              width: "100px",
+              left: "",
+              mobileleft: "",
+              tag: "a",
+              background: "",
+              hover: "pink",
+              textcolor: "white",
+              ishidden: "home",
+              value: "home",
+              class: "loginbuttonhome",
+              css: ""
+            }
+          ];
+
+          var id = lib.actives[0] || "home";
+          document
+            .getElementById(id)
+            .insertAdjacentHTML("afterbegin", render("client", element));
+        }
+        
+        
+        
+        if(e == "publish"){
+                  document.getElementById("mySidenav").style.width = "0px";
+           modalContent.innerHTML =
+              "<div id='register' class='active' style=''><h3>Your account</h3><p>Enter a username and password for your Fastur account</p><input style='padding:10px;' id='register-name'   type='text' data-display='register'  placeholder='name' class='blank' data-action='0'> <input style='padding:10px;' id='register-email'   type='email' data-display='register'  placeholder='email' class='blank' data-action='0'> <input style='padding:10px;' id='register-password'   type='password' data-display='register'  placeholder='password' class='blank' data-action='0'><br><h3>Your Site</h3><p>Settings for your site</p><input style='padding:10px;' id='title-name'   type='text' data-display='register'  placeholder='title' class='blank' data-action='0'> <input style='padding:10px;' id='description-name'   type='text' data-display='register'  placeholder='description' class='blank' data-action='0'> <br><br><label class='container'>Fastur URL <input type='radio' id='fastur' checked='checked' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Custom Domain <input type='radio' id='custom' name='radio'> <span class='checkmark'></span> </label> <label class='container'>Draft <input type='radio' id='draft' name='radio'> <span class='checkmark'></span> </label><input style='padding:10px;' id='url-name'   type='text' data-display='register'  placeholder='URL' class='blank' data-action='0'>  <br><br><input style='padding:10px;' id='registerm' onclick='lib.login('publish')''  type='submit' value='publish' data-display='register'  placeholder='' class='registerelement' data-action='0'> </div>";
             document.getElementById("myModal").style.display = "block";
           document.getElementById("registerm").onclick = function() {lib.login('publish')};
 
@@ -1678,7 +1862,9 @@ function render(action, elements) {
           var type = "image";
         } else if (e == "publish") {
           var type = "publish";
-          
+                     
+          var href = window.location.href.split('?')[1]
+          var a = href.split('#')[0]
           var register_name = document.getElementById("register-name").value;
           var register_email = document.getElementById("register-email").value;
           var register_password = document.getElementById("register-password").value;          
@@ -1694,7 +1880,10 @@ function render(action, elements) {
               // only one radio can be logically checked, don't check the rest
               break;
             }
-          }
+          }          
+            var elements = lib.value;
+
+          console.log(elements)
           
         } else if (e == "register") {
           var type = "register";
@@ -1732,7 +1921,7 @@ function render(action, elements) {
           part: o,
           name: u,
           modifier: "editor",
-          query: code,
+          query: elements,
           email: email,
           password: password,
           uuid: lib.cookie("fastur"),
@@ -1757,7 +1946,8 @@ function render(action, elements) {
             result = JSON.parse(result);
 
             if (result.type == "dict") {
-              myBtn.innerHTML = result.data;
+             
+              document.getElementById("uform-li").innerHTML = result.data;
             }
             if (result.type == "image") {
               var image = lib.image;
@@ -1851,9 +2041,24 @@ function render(action, elements) {
       },
       edit: function(e) {
         modalContent.innerHTML =
-          "<b>Useful Instructions!</b><br><br>Click on an element to see its ID<br><br>Use the form! Type in:<br>'change *ID* *content/color/background/border* to *value*' <br> <br>When you are ready to publish, Type in:<br>'publish to *demo*'<br><br>use the <a href='https://www.w3schools.com/cssref/'> CSS ref</a> to expand your vocabulary and capabilities<br><br> Create an account with stripe.com<br>You will need to copy stripe api keys to your fastur site<br>on fastur.com type in stripe to set your stripe keys <br><br>Type in help to bring up this help modal ";
+          "<b>Useful Instructions!</b><br><br>Click on an element to see its settings panel<br><br>The conversational builder uses the formula:<br><b>change *ID* *property* to *value*</b><br><br> for example, you can type in: 'change title background to blue'<br><br>When you are ready to publish, click <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Capa_1' width='20px' height='20px' x='0px' y='0px' viewBox='0 0 49 49' style='enable-background:new 0 0 49 49;' xml:space='preserve'> <g> <rect x='27.5' y='5' width='6' height='10'/> <path d='M39.914,0H0.5v49h48V8.586L39.914,0z M10.5,2h26v16h-26V2z M39.5,47h-31V26h31V47z'/> <path d='M13.5,32h7c0.553,0,1-0.447,1-1s-0.447-1-1-1h-7c-0.553,0-1,0.447-1,1S12.947,32,13.5,32z'/> <path d='M13.5,36h10c0.553,0,1-0.447,1-1s-0.447-1-1-1h-10c-0.553,0-1,0.447-1,1S12.947,36,13.5,36z'/> <path d='M26.5,36c0.27,0,0.52-0.11,0.71-0.29c0.18-0.19,0.29-0.45,0.29-0.71s-0.11-0.521-0.29-0.71c-0.37-0.37-1.04-0.37-1.41,0 c-0.19,0.189-0.3,0.439-0.3,0.71c0,0.27,0.109,0.52,0.29,0.71C25.979,35.89,26.229,36,26.5,36z'/> </g> </svg><br><br> Create an account with stripe.com<br>You will need to copy stripe api keys to your fastur site <br><br>Type in help to bring up this help modal ";
         document.getElementById("myModal").style.display = "block";
 
+        function loaddb(){
+                    
+          var href = window.location.href;
+          var href = href.split('?')[1]
+          var id = href.split('#')[0]
+           fetch("api/" +id +".json").then(function(response) {
+             return response.text();
+           }).then(function(data) {
+             console.log(data)
+                       lib.value = data;
+           });
+        }
+        loaddb()
+        
+        
         function parse(query) {
           query = query.toLowerCase();
           var action = query.split(" ");
@@ -2206,23 +2411,17 @@ function render(action, elements) {
       }
       {
         if (window.location.hash) {
-          hashUpdate();
+          var hashed = window.location.hash.split("#")[1];
+          hashUpdate(hashed);
         }
-        var hashed = window.location.hash.split("#")[1];
-        ["hashchange", "load"].forEach(event =>
-          window.addEventListener(event, hashUpdate)
-        );
+        
 
-        function hashUpdate(hash) {
-          var hash = hash.newURL;
-          var hash = hash.split("#")[1];
-
+        function hashUpdate(hash) { 
           var target = document.getElementById(hash);
 
           if (target) {
             if (hash == lib.actives[0]) {
             } else {
-              modal.style.display = "none";
               for (var active of lib.actives) {
                 if (active) {
                   var activated = document.getElementById(active);
@@ -2361,6 +2560,7 @@ function render(action, elements) {
           name: "Fastur Search",
           onclick: "lib.login('search',input.value)",
           display: "block",
+          style:"padding: 10px; ",
           tag: "a",
           overflow: "auto",
           bottom: "65px",
@@ -2790,7 +2990,7 @@ background: ${b.hover || " "};
       " href='" +
       b.href +
       "' style='" +
-      (b.style || "padding:10px;") +
+      (b.style || "padding:0px;") +
       "' id='" +
       (b.id || "card") +
       "' onclick=" +
@@ -2918,7 +3118,7 @@ background: ${b.hover || " "};
       "</div>" +
       "<div id='uform' class='active' style='display:block'>" +
       uform +
-      "</div><div id='myModal' class='modal'><div class='modal-content'> <span class='close'>&times;</span> <p id='modalContent'></p> </div></div><div id='mySidenav' class='sidenav'> <a href='javascript:void(0)' class='closebtn' onclick='lib.closeNav()'>&times;</a> <a href='#'>Settings</a> <div id='uform-ul'></div> <div id='uform-li'></div></div>";
+      "</div><div id='myModal' class='modal'><div class='modal-content'> <span class='close'>&times;</span> <p id='modalContent'></p> </div></div><div id='mySidenav' class='sidenav'> <a href='javascript:void(0)' class='closebtn' onclick='lib.closeNav()'>&times;</a> <h2>Settings</h2> <div id='uform-ul'></div> <div id='uform-li'></div></div>";
   }
   if (elements) {
     var html =
@@ -3106,7 +3306,7 @@ var server = require("http")
             var object = JSON.parse(string);
             console.log(object);
             switch (object.type) {
-              case "commit": {
+              case "publish": {
                 var q = object.query;
                 if (object.modifier == "editor") {
                   var q = object.input;
@@ -3121,14 +3321,18 @@ var server = require("http")
                       html
                     );
                   }
+                   var datastring = require("fs").readFileSync('api/data.json','utf8')
+                  var json = JSON.parse(datastring)
                   if (object.input.length == 32) {
                     var i = json.findIndex(function(item, i) {
                       return item.uid == object.query;
                     });
+                    if (json[i]){ 
                     var subname = json[i].subname;
+                    }
                   }
-                  subname = object.input + ".fastur.com";
-
+                   subname = object.register_url + ".fastur.com";
+                  
                   var string = require("fs").readFileSync(
                     "./api/data.json",
                     "utf8"
