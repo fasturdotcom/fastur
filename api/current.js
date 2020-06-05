@@ -1759,7 +1759,7 @@ function render(action, elements) {
       },
       mainmenu: function mainmenu(e) {
         modalContent.innerHTML =
-          "<div class='inner'><ul><li><a href='#dashboard'><h2>Dashboard</h2><p>Open your account dashboard</p></a></li><li><a href='#docs'><h2>Documentation</h2><p>Get answers and instructions</p></a></li><li><a href='#pro'><h2>Go Pro!</h2><p>Upgrade your Fastur account</p></a></li><li><a href='#contact'><h2>Contact</h2><p>Send your questions and comments</p></a></li><li><a href='#login'><h2>Log In</h2><p>Log in to your account</p></a></li><li><a href='#register'><h2>Register</h2><p>Create a new account</p></a></li></ul></div>";
+          "<div class='inner'><ul><li><a href='#dashboard'><h2 data-link='dashboard'>Dashboard</h2><p data-link='dasboard'>Open your account dashboard</p></a></li><li><a href='#docs'><h2 data-link='docs'>Documentation</h2><p data-link='docs'>Get answers and instructions</p></a></li><li><a href='#pro'><h2 data-link='pro'>Go Pro!</h2><p data-link='pro'>Upgrade your Fastur account</p></a></li><li><a href='#contact'><h2 data-link='contact'>Contact</h2><p data-link='contact'>Send your questions and comments</p></a></li><li><a data-link='login' href='#login'><h2 data-link='login'>Log In</h2><p data-link='login'>Log in to your account</p></a></li><li><a href='#register'><h2 data-link='register'>Register</h2><p data-link='register'>Create a new account</p></a></li></ul></div>";
         document.getElementById("myModal").style.display = "block";
       },
       cookie: function(e) {
@@ -2445,8 +2445,10 @@ function render(action, elements) {
         }
       }
       {
-        [].forEach.call(document.querySelectorAll("a"), function(el) {
-          el.addEventListener("click", function() {
+        console.log('okay');
+document.addEventListener("click", function(){
+console.log(event.target.dataset.link) 
+console.log('ok')
             console.log(event.target.dataset.link);
             var target = event.target.dataset.link;
 
@@ -2476,7 +2478,7 @@ function render(action, elements) {
               lib.actives.push(target.id);
             }
           });
-        });
+         
         var modal = document.getElementById("myModal");
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
