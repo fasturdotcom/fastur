@@ -2298,7 +2298,7 @@ function render(action, elements) {
             e.preventDefault();
           });
         });
-        var contents = document.querySelectorAll("[data-action]");
+        var contents = document.querySelectorAll("[data-action]"); 
         [].forEach.call(contents, function(content) {
           content.addEventListener("mouseenter", function(e) {
             e.preventDefault();
@@ -2500,7 +2500,7 @@ console.log('ok')
   } else {
     if (action == "edit") {
       elements.push(
-        {
+        {person:"child",
           outline: "none",
           id: "image_upload",
           tag: "input",
@@ -2518,7 +2518,7 @@ console.log('ok')
           action: "INPUT",
           type: "button"
         },
-        {
+        {person:"child",
           href: "#",
           id: "myImage",
           name:
@@ -2536,7 +2536,7 @@ console.log('ok')
           ishidden: "display:block;",
           type: "button"
         },
-        {
+        {person:"child",
           outline: "none",
           id: "input",
           tag: "input",
@@ -2556,7 +2556,7 @@ console.log('ok')
           action: "INPUT",
           type: "button"
         },
-        {
+        {person:"child",
           href: "#",
           id: "myBtn",
           name: "Fastur Search",
@@ -2620,11 +2620,13 @@ console.log('ok')
       b.contenteditable = "true";
     }
     var classList = b.class;
+    if (classList){    
     var classArray = classList.split(" ");
     var classReady = "";
     for (var i in classArray) {
       var entry = "." + classArray[i];
       classReady += entry;
+    }
     }
     {
       css += ` ${classReady || "card"} { 
@@ -2667,14 +2669,33 @@ background: ${b.hover || " "};
 }
 
 `;
+    } 
+    if (b.person == "parent" ){
+      parents.push(b)
+    } else if (b.person == "child"){
+      children.push(b)
     }
-
- var element = "<" + (b.tag || "div") + " href='" + b.href + "' style='" + (b.style || "padding:0px;") + "' id='" + (b.id || "card") + "' onclick=" + (b.onclick || "") + " src='" + (b.src || "") + "' contenteditable='" + (b.contenteditable || " ") + "' type='" + (b.formtype || "") + "' value='" + (b.value || "") + "' data-display='" + (b.datadisplay || "") + "' data-link='" + (b.datalink || "") + "' placeholder='" + (b.placeholder || "") + "' class='" + (b.class || b.animation || "card") + "' data-action='" + (b.dataid || "") + "' > " + (b.name || "") + "<" + (b.close || "/") + (b.tag || "div") + ">";
-      body += "<div id='" + b.id + "' class='active "+ b.grid +"' >" + element + "</div>";  
-
-  }  
-   
     
+    
+  }        
+
+  var temp = "";
+    for (var i in parents){
+      var parentsTemp = "<div id='"+parents[i].id+"' style='"+(parents[i].style || "")+"'>"
+      for (var k in children){
+        
+        if (children[k].datadisplay == parents[i].id ){
+          
+          parentsTemp += "<div id='" + children[k].id + "' class='active "+ children[k].grid +"' >" +  "<" + (children[k].tag || "div") + " href='" + children[k].href + "' style='" + (children[k].style || "padding:0px;") + "' id='" + (children[k].id || "card") + "' onclick=" + (children[k].onclick || "") + " src='" + (children[k].src || "") + "' contenteditable='" + (children[k].contenteditable || " ") + "' type='" + (children[k].formtype || "") + "' value='" + (children[k].value || "") + "' data-display='" + (children[k].datadisplay || "") + "' data-link='" + (children[k].datalink || "") + "' placeholder='" + (children[k].placeholder || "") + "' class='" + (children[k].class || children[k].animation || "card") + "' data-action='" + (children[k].dataid || "") + "' > " + (children[k].name || "") + "<" + (children[k].close || "/") + (children[k].tag || "div") + ">" + "</div>";
+      
+        }
+      }
+      parentsTemp += "</div>";
+      temp+= parentsTemp;
+    }
+  temp += "<div id='myModal' class='modal'><div class='modal-content'> <span class='close'>&times;</span> <p id='modalContent'></p> </div></div><div id='mySidenav' class='sidenav'> <a href='javascript:void(0)' data-link='closenav' class='closebtn' onclick='lib.closeNav()'>&times;</a> <h2>Settings</h2> <div id='uform-ul'></div> <div id='uform-li'></div></div>";
+  
+    body += temp;
 
   if (elements) { 
     var html =
